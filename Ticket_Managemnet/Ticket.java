@@ -240,4 +240,6 @@ public class Ticket {
         //return movie.getBasicTicketPrice()*this.price_rate;
 
     }
+
+
 }

@@ -10,6 +10,7 @@ import Schedule_Management.TimeTable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -25,7 +26,7 @@ public class Booking {
     private DateTime bookingDateTime;
     private LocalTime bookingTime;
     private int booking_status;
-
+    private ArrayList<Ticket> ticketList;
     public Booking() {
         this.childTicket_qty=0;
         this.adultTicket_qty=0;
@@ -72,6 +73,10 @@ public class Booking {
         return bookingDateTime;
     }
 
+    public ArrayList<Ticket> getTicketList() {
+        return ticketList;
+    }
+
     public int getBooking_status() {
         return booking_status;
     }
@@ -102,7 +107,11 @@ public class Booking {
         this.booking_status = booking_status;
     }
 
-//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    public void setTicketList(ArrayList<Ticket> ticketList) {
+        this.ticketList = ticketList;
+    }
+
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     public static void insertBooking(Booking b) throws Exception {
         int rowAffected = 0;
 
@@ -357,6 +366,7 @@ public class Booking {
                             for (Ticket t : cartTicket) {
                                 Ticket.insertTicket(t);
                             }
+
                         }
                     }catch (Exception e){
                         System.out.println("Something wrong...");
@@ -398,4 +408,81 @@ public class Booking {
 
         return bookings;
     }
+
+    public static ArrayList<Booking> getBookingList(){
+        boolean error = false;
+        ArrayList<Booking> bookingList = new ArrayList<>();
+
+        try {
+            Object[] params = { };
+            ResultSet result = DatabaseUtils.selectQueryById("*", "booking",null,null);
+
+            while (result.next()) {
+
+                Booking booking = new Booking();
+                booking.setBooking_id(result.getInt("booking_id"));
+                booking.setAdultTicket_qty(result.getInt("adultTicket_qty"));
+                booking.setBookingDateTime(new DateTime(result.getDate("booking_date").toLocalDate()));
+                booking.setChildTicket_qty(result.getInt("childTicket_qty"));
+                booking.setTotalPrice(result.getDouble("total_price"));
+                booking.setBooking_status(result.getInt("booking_status"));
+                Time time =result.getTime("booking_time");
+                booking.setBookingTime(time.toLocalTime());
+
+                bookingList.add(booking);
+
+            }
+
+            result.close();
+
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return bookingList;
+    }
+
+    public void loadingTicketList() throws SQLException {
+        ArrayList<Ticket> tickets = new ArrayList<>();
+
+        try {
+            Object[] params = {booking_id};
+            ResultSet result = DatabaseUtils.selectQueryById("*", "ticket","booking_id = ?",params);
+
+            while (result.next()) {
+
+                Ticket ticket = new Ticket();
+
+                ticket.setTicketType(result.getString("ticket_type"));
+                ticket.setTicket_id(result.getInt("ticket_id"));
+                Seat seat = new Seat();
+                seat.setSeat_id(result.getString("seat_id"));
+                ticket.setSeat(seat);
+
+                Booking booking =new Booking();
+                booking.setBooking_id(result.getInt("booking_id"));
+                ticket.setBooking(booking);
+
+                TimeTable timetable=new TimeTable();
+                timetable.setTimetableID(result.getInt("schedule_id"));
+                ticket.setBooking(booking);
+
+                ticket.setPrice_rate(result.getDouble("price_rate"));
+                tickets.add(ticket);
+
+
+            }
+
+            result.close();
+
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        this.setTicketList(ticketList);
+
+    }
 }
+
+
