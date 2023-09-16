@@ -302,10 +302,10 @@ public class Booking {
             if (cartTicket.size() > 0) {
                 System.out.println("\nCart : ");
                 for (Ticket t : cartTicket) {
-                    System.out.println("\t\t-----------------------");
-                    System.out.printf("\t\t| Ticket id :| %6d |\n", t.getTicket_id());
-                    System.out.printf("\t\t| Seat id   :| %6s |\n", t.getSeat().getSeat_id());
-                    System.out.printf("\t\t| Price     :| %6.2f |\n", t.calculateTicketPrice());
+                    System.out.println("\t\t-------------------------");
+                    System.out.printf("\t\t| Ticket id :| %6d   |\n", t.getTicket_id());
+                    System.out.printf("\t\t| Seat id   :| %6s   |\n", t.getSeat().getSeat_id());
+                    System.out.printf("\t\t| Price     :| RM%5.2f |\n", t.calculateTicketPrice());
                     this.totalPrice += t.calculateTicketPrice();
                     if(t.getTicketType().equals("Adult")){
                         this.adultTicket_qty++;
@@ -313,7 +313,7 @@ public class Booking {
                         this.childTicket_qty++;
                     }
                 }
-                System.out.println("\t\t-----------------------\n");
+                System.out.println("\t\t-------------------------\n");
                 System.out.println("Booking Details : ");
                 System.out.println("\t\t-------------------------------------------");
                 System.out.printf("\t\t Booking ID : %04d\t\tDate : %s\n", getBooking_id(), DateTime.getCurrentDate());
