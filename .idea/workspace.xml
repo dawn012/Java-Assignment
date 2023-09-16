@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="change the structure">
+    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="update the search movie by name">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Driver/SystemClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/Driver/SystemClass.java" afterDir="false" />
     </list>
@@ -252,7 +252,15 @@
       <option name="project" value="LOCAL" />
       <updated>1694860185879</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="update the search movie by name">
+      <option name="closed" value="true" />
+      <created>1694862946585</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1694862946585</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -315,7 +323,8 @@
     <MESSAGE value="fix the delete hall bug in manage hall method" />
     <MESSAGE value="change the cinema class" />
     <MESSAGE value="change the structure" />
-    <option name="LAST_COMMIT_MESSAGE" value="change the structure" />
+    <MESSAGE value="update the search movie by name" />
+    <option name="LAST_COMMIT_MESSAGE" value="update the search movie by name" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
