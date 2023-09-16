@@ -1,7 +1,7 @@
 package Booking_Management;
 
 import Database.DatabaseUtils;
-import DateTime_Management.DateTime;
+import Driver.DateTime;
 import Hall_Management.Hall;
 import Seat_Management.Seat;
 
@@ -10,6 +10,9 @@ import Schedule_Management.TimeTable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -20,6 +23,7 @@ public class Booking {
     private int childTicket_qty;
     private double totalPrice;
     private DateTime bookingDateTime;
+    private LocalTime bookingTime;
     private int booking_status;
 
     public Booking() {
@@ -59,12 +63,19 @@ public class Booking {
     public double getTotalPrice() {
         return totalPrice;
     }
+
+    public LocalTime getBookingTime() {
+        return bookingTime;
+    }
+
     public DateTime getBookingDateTime() {
         return bookingDateTime;
     }
+
     public int getBooking_status() {
         return booking_status;
     }
+
     //Setter
     public void setBooking_id(int booking_id) {
         this.booking_id = booking_id;
@@ -78,9 +89,15 @@ public class Booking {
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
     }
+
+    public void setBookingTime(LocalTime bookingTime) {
+        this.bookingTime = bookingTime;
+    }
+
     public void setBookingDateTime(DateTime bookingDateTime) {
         this.bookingDateTime = bookingDateTime;
     }
+
     public void setBooking_status(int booking_status) {
         this.booking_status = booking_status;
     }
@@ -91,7 +108,7 @@ public class Booking {
 
         try {
             String insertSql = "INSERT INTO `booking` (`booking_id`,`adultTicket_qty`,`childTicket_qty`,`total_price`,`booking_date`,`booking_time`,`booking_status`) value(?,?,?,?,?,?,?);";
-            Object[] params = {b.getBooking_id(),b.getAdultTicket_qty(),b.getChildTicket_qty(),b.getTotalPrice(),DateTime.getCurrentDate(),DateTime.getCurrentTime(),b.getBooking_status()};
+            Object[] params = {b.getBooking_id(),b.getAdultTicket_qty(),b.getChildTicket_qty(),b.getTotalPrice(),b.getBookingDateTime().getDate(),b.getBookingTime(),b.getBooking_status()};
             rowAffected = DatabaseUtils.insertQuery(insertSql, params);
         }
         catch (SQLException e) {
@@ -305,7 +322,7 @@ public class Booking {
                     System.out.println("\t\t-------------------------");
                     System.out.printf("\t\t| Ticket id :| %6d   |\n", t.getTicket_id());
                     System.out.printf("\t\t| Seat id   :| %6s   |\n", t.getSeat().getSeat_id());
-                    System.out.printf("\t\t| Price     :| RM%5.2f |\n", t.calculateTicketPrice());
+                    System.out.printf("\t\t| Price     :| RM%6.2f |\n", t.calculateTicketPrice());
                     this.totalPrice += t.calculateTicketPrice();
                     if(t.getTicketType().equals("Adult")){
                         this.adultTicket_qty++;
@@ -313,10 +330,18 @@ public class Booking {
                         this.childTicket_qty++;
                     }
                 }
+
+                LocalDate date = LocalDate.now();
+                DateTime bookingDate=new DateTime(date);
+                setBookingDateTime(bookingDate);
+
+                LocalTime currentTime = LocalTime.now();
+                setBookingTime(currentTime);
+
                 System.out.println("\t\t-------------------------\n");
                 System.out.println("Booking Details : ");
                 System.out.println("\t\t-------------------------------------------");
-                System.out.printf("\t\t Booking ID : %04d\t\tDate : %s\n", getBooking_id(), DateTime.getCurrentDate());
+                System.out.printf("\t\t Booking ID : %04d\t\tDate : %s\n", getBooking_id(), getBookingDateTime().getDate());
                 System.out.println("\t\t-------------------------------------------");
                 System.out.printf("\t\t Adult Ticket(RM%6.2f) x %d\n", schedule.getMovie().getBasicTicketPrice() * 1.2, getAdultTicket_qty());
                 System.out.printf("\t\t Child Ticket(RM%6.2f) X %d\n", schedule.getMovie().getBasicTicketPrice() * 0.8, getChildTicket_qty());
