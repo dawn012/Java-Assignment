@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="add the yong package">
+    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="change the SystemClass.java">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hall_management/Hall.java" beforeDir="false" afterPath="$PROJECT_DIR$/hall_management/Hall.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/seat_management/Seat.java" beforeDir="false" afterPath="$PROJECT_DIR$/seat_management/Seat.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -148,7 +146,23 @@
       <option name="project" value="LOCAL" />
       <updated>1694838189034</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="change the hall package">
+      <option name="closed" value="true" />
+      <created>1694838504476</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1694838504476</updated>
+    </task>
+    <task id="LOCAL-00014" summary="change the SystemClass.java">
+      <option name="closed" value="true" />
+      <created>1694839223323</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1694839223323</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -201,7 +215,9 @@
     <MESSAGE value="add the package" />
     <MESSAGE value="add the sql" />
     <MESSAGE value="add the yong package" />
-    <option name="LAST_COMMIT_MESSAGE" value="add the yong package" />
+    <MESSAGE value="change the hall package" />
+    <MESSAGE value="change the SystemClass.java" />
+    <option name="LAST_COMMIT_MESSAGE" value="change the SystemClass.java" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
