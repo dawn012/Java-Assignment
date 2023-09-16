@@ -16,15 +16,7 @@ public class Hall {
     private String hallType;
     private int hallCapacity;
     private int status;
-
     private ArrayList<Seat> seats;
-    public ArrayList<Seat> getSeats() {
-        return seats;
-    }
-
-    public void setSeats(ArrayList<Seat> seats) {
-        this.seats = seats;
-    }
 
     // Constructor
     public Hall(){
@@ -96,35 +88,44 @@ public class Hall {
         return 0;
     }
 
-    public void modifyHall() throws SQLException {
+    public boolean modifyHall() throws SQLException {
+        int rowAffected = 0;
+
         try {
             String updateSql = "UPDATE `hall` SET `hall_name`= ?, `hall_type`= ?, `hall_capacity`= ? WHERE hall_id = ?";
             Object[] params = {getHallName().getName(), getHallType(), getHallCapacity(), getHallID()};
-            int rowAffected = DatabaseUtils.updateQuery(updateSql, params);
-            if (rowAffected > 0) {
-                System.out.println("\nThe changes have been saved.");
-            } else {
-                System.out.println("\nSomething went wrong...");
-            }
+            rowAffected = DatabaseUtils.updateQuery(updateSql, params);
         }
         catch (SQLException e) {
             e.printStackTrace();
+        }
+
+        if (rowAffected > 0) {
+            System.out.println("\nThe changes have been saved.");
+            return true;
+        } else {
+            System.out.println("\nSomething went wrong...");
+            return false;
         }
     }
 
-    public void deleteHall() throws SQLException {
+    public boolean deleteHall() throws SQLException {
+        int rowAffected = 0;
+
         try {
             Object[] params = {getHallID()};
-            int rowAffected = DatabaseUtils.deleteQueryById("hall", "hall_status", "hall_id", params);
-
-            if (rowAffected > 0) {
-                System.out.println("\nThe hall has been deleted.");
-            } else {
-                System.out.println("\nSomething went wrong...");
-            }
+            rowAffected = DatabaseUtils.deleteQueryById("hall", "hall_status", "hall_id", params);
         }
         catch (SQLException e) {
             e.printStackTrace();
+        }
+
+        if (rowAffected > 0) {
+            System.out.println("\nThe hall has been deleted.");
+            return true;
+        } else {
+            System.out.println("\nSomething went wrong...");
+            return false;
         }
     }
 
@@ -144,6 +145,10 @@ public class Hall {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public void setSeats(ArrayList<Seat> seats) {
+        this.seats = seats;
     }
 
     // Getter
@@ -167,7 +172,9 @@ public class Hall {
         return status;
     }
 
-
+    public ArrayList<Seat> getSeats() {
+        return seats;
+    }
 
     //ChinYong Part
     //init the hall's seat from database

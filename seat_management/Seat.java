@@ -12,8 +12,6 @@ import java.util.Scanner;
 public class Seat {
     //Data Field
     private String seat_id;
-    //private Hall hall;
-
     private int seatRow;
     private int seatCol;
     private int seat_status;

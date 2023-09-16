@@ -10,6 +10,7 @@ import movie_management.MovieUtils;
 import movie_management.MovieValidator;
 import movie_management.DateTime;
 import timetable_management.TimeTable;
+import booking_management.Booking;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -237,7 +238,9 @@ public class SystemClass {
                                             }
                                         } while (error);
 
-                                        // 4. Select the seat
+                                        // 4. Select the seat chin yong part
+                                        Booking booking = new Booking();
+                                        booking.executeBooking(timeTable);
 
                                     } else {
                                         back = false;
