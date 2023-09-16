@@ -20,7 +20,6 @@ public class Cinema implements DatabaseOperations {
     private Address cinemaAddress;
     private String cinemaPhone;
     private int status;
-    private static ArrayList<Cinema> cinemas = new ArrayList<>();
     private static final String OFFICE_PHONE_REGEX = "^(01[023456789]-[0-9]{7}|011-[0-9]{8}|03-[0-9]{8}|08[0-9]-[0-9]{6}|0[12456789]-[0-9]{7})$";
 
     public Cinema(){
@@ -39,28 +38,6 @@ public class Cinema implements DatabaseOperations {
         this.cinemaName = cinemaName;
         this.cinemaAddress = cinemaAddress;
         this.cinemaPhone = cinemaPhone;
-    }
-
-    static {
-        try {
-            ResultSet result = DatabaseUtils.selectQueryById("*", "cinema", null, null);
-
-            while (result.next()) {
-                Cinema cinema = new Cinema();
-
-                cinema.setCinemaID(result.getInt("cinema_id"));
-                cinema.setCinemaName(new Name(result.getString("cinema_name")));
-                cinema.setCinemaAddress(new Address(result.getString("cinema_address")));
-                cinema.setCinemaPhone(result.getString("cinema_phone"));
-
-                cinemas.add(cinema);
-            }
-
-            result.close();
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     // Method
@@ -303,9 +280,5 @@ public class Cinema implements DatabaseOperations {
 
     public int getStatus() {
         return status;
-    }
-
-    public static ArrayList<Cinema> getCinemas() {
-        return cinemas;
     }
 }

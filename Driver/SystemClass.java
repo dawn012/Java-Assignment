@@ -1042,7 +1042,7 @@ public class SystemClass {
         boolean error = true;
         boolean continues = true;
 
-        ArrayList<Cinema> cinemas = Cinema.getCinemas();
+        ArrayList<Cinema> cinemas = Cinema.viewCinemaList(1);
         int cinemaSelected = 0;
 
         do {
