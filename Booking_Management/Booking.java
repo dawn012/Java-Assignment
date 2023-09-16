@@ -128,7 +128,7 @@ public class Booking {
         }
 
         if (rowAffected > 0) {
-            System.out.println("\nBooking successfully added...");
+            System.out.println("Booking successfully added...");
         }
         else {
             System.out.println("\nSomething went wrong!");
@@ -324,6 +324,7 @@ public class Booking {
                     ticket.setPrice_rate(priceRate);
                     ticket.setTicketType(ticketType);
                     ticket.setTicket_id(ticket.countTicket_id(count+1));
+                    ticket.setTicket_id(ticket.countTicket_id(count+1));
                     ticket.setBooking(this);
                     ticket.setSeat(seat);
                     ticket.setTimeTable(schedule);
@@ -390,6 +391,7 @@ public class Booking {
                 }while(confirmChar!='Y' && confirmChar!='N' && confirmChar!='R');
             } else {
                 System.out.println("No Ticket be Selected.\nExit Booking Page...");
+                confirmChar='N';
             }
         }
     }

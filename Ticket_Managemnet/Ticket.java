@@ -68,7 +68,7 @@ public class Ticket {
     }
     public int countTicket_id(int count) {
         this.ticket_id=1;
-        //this.ticket_id = ticket_id;
+
         ArrayList<Ticket> tickets=Ticket.getBookedTicketList();
         for(Ticket t:tickets){
             this.ticket_id++;
@@ -155,11 +155,11 @@ public class Ticket {
                 ticket.setPrice_rate(result.getDouble("price_rate"));
                 tickets.add(ticket);
 
-                //seats.add(seat);
+
             }
 
             result.close();
-            //resultHall.close();
+
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -229,7 +229,7 @@ public class Ticket {
         }
 
         if (rowAffected > 0) {
-            System.out.println("\nTicket successfully added...");
+            System.out.println("Ticket successfully added...");
         }
         else {
             System.out.println("\nSomething went wrong!");
