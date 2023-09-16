@@ -4,10 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="change the package name">
+    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="change the view schedule">
+      <change afterPath="$PROJECT_DIR$/lib/.idea/libraries/mysql_connector_java_8_0_28.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Driver/Driver.java" beforeDir="false" afterPath="$PROJECT_DIR$/Driver/Driver.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Driver/SystemClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/Driver/SystemClass.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Schedule_Management/TimeTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/Schedule_Management/TimeTable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Seat_Management/TestDriver.java" beforeDir="false" afterPath="$PROJECT_DIR$/Seat_Management/TestDriver.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,7 +42,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "last_opened_file_path": "C:/Users/zheng/Downloads/Java Assignment/Cinema Ticketing System/lib",
+    "last_opened_file_path": "C:/Users/zheng/Downloads/Java/Practical 6/Q3",
     "onboarding.tips.debug.path": "C:/Users/zheng/Downloads/Cinema Ticketing System/src/main/java/org/example/Main.java"
   }
 }]]></component>
@@ -200,7 +207,15 @@
       <option name="project" value="LOCAL" />
       <updated>1694842307045</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="change the view schedule">
+      <option name="closed" value="true" />
+      <created>1694845299906</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1694845299907</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -258,7 +273,8 @@
     <MESSAGE value="change the directory to package" />
     <MESSAGE value="change the sql.txt" />
     <MESSAGE value="change the package name" />
-    <option name="LAST_COMMIT_MESSAGE" value="change the package name" />
+    <MESSAGE value="change the view schedule" />
+    <option name="LAST_COMMIT_MESSAGE" value="change the view schedule" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

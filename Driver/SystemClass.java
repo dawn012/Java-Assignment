@@ -20,10 +20,10 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class SystemClass {
-    public SystemClass(){
+    private SystemClass(){
     }
 
-    public void run(Scanner sc) throws Exception {
+    public static void run(Scanner sc) throws Exception {
         int choice = 0;
         boolean error = true, back = false;
 
@@ -405,7 +405,7 @@ public class SystemClass {
         } while (back == false);
     }
 
-    public void manageCinema(Scanner sc) throws Exception {
+    private static void manageCinema(Scanner sc) throws Exception {
         boolean back = false;
 
         do {
@@ -1036,7 +1036,7 @@ public class SystemClass {
         } while (back == false);
     }
 
-    public void manageHall(Scanner sc) throws Exception {
+    private static void manageHall(Scanner sc) throws Exception {
         boolean back = false;
         boolean error = true;
         boolean continues = true;
@@ -1537,7 +1537,7 @@ public class SystemClass {
         } while (back == false);
     }
 
-    public void manageMovie(Scanner sc) throws Exception {
+    private static void manageMovie(Scanner sc) throws Exception {
         boolean back = false;
 
         do {
@@ -2241,7 +2241,7 @@ public class SystemClass {
         } while (back == false);
     }
 
-    public void manageGenre(Scanner sc) throws Exception {
+    private static void manageGenre(Scanner sc) throws Exception {
         boolean back = false;
 
         do {
@@ -2598,49 +2598,71 @@ public class SystemClass {
         } while (back == false);
     }
 
-    public void manageSchedule(Scanner sc) throws Exception {
+    private static void manageSchedule(Scanner sc) throws Exception {
         boolean back = false;
 
         do {
             int choice = displayMenu("Schedule", sc);
             boolean error = true;
+            boolean continues = true;
 
             switch (choice) {
                 case 0:
                     back = true;
                     break;
                 case 1:
-                    // Cinema
-                    int cinemaNo = 0;
-                    error = true;
-                    ArrayList<Cinema> cinemas = new ArrayList<>();
                     do {
-                        try {
-                            System.out.print("\nSelect the cinema you want to view the schedule: ");
-                            cinemas = Cinema.viewCinemaList(1);
-                            System.out.print("\nEnter the cinema no: ");
-                            cinemaNo = sc.nextInt();
-                            sc.nextLine();
+                        // Cinema
+                        int cinemaNo = 0;
+                        error = true;
+                        ArrayList<Cinema> cinemas = new ArrayList<>();
+                        do {
+                            try {
+                                System.out.print("\nSelect the cinema you want to view the schedule (0 - Back): ");
+                                cinemas = Cinema.viewCinemaList(1);
+                                System.out.print("\nEnter the cinema no: ");
+                                cinemaNo = sc.nextInt();
+                                sc.nextLine();
 
-                            if (cinemaNo > 0 && cinemaNo <= cinemas.size() && cinemas.get(cinemaNo - 1).getStatus() == 1) {
-                                error = false;
+                                if (cinemaNo >= 0 && cinemaNo <= cinemas.size()) {
+                                    error = false;
+                                } else {
+                                    System.out.println("Your choice is not among the available options! PLease try again.");
+                                }
+                            } catch (InputMismatchException e) {
+                                System.out.println("Please enter a valid cinema no!");
+                                sc.nextLine();
                             }
-                            else {
-                                System.out.println("Your choice is not among the available options! PLease try again.");
+                        } while (error);
+
+                        if (cinemaNo != 0) {
+                            TimeTable timeTable = TimeTable.acceptViewScheduleListInput(sc, cinemas.get(cinemaNo - 1));
+
+                            ArrayList<TimeTable> schedules = timeTable.viewSchedule();
+
+                            TimeTable.printing(schedules);
+
+                            String continueViewSchedule;
+                            do {
+                                System.out.println("\nDo you want view another schedule? (Y / N)");
+                                System.out.print("Answer: ");
+                                String answer = sc.next();
+                                sc.nextLine();
+
+                                continueViewSchedule = SystemClass.askForContinue(answer);
+                            } while (continueViewSchedule.equals("Invalid"));
+
+                            if (continueViewSchedule.equals("Y")) {
+                                continues = true;
+                            } else {
+                                continues = false;
+                                back = false;
                             }
+                        } else {
+                            continues = false;
+                            back = false;
                         }
-                        catch (InputMismatchException e) {
-                            System.out.println("Please enter a valid cinema no!");
-                            sc.nextLine();
-                        }
-                    } while (error);
-
-                    TimeTable timeTable = TimeTable.acceptViewScheduleListInput(sc, cinemas.get(cinemaNo - 1));
-
-                    ArrayList<TimeTable> schedules = timeTable.viewSchedule();
-
-                    TimeTable.printing(schedules);
-
+                    } while (continues);
                     break;
                 case 2:
                     TimeTable newSchedule = new TimeTable();
@@ -2650,7 +2672,7 @@ public class SystemClass {
                     error = true;
 
                     do {
-                        moviesAfterFiltered = Movie.viewMovieListByFilter(sc);
+                        moviesAfterFiltered = Movie.viewMovieListByFilter(sc);  // return null means user select 0 (back), return empty ArrayList means no movie was found
 
                         if (moviesAfterFiltered != null) {
                             do {
@@ -2671,238 +2693,78 @@ public class SystemClass {
                                     error = true;
                                 }
                             } while (error);
+                        } else {
+                            continues = false;
+                            back = false;
+                            break;
                         }
                     } while (movieID == 0 && moviesAfterFiltered != null);
 
                     if (movieID != 0 && moviesAfterFiltered != null) {
-                        newSchedule.setMovie(moviesAfterFiltered.get(movieID - 1));
-
-                        // Cinema
-                        cinemaNo = 0;
-                        error = true;
-                        cinemas = new ArrayList<>();
-
                         do {
-                            try {
-                                System.out.print("\nSelect the cinema you want to view the schedule: ");
-                                cinemas = Cinema.viewCinemaList(1);
-                                System.out.print("\nEnter the cinema no: ");
-                                cinemaNo = sc.nextInt();
-                                sc.nextLine();
+                            newSchedule.setMovie(moviesAfterFiltered.get(movieID - 1));
 
-                                if (cinemaNo > 0 && cinemaNo <= cinemas.size()) {
-                                    error = false;
-                                } else {
-                                    System.out.println("Your choice is not among the available options! PLease try again.");
-                                }
-                            } catch (InputMismatchException e) {
-                                System.out.println("Please enter a valid cinema no!");
-                                sc.nextLine();
-                            }
-                        } while (error);
-
-                        // Hall
-                        int hallNo = 0;
-                        error = true;
-                        ArrayList<Hall> halls = new ArrayList<>();
-                        do {
-                            try {
-                                System.out.println("\nSelect the hall: ");
-                                halls = cinemas.get(cinemaNo - 1).getHallList(1);
-
-                                for (int i = 0; i < halls.size(); i++) {
-                                    System.out.println((i + 1) + ". " + halls.get(i).getHallName().getName());
-                                }
-
-                                System.out.print("\nEnter the hall no: ");
-                                hallNo = sc.nextInt();
-                                sc.nextLine();
-
-                                if (hallNo > 0 && hallNo <= halls.size()) {
-                                    error = false;
-                                } else {
-                                    System.out.println("Your choice is not among the available options! PLease try again.");
-                                }
-                            } catch (InputMismatchException e) {
-                                System.out.println("Please enter a valid hall no!");
-                                sc.nextLine();
-                            }
-                        } while (error);
-
-                        newSchedule.setHall(halls.get(hallNo - 1));
-
-                        // Show Date
-                        error = true;
-                        String date = null;
-                        DateTime addDate = null;
-                        boolean validDate = false;
-                        do {
-                            System.out.print("\nEnter movie show date (YYYY-MM-DD): ");
-                            date = sc.nextLine();
-
-                            if (date.trim().isEmpty()) {
-                                System.out.println("Please enter the show date.");
-                            } else {
-                                try {
-                                    String[] parts = date.split("-");
-                                    int year = Integer.parseInt(parts[0]);  // Java's built-in method for converting strings to integers (int type)
-                                    int month = Integer.parseInt(parts[1]);
-                                    int day = Integer.parseInt(parts[2]);
-
-                                    // 验证日期是否 valid
-                                    addDate = new DateTime(year, month, day);
-                                    validDate = addDate.isValidDate();
-
-                                    if (validDate == true) {
-                                        String errorMessage = addDate.checkLocalDate();
-
-                                        if (errorMessage == null) {
-                                            newSchedule.setShowDate(addDate);
-
-                                            if (movieID == 1) {  // 1 mean add the schedule for the future movie, thus need to check whether the show date later than the movie release date
-                                                errorMessage = newSchedule.checkShowDate();
-                                                if (errorMessage == null) {
-                                                    error = false;
-                                                }
-                                                else {
-                                                    System.out.println(errorMessage);
-                                                }
-                                            }
-                                        } else {
-                                            System.out.println(errorMessage);
-                                        }
-                                    } else {
-                                        System.out.println("Please enter a valid date!");
-                                        error = true;
-                                    }
-                                } catch (Exception e) {
-                                    System.out.println("The date format entered in wrong!");
-                                }
-                            }
-                        } while (error);
-
-                        LocalTime[] selectedTimeSlots = newSchedule.availableTimeSlots(sc);
-                        newSchedule.setStartTime(selectedTimeSlots[0]);
-                        newSchedule.setEndTime(selectedTimeSlots[1]);
-
-                        // Add schedule
-                        String confirmation;
-                        do {
-                            System.out.println("\nDo you want add the new schedule for this movie? (Y / N)");
-                            System.out.print("Answer: ");
-                            String answer = sc.next();
-                            sc.nextLine();
-
-                            confirmation = SystemClass.askForContinue(answer);
-                        } while (confirmation.equals("Invalid"));
-
-                        if (confirmation.equals("Y")) {
-                            newSchedule.add();
-                            System.out.println("This schedule has been added for the movie.");
-                        }
-                        else {
-                            System.out.println("This schedule will not be added for the movie.");
-                        }
-                    }
-                    back = false;
-                    break;
-                case 3:
-                    // Modify Schedule
-                    error = true;
-                    int scheduleNo = 0;
-
-                    // Cinema
-                    cinemaNo = 0;
-                    error = true;
-                    cinemas = new ArrayList<>();
-
-                    do {
-                        try {
-                            System.out.print("\nSelect the cinema you want to view the schedule: ");
-                            cinemas = Cinema.viewCinemaList(1);
-                            System.out.print("\nEnter the cinema no: ");
-                            cinemaNo = sc.nextInt();
-                            sc.nextLine();
-
-                            if (cinemaNo > 0 && cinemaNo <= cinemas.size() && cinemas.get(cinemaNo - 1).getStatus() == 1) {
-                                error = false;
-                            }
-                            else {
-                                System.out.println("Your choice is not among the available options! PLease try again.");
-                            }
-                        }
-                        catch (InputMismatchException e) {
-                            System.out.println("Please enter a valid cinema no!");
-                            sc.nextLine();
-                        }
-                    } while (error);
-
-                    timeTable = TimeTable.acceptViewScheduleListInput(sc, cinemas.get(cinemaNo - 1));
-
-                    ArrayList<TimeTable> timeTables = timeTable.viewSchedule();
-
-                    do {
-                        try {
-                            System.out.print("\nEnter the schedule no. you want to modify (0 - Back): ");
-                            scheduleNo = sc.nextInt();
-                            sc.nextLine();
-
-                            if (scheduleNo < 0 || scheduleNo > timeTables.size()) {
-                                System.out.println("Your choice is not among the available options! PLease try again.");
-                            }
-                            else {
-                                error = false;
-                            }
-                        } catch (InputMismatchException e) {
-                            System.out.println("Please enter a valid schedule no.");
-                            sc.nextLine();
-                        }
-                    } while (error);
-
-                    TimeTable modifySchedule = new TimeTable(timeTables.get(scheduleNo - 1).getTimetableID(), timeTables.get(scheduleNo - 1).getMovie(), timeTables.get(scheduleNo - 1).getHall(), timeTables.get(scheduleNo - 1).getShowDate(), timeTables.get(scheduleNo - 1).getStartTime());
-
-                    error = true;
-                    int choice2 = 0;
-                    do {
-                        try {
-                            System.out.println("\nSelect the operation:");
-                            System.out.println("1. Modify the movie show time");
-                            System.out.println("2. Modify the movie show date");
-                            System.out.println("3. Modify the movie to be played");
-                            System.out.println("4. Modify the location of the movie to be played");
-                            System.out.print("\nEnter your selection (0 - Back): ");
-                            choice2 = sc.nextInt();
-                            sc.nextLine();
-
-                            if (choice2 < 0 || choice2 > 4) {
-                                System.out.println("Your choice is not among the available options! PLease try again.");
-                            } else {
-                                error = false;
-                            }
-                        } catch (InputMismatchException e) {
-                            System.out.println("Please enter a valid operation no.");
-                            sc.nextLine();
-                        }
-                    } while (error);
-
-                    switch (choice2) {
-                        case 1:
-                            // 时间调整
-                            LocalTime[] selectedTimeSlots = modifySchedule.availableTimeSlots(sc);
-                            modifySchedule.setStartTime(selectedTimeSlots[0]);
-                            modifySchedule.setEndTime(selectedTimeSlots[1]);
-
-                            modifySchedule.modify();
-                            break;
-                        case 2:
-                            // 日期调整
+                            // Cinema
+                            int cinemaNo = 0;
                             error = true;
-                            String date;
-                            DateTime modifyDate = null;  // Store the old show date
-                            boolean validDate;
+                            ArrayList<Cinema> cinemas = new ArrayList<>();
 
                             do {
-                                System.out.print("\nEnter the new movie show date (YYYY-MM-DD): ");
+                                try {
+                                    System.out.print("\nSelect the cinema you want to view the schedule: ");
+                                    cinemas = Cinema.viewCinemaList(1);
+                                    System.out.print("\nEnter the cinema no: ");
+                                    cinemaNo = sc.nextInt();
+                                    sc.nextLine();
+
+                                    if (cinemaNo > 0 && cinemaNo <= cinemas.size()) {
+                                        error = false;
+                                    } else {
+                                        System.out.println("Your choice is not among the available options! PLease try again.");
+                                    }
+                                } catch (InputMismatchException e) {
+                                    System.out.println("Please enter a valid cinema no!");
+                                    sc.nextLine();
+                                }
+                            } while (error);
+
+                            // Hall
+                            int hallNo = 0;
+                            error = true;
+                            ArrayList<Hall> halls = new ArrayList<>();
+                            do {
+                                try {
+                                    System.out.println("\nSelect the hall: ");
+                                    halls = cinemas.get(cinemaNo - 1).getHallList(1);
+
+                                    for (int i = 0; i < halls.size(); i++) {
+                                        System.out.println((i + 1) + ". " + halls.get(i).getHallName().getName());
+                                    }
+
+                                    System.out.print("\nEnter the hall no: ");
+                                    hallNo = sc.nextInt();
+                                    sc.nextLine();
+
+                                    if (hallNo > 0 && hallNo <= halls.size()) {
+                                        error = false;
+                                    } else {
+                                        System.out.println("Your choice is not among the available options! PLease try again.");
+                                    }
+                                } catch (InputMismatchException e) {
+                                    System.out.println("Please enter a valid hall no!");
+                                    sc.nextLine();
+                                }
+                            } while (error);
+
+                            newSchedule.setHall(halls.get(hallNo - 1));
+
+                            // Show Date
+                            error = true;
+                            String date = null;
+                            DateTime addDate = null;
+                            boolean validDate = false;
+                            do {
+                                System.out.print("\nEnter movie show date (YYYY-MM-DD): ");
                                 date = sc.nextLine();
 
                                 if (date.trim().isEmpty()) {
@@ -2915,24 +2777,25 @@ public class SystemClass {
                                         int day = Integer.parseInt(parts[2]);
 
                                         // 验证日期是否 valid
-                                        modifyDate = new DateTime(year, month, day);
-                                        validDate = modifyDate.isValidDate();
+                                        addDate = new DateTime(year, month, day);
+                                        validDate = addDate.isValidDate();
 
                                         if (validDate == true) {
-                                            String errorMessage = modifyDate.checkLocalDate();
+                                            String errorMessage = addDate.checkLocalDate();
 
                                             if (errorMessage == null) {
-                                                modifySchedule.setShowDate(modifyDate);
+                                                newSchedule.setShowDate(addDate);
 
-                                                errorMessage = modifySchedule.checkShowDate();
-                                                if (errorMessage == null) {
-                                                    error = false;
-                                                } else {
-                                                    System.out.println(errorMessage);
+                                                if (movieID == 1) {  // 1 mean add the schedule for the future movie, thus need to check whether the show date later than the movie release date
+                                                    errorMessage = newSchedule.checkShowDate();
+                                                    if (errorMessage == null) {
+                                                        error = false;
+                                                    } else {
+                                                        System.out.println(errorMessage);
+                                                    }
                                                 }
                                             } else {
                                                 System.out.println(errorMessage);
-                                                error = true;
                                             }
                                         } else {
                                             System.out.println("Please enter a valid date!");
@@ -2944,103 +2807,383 @@ public class SystemClass {
                                 }
                             } while (error);
 
-                            // 时间调整
-                            selectedTimeSlots = modifySchedule.availableTimeSlots(sc);
-                            modifySchedule.setStartTime(selectedTimeSlots[0]);
-                            modifySchedule.setEndTime(selectedTimeSlots[1]);
+                            LocalTime[] selectedTimeSlots = newSchedule.availableTimeSlots(sc);
+                            newSchedule.setStartTime(selectedTimeSlots[0]);
+                            newSchedule.setEndTime(selectedTimeSlots[1]);
 
-                            modifySchedule.modify();
-                            break;
-                        case 3:
-                            // Modify the movie to be played
-                            movieID = 1;
+                            // Add schedule
+                            String confirmation;
                             do {
-                                moviesAfterFiltered = Movie.viewMovieListByFilter(sc);
+                                System.out.println("\nDo you want add the new schedule for this movie? (Y / N)");
+                                System.out.print("Answer: ");
+                                String answer = sc.next();
+                                sc.nextLine();
 
-                                if (moviesAfterFiltered != null) {
+                                confirmation = SystemClass.askForContinue(answer);
+                            } while (confirmation.equals("Invalid"));
+
+                            // Confirm that the schedule is successfully added
+                            boolean success;
+                            do {
+                                if (confirmation.equals("Y")) {
+                                    success = newSchedule.add();
+                                } else {
+                                    success = true;
+                                    System.out.println("This schedule will not be added for the movie.");
+                                }
+
+                                if (success == false) {
+                                    do {
+                                        System.out.println("\nDo you want to retry to add the new schedule for this movie? (Y / N)");
+                                        System.out.print("Answer: ");
+                                        String answer = sc.next();
+                                        sc.nextLine();
+
+                                        confirmation = SystemClass.askForContinue(answer);
+
+                                        if (confirmation.equals("Y")) {
+                                            continues = true;
+                                        } else {
+                                            continues = false;
+                                        }
+                                    } while (confirmation.equals("Invalid"));
+                                }
+                                else {
+                                    continues = false;
+                                }
+                            } while (continues);
+
+                            String continueAddSchedule;
+                            do {
+                                System.out.println("\nDo you want add another new schedule for this movie? (Y / N)");
+                                System.out.print("Answer: ");
+                                String answer = sc.next();
+                                sc.nextLine();
+
+                                continueAddSchedule = SystemClass.askForContinue(answer);
+                            } while (continueAddSchedule.equals("Invalid"));
+
+                            if (continueAddSchedule.equals("Y")) {
+                                newSchedule = new TimeTable();
+                                continues = true;
+                            } else {
+                                continues = false;
+                                back = false;
+                            }
+                        } while (continues);
+                    }
+                    break;
+                case 3:
+                    // Modify Schedule
+                    error = true;
+                    int scheduleNo = 0;
+
+                    // Cinema
+                    int cinemaNo = 0;
+                    error = true;
+                    ArrayList<Cinema> cinemas = new ArrayList<>();
+
+                    do {
+                        try {
+                            System.out.print("\nSelect the cinema you want to view the schedule: ");
+                            cinemas = Cinema.viewCinemaList(1);
+                            System.out.print("\nEnter the cinema no (0 - Back): ");
+                            cinemaNo = sc.nextInt();
+                            sc.nextLine();
+
+                            if (cinemaNo >= 0 && cinemaNo <= cinemas.size()) {
+                                error = false;
+                            } else {
+                                System.out.println("Your choice is not among the available options! PLease try again.");
+                            }
+                        } catch (InputMismatchException e) {
+                            System.out.println("Please enter a valid cinema no!");
+                            sc.nextLine();
+                        }
+                    } while (error);
+
+                    error = true;
+                    if (cinemaNo != 0) {
+                        TimeTable timeTable = TimeTable.acceptViewScheduleListInput(sc, cinemas.get(cinemaNo - 1));
+
+                        ArrayList<TimeTable> schedules = timeTable.viewSchedule();
+
+                        TimeTable.printing(schedules);
+
+                        if (!schedules.isEmpty()) {
+                            do {
+                                try {
+                                    System.out.print("\nEnter the schedule no. you want to modify: ");
+                                    scheduleNo = sc.nextInt();
+                                    sc.nextLine();
+
+                                    if (scheduleNo > 0 && scheduleNo <= schedules.size()) {
+                                        error = false;
+                                    } else {
+                                        System.out.println("Your choice is not among the available options! PLease try again.");
+                                    }
+                                } catch (InputMismatchException e) {
+                                    System.out.println("Please enter a valid schedule no.");
+                                    sc.nextLine();
+                                }
+                            } while (error);
+
+                            TimeTable modifySchedule = new TimeTable(schedules.get(scheduleNo - 1).getTimetableID(), schedules.get(scheduleNo - 1).getMovie(), schedules.get(scheduleNo - 1).getHall(), schedules.get(scheduleNo - 1).getShowDate(), schedules.get(scheduleNo - 1).getStartTime());
+
+                            error = true;
+                            int choice2 = 0;
+                            do {
+                                try {
+                                    System.out.println("\nSelect the operation:");
+                                    System.out.println("1. Modify the movie show time");
+                                    System.out.println("2. Modify the movie show date");
+                                    System.out.println("3. Modify the movie to be played");
+                                    System.out.println("4. Modify the location of the movie to be played");
+                                    System.out.print("\nEnter your selection: ");
+                                    choice2 = sc.nextInt();
+                                    sc.nextLine();
+
+                                    if (choice2 <= 0 || choice2 > 4) {
+                                        System.out.println("Your choice is not among the available options! PLease try again.");
+                                    } else {
+                                        error = false;
+                                    }
+                                } catch (InputMismatchException e) {
+                                    System.out.println("Please enter a valid operation no.");
+                                    sc.nextLine();
+                                }
+                            } while (error);
+
+                            switch (choice2) {
+                                case 1:
+                                    // 时间调整
+                                    LocalTime[] selectedTimeSlots = modifySchedule.availableTimeSlots(sc);
+                                    modifySchedule.setStartTime(selectedTimeSlots[0]);
+                                    modifySchedule.setEndTime(selectedTimeSlots[1]);
+
+                                    break;
+                                case 2:
+                                    // 日期调整
+                                    error = true;
+                                    String date;
+                                    DateTime modifyDate = null;  // Store the old show date
+                                    boolean validDate;
+
+                                    do {
+                                        System.out.print("\nEnter the new movie show date (YYYY-MM-DD): ");
+                                        date = sc.nextLine();
+
+                                        if (date.trim().isEmpty()) {
+                                            System.out.println("Please enter the show date.");
+                                        } else {
+                                            try {
+                                                String[] parts = date.split("-");
+                                                int year = Integer.parseInt(parts[0]);  // Java's built-in method for converting strings to integers (int type)
+                                                int month = Integer.parseInt(parts[1]);
+                                                int day = Integer.parseInt(parts[2]);
+
+                                                // 验证日期是否 valid
+                                                modifyDate = new DateTime(year, month, day);
+                                                validDate = modifyDate.isValidDate();
+
+                                                if (validDate == true) {
+                                                    String errorMessage = modifyDate.checkLocalDate();
+
+                                                    if (errorMessage == null) {
+                                                        modifySchedule.setShowDate(modifyDate);
+
+                                                        errorMessage = modifySchedule.checkShowDate();
+                                                        if (errorMessage == null) {
+                                                            error = false;
+                                                        } else {
+                                                            System.out.println(errorMessage);
+                                                        }
+                                                    } else {
+                                                        System.out.println(errorMessage);
+                                                        error = true;
+                                                    }
+                                                } else {
+                                                    System.out.println("Please enter a valid date!");
+                                                    error = true;
+                                                }
+                                            } catch (Exception e) {
+                                                System.out.println("The date format entered in wrong!");
+                                            }
+                                        }
+                                    } while (error);
+
+                                    // 时间调整
+                                    selectedTimeSlots = modifySchedule.availableTimeSlots(sc);
+                                    modifySchedule.setStartTime(selectedTimeSlots[0]);
+                                    modifySchedule.setEndTime(selectedTimeSlots[1]);
+
+                                    break;
+                                case 3:
+                                    // Modify the movie to be played
+                                    movieID = 1;
+
+                                    do {
+                                        moviesAfterFiltered = Movie.viewMovieListByFilter(sc);
+
+                                        if (moviesAfterFiltered != null) {
+                                            do {
+                                                try {
+                                                    System.out.print("\nEnter the movie id: ");
+                                                    movieID = sc.nextInt();
+                                                    sc.nextLine();
+
+                                                    if (movieID > 0 && movieID <= moviesAfterFiltered.size()) {
+                                                        error = false;
+                                                    } else {
+                                                        System.out.println("Your choice is not among the available options! PLease try again.");
+                                                        error = true;
+                                                    }
+                                                } catch (InputMismatchException e) {
+                                                    System.out.println("Please enter a valid movie id!");
+                                                    sc.nextLine();
+                                                    error = true;
+                                                }
+                                            } while (error);
+                                        }
+                                    } while (movieID == 0 && moviesAfterFiltered != null);
+
+                                    if (moviesAfterFiltered != null) {
+                                        modifySchedule.setMovie(moviesAfterFiltered.get(movieID - 1));
+
+                                        // 日期调整
+                                        error = true;
+                                        modifyDate = null;  // Store the old show date
+
+                                        do {
+                                            System.out.print("\nEnter the new movie show date (YYYY-MM-DD): ");
+                                            date = sc.nextLine();
+
+                                            if (date.trim().isEmpty()) {
+                                                System.out.println("Please enter the show date.");
+                                            } else {
+                                                try {
+                                                    String[] parts = date.split("-");
+                                                    int year = Integer.parseInt(parts[0]);  // Java's built-in method for converting strings to integers (int type)
+                                                    int month = Integer.parseInt(parts[1]);
+                                                    int day = Integer.parseInt(parts[2]);
+
+                                                    // 验证日期是否 valid
+                                                    modifyDate = new DateTime(year, month, day);
+                                                    validDate = modifyDate.isValidDate();
+
+                                                    if (validDate == true) {
+                                                        String errorMessage = modifyDate.checkLocalDate();
+
+                                                        if (errorMessage == null) {
+                                                            modifySchedule.setShowDate(modifyDate);
+
+                                                            errorMessage = modifySchedule.checkShowDate();
+                                                            if (errorMessage == null) {
+                                                                error = false;
+                                                            } else {
+                                                                System.out.println(errorMessage);
+                                                            }
+                                                            error = false;
+                                                        } else {
+                                                            System.out.println(errorMessage);
+                                                            error = true;
+                                                        }
+                                                    } else {
+                                                        System.out.println("Please enter a valid date!");
+                                                        error = true;
+                                                    }
+                                                } catch (Exception e) {
+                                                    System.out.println("The date format entered in wrong!");
+                                                }
+                                            }
+                                        } while (error);
+
+                                        // 时间调整
+                                        selectedTimeSlots = modifySchedule.availableTimeSlots(sc);
+                                        modifySchedule.setStartTime(selectedTimeSlots[0]);
+                                        modifySchedule.setEndTime(selectedTimeSlots[1]);
+                                    }
+                                    break;
+                                case 4:
+                                    // Cinema
+                                    cinemaNo = 0;
+                                    error = true;
+                                    cinemas = new ArrayList<>();
+
                                     do {
                                         try {
-                                            System.out.print("\nEnter the movie id (0 - Back): ");
-                                            movieID = sc.nextInt();
+                                            System.out.print("\nSelect the cinema you want to add the schedule: ");
+                                            cinemas = Cinema.viewCinemaList(1);
+                                            System.out.print("\nEnter the cinema no: ");
+                                            cinemaNo = sc.nextInt();
                                             sc.nextLine();
 
-                                            if (movieID >= 0 && movieID <= moviesAfterFiltered.size()) {
+                                            if (cinemaNo > 0 && cinemaNo <= cinemas.size()) {
                                                 error = false;
                                             } else {
                                                 System.out.println("Your choice is not among the available options! PLease try again.");
-                                                error = true;
                                             }
                                         } catch (InputMismatchException e) {
-                                            System.out.println("Please enter a valid movie id!");
+                                            System.out.println("Please enter a valid cinema no!");
                                             sc.nextLine();
-                                            error = true;
                                         }
                                     } while (error);
-                                }
-                            } while (movieID == 0 && moviesAfterFiltered != null);
 
-                            if (movieID != 0 && moviesAfterFiltered != null) {
+                                    // Receive the input of hall and show date
+                                    timeTable = TimeTable.acceptViewScheduleListInput(sc, cinemas.get(cinemaNo - 1));
 
-                                modifySchedule.setMovie(moviesAfterFiltered.get(movieID - 1));
+                                    modifySchedule.setHall(timeTable.getHall());
+                                    modifySchedule.setShowDate(timeTable.getShowDate());
 
-                                // 日期调整
-                                error = true;
-                                modifyDate = null;  // Store the old show date
+                                    selectedTimeSlots = modifySchedule.availableTimeSlots(sc);
+                                    modifySchedule.setStartTime(selectedTimeSlots[0]);
+                                    modifySchedule.setEndTime(selectedTimeSlots[1]);
 
-                                do {
-                                    System.out.print("\nEnter the new movie show date (YYYY-MM-DD): ");
-                                    date = sc.nextLine();
-
-                                    if (date.trim().isEmpty()) {
-                                        System.out.println("Please enter the show date.");
-                                    } else {
-                                        try {
-                                            String[] parts = date.split("-");
-                                            int year = Integer.parseInt(parts[0]);  // Java's built-in method for converting strings to integers (int type)
-                                            int month = Integer.parseInt(parts[1]);
-                                            int day = Integer.parseInt(parts[2]);
-
-                                            // 验证日期是否 valid
-                                            modifyDate = new DateTime(year, month, day);
-                                            validDate = modifyDate.isValidDate();
-
-                                            if (validDate == true) {
-                                                String errorMessage = modifyDate.checkLocalDate();
-
-                                                if (errorMessage == null) {
-                                                    modifySchedule.setShowDate(modifyDate);
-
-                                                    errorMessage = modifySchedule.checkShowDate();
-                                                    if (errorMessage == null) {
-                                                        error = false;
-                                                    } else {
-                                                        System.out.println(errorMessage);
-                                                    }
-                                                    error = false;
-                                                } else {
-                                                    System.out.println(errorMessage);
-                                                    error = true;
-                                                }
-                                            } else {
-                                                System.out.println("Please enter a valid date!");
-                                                error = true;
-                                            }
-                                        } catch (Exception e) {
-                                            System.out.println("The date format entered in wrong!");
-                                        }
-                                    }
-                                } while (error);
-
-                                // 时间调整
-                                selectedTimeSlots = modifySchedule.availableTimeSlots(sc);
-                                modifySchedule.setStartTime(selectedTimeSlots[0]);
-                                modifySchedule.setEndTime(selectedTimeSlots[1]);
-
-                                modifySchedule.modify();
+                                    break;
                             }
-                            break;
-                        case 4:
-                            break;
+
+                            // Modify schedule
+                            String confirmation;
+                            do {
+                                System.out.println("\nDo you want to modify this schedule? (Y / N)");
+                                System.out.print("Answer: ");
+                                String answer = sc.next();
+                                sc.nextLine();
+
+                                confirmation = SystemClass.askForContinue(answer);
+                            } while (confirmation.equals("Invalid"));
+
+                            // Confirm that the schedule is successfully modified
+                            boolean success = false;
+                            do {
+                                if (confirmation.equals("Y")) {
+                                    success = modifySchedule.modify();
+                                } else {
+                                    success = true;
+                                    System.out.println("This schedule will not be modified.");
+                                }
+
+                                if (success == false) {
+                                    do {
+                                        System.out.println("\nDo you want to retry to modify the hall? (Y / N)");
+                                        System.out.print("Answer: ");
+                                        String answer = sc.next();
+                                        sc.nextLine();
+
+                                        confirmation = SystemClass.askForContinue(answer);
+
+                                        if (confirmation.equals("Y")) {
+                                            continues = true;
+                                        } else {
+                                            continues = false;
+                                        }
+                                    } while (confirmation.equals("Invalid"));
+                                }
+                                else {
+                                    continues = false;
+                                }
+                            } while (continues);
+                        }
                     }
                     back = false;
                     break;
@@ -3054,66 +3197,112 @@ public class SystemClass {
                         try {
                             System.out.print("\nSelect the cinema you want to view the schedule: ");
                             cinemas = Cinema.viewCinemaList(1);
-                            System.out.print("\nEnter the cinema no: ");
+                            System.out.print("\nEnter the cinema no (0 - Back): ");
                             cinemaNo = sc.nextInt();
                             sc.nextLine();
 
-                            if (cinemaNo > 0 && cinemaNo <= cinemas.size() && cinemas.get(cinemaNo - 1).getStatus() == 1) {
+                            if (cinemaNo >= 0 && cinemaNo <= cinemas.size()) {
                                 error = false;
-                            }
-                            else {
+                            } else {
                                 System.out.println("Your choice is not among the available options! PLease try again.");
                             }
-                        }
-                        catch (InputMismatchException e) {
+                        } catch (InputMismatchException e) {
                             System.out.println("Please enter a valid cinema no!");
                             sc.nextLine();
                         }
                     } while (error);
 
-                    timeTable = TimeTable.acceptViewScheduleListInput(sc, cinemas.get(cinemaNo - 1));
-
-                    timeTables = timeTable.viewSchedule();
-
-                    error = true;
-                    scheduleNo = 1;
-                    String delete;
-
-                    do {
-                        try {
-                            System.out.print("\nEnter the schedule no. you want to delete (0 - Back): ");
-                            scheduleNo = sc.nextInt();
-                            sc.nextLine();
-
-                            if (scheduleNo >= 0 && scheduleNo <= timeTables.size()) {
-                                error = false;
-                            }
-                            else {
-                                System.out.println("Your choice is not among the available options! PLease try again.");
-                            }
-                        } catch (InputMismatchException e) {
-                            System.out.println("Please enter a valid schedule no.");
-                            sc.nextLine();
-                        }
-                    } while (error);
-
-                    if (scheduleNo != 0) {
-                        TimeTable deleteSchedule = new TimeTable(timeTables.get(scheduleNo - 1).getTimetableID(), timeTables.get(scheduleNo - 1).getMovie(), timeTables.get(scheduleNo - 1).getHall(), timeTables.get(scheduleNo - 1).getShowDate(), timeTables.get(scheduleNo - 1).getStartTime());
+                    if (cinemaNo != 0) {
+                        TimeTable timeTable = TimeTable.acceptViewScheduleListInput(sc, cinemas.get(cinemaNo - 1));
 
                         do {
-                            System.out.println("\nDo you want to delete this schedule? (Y / N)");
-                            System.out.print("Answer: ");
-                            String answer = sc.next();
-                            sc.nextLine();
+                            ArrayList<TimeTable> schedules = timeTable.viewSchedule();
 
-                            delete = SystemClass.askForContinue(answer);
-                        } while (delete.equals("Invalid"));
+                            TimeTable.printing(schedules);
 
-                        if (delete.equals("Y")) {
-                            deleteSchedule.delete();
-                        } else {
-                            System.out.println("\nThe schedule is saved.");
-                        }
+                            if (!schedules.isEmpty()) {
+                                error = true;
+                                scheduleNo = 1;
+                                String confirmation;
+
+                                do {
+                                    try {
+                                        System.out.print("\nEnter the schedule no. you want to delete: ");
+                                        scheduleNo = sc.nextInt();
+                                        sc.nextLine();
+
+                                        if (scheduleNo > 0 && scheduleNo <= schedules.size()) {
+                                            error = false;
+                                        } else {
+                                            System.out.println("Your choice is not among the available options! PLease try again.");
+                                        }
+                                    } catch (InputMismatchException e) {
+                                        System.out.println("Please enter a valid schedule no.");
+                                        sc.nextLine();
+                                    }
+                                } while (error);
+
+                                TimeTable deleteSchedule = new TimeTable(schedules.get(scheduleNo - 1).getTimetableID(), schedules.get(scheduleNo - 1).getMovie(), schedules.get(scheduleNo - 1).getHall(), schedules.get(scheduleNo - 1).getShowDate(), schedules.get(scheduleNo - 1).getStartTime());
+
+                                do {
+                                    System.out.println("\nDo you want to delete this schedule? (Y / N)");
+                                    System.out.print("Answer: ");
+                                    String answer = sc.next();
+                                    sc.nextLine();
+
+                                    confirmation = SystemClass.askForContinue(answer);
+                                } while (confirmation.equals("Invalid"));
+
+                                // Confirm that the schedule is successfully deleted
+                                boolean success;
+                                do {
+                                    if (confirmation.equals("Y")) {
+                                        success = deleteSchedule.delete();
+                                    } else {
+                                        success = true;
+                                        System.out.println("\nThe schedule is saved.");
+                                    }
+
+                                    if (success == false) {
+                                        do {
+                                            System.out.println("\nDo you want to retry to delete this schedule? (Y / N)");
+                                            System.out.print("Answer: ");
+                                            String answer = sc.next();
+                                            sc.nextLine();
+
+                                            confirmation = SystemClass.askForContinue(answer);
+
+                                            if (confirmation.equals("Y")) {
+                                                continues = true;
+                                            } else {
+                                                continues = false;
+                                            }
+                                        } while (confirmation.equals("Invalid"));
+                                    }
+                                    else {
+                                        continues = false;
+                                    }
+                                } while (continues);
+
+                                String continueDeleteSchedule;
+                                do {
+                                    System.out.println("\nDo you want delete another schedule? (Y / N)");
+                                    System.out.print("Answer: ");
+                                    String answer = sc.next();
+                                    sc.nextLine();
+
+                                    continueDeleteSchedule = SystemClass.askForContinue(answer);
+                                } while (continueDeleteSchedule.equals("Invalid"));
+
+                                if (continueDeleteSchedule.equals("Y")) {
+                                    continues = true;
+                                } else {
+                                    continues = false;
+                                }
+                            } else {
+                                continues = false;
+                            }
+                        } while (continues);
                     }
                     back = false;
                     break;
