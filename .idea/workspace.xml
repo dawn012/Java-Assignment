@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="first">
-      <change afterPath="$PROJECT_DIR$/lib/mysql-connector-java-8.0.28.jar" afterDir="false" />
+    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="add the yong package">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hall_management/Hall.java" beforeDir="false" afterPath="$PROJECT_DIR$/hall_management/Hall.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/seat_management/Seat.java" beforeDir="false" afterPath="$PROJECT_DIR$/seat_management/Seat.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -123,7 +124,31 @@
       <option name="project" value="LOCAL" />
       <updated>1694835979146</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="add the package">
+      <option name="closed" value="true" />
+      <created>1694837709370</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1694837709370</updated>
+    </task>
+    <task id="LOCAL-00011" summary="add the sql">
+      <option name="closed" value="true" />
+      <created>1694837926997</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1694837926997</updated>
+    </task>
+    <task id="LOCAL-00012" summary="add the yong package">
+      <option name="closed" value="true" />
+      <created>1694838189034</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1694838189034</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -173,7 +198,10 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="first" />
-    <option name="LAST_COMMIT_MESSAGE" value="first" />
+    <MESSAGE value="add the package" />
+    <MESSAGE value="add the sql" />
+    <MESSAGE value="add the yong package" />
+    <option name="LAST_COMMIT_MESSAGE" value="add the yong package" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

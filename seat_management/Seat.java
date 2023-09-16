@@ -1,10 +1,7 @@
 package seat_management;
 
 import Connect.DatabaseUtils;
-import Driver.Name;
 import hall_management.Hall;
-import movie_management.Movie;
-import movie_management.ShowDate;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
