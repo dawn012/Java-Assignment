@@ -194,11 +194,13 @@ public class Seat {
         System.out.printf("test:OK");
         return 0;
     }
-    public static boolean checkSeatValidation(int row,int col){
-        if(row>=1&&row<=8&&col>=1&&col<=8)
-            return true;
-        else
+    public static boolean checkSeatValidation(char row,int col){
+        if(col<1||col>8)
             return false;
+        else if (row < 'A' || row > 'H')
+            return false;
+        else
+            return true;
     }
 
     public void updateSeatStatus() throws SQLException {

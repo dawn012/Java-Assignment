@@ -1529,8 +1529,9 @@ public class SystemClass {
                                     case 4: //ChinYong Part
 
                                         hallsModified.get(hallModified-1).initSeatList();
-
-                                        int row = 0, col = 0;
+                                        String strRow=" ";
+                                        int col = 0;
+                                        char row =strRow.charAt(0);
                                         Scanner scanner=new Scanner(System.in);
                                         boolean validInput = false;
                                         String strCon="Y";
@@ -1540,7 +1541,8 @@ public class SystemClass {
                                             while (!validInput) {
                                                 try {
                                                     System.out.print("\nSelect Row    : ");
-                                                    row = scanner.nextInt();
+                                                    strRow=scanner.next().toUpperCase();
+                                                    row=strRow.charAt(0);
 
                                                     System.out.print("Select Column : ");
                                                     col = scanner.nextInt();
@@ -1558,8 +1560,8 @@ public class SystemClass {
                                             }
                                             validInput=false;
                                             String letter2 = Integer.toString(hallsModified.get(hallModified - 1).getHallID());
-                                            char letter = (char) ('A' + row - 1);
-                                            String combineSeatId = letter2 + letter + Integer.toString(col);
+                                            //char letter = (char) ('A' + row - 1);
+                                            String combineSeatId = letter2 + row + Integer.toString(col);
 
                                             int seatStatus = 1;
                                             do {

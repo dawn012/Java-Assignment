@@ -231,7 +231,9 @@ public class Booking {
             ArrayList<Ticket> tickets = Ticket.getBookedTicketList(schedule.getTimetableID());
             ArrayList<Ticket> cartTicket = new ArrayList<>();
             System.out.println("Booking ID : " + this.booking_id);
-            int row = 0, col = 0;
+            String strRow=" ";
+            int col = 0;
+            char row =strRow.charAt(0);
 
             String str = " ";
             char ch = str.charAt(0);
@@ -246,7 +248,9 @@ public class Booking {
                 while (!validInput) {
                     try {
                         System.out.print("\nSelect Row    : ");
-                        row = scanner.nextInt();
+                        strRow=scanner.next().toUpperCase();
+                        row=strRow.charAt(0);
+
                         //System.out.println(row);/////////////////////
                         System.out.print("Select Column : ");
                         col = scanner.nextInt();
@@ -285,8 +289,8 @@ public class Booking {
                     }
                 } while (inputType != 1 && inputType != 2);
                 String letter2 = Integer.toString(schedule.getHall().getHallID());
-                char letter = (char) ('A' + row - 1);
-                String combineSeatId = letter2 + letter + Integer.toString(col);
+//                char letter = (char) ('A' + row - 1);
+                String combineSeatId = letter2 + row + Integer.toString(col);
 
                 boolean exist = false;
                 for (Ticket t : tickets) {
