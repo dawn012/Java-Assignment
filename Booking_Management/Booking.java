@@ -13,12 +13,15 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
 
 public class Booking {
+    /////////////////////////////////////////////////////////
+    private int customerId;  //暂时用，暂时代替Customer class///
+    /////////////////////////////////////////////////////////
     private int booking_id;
     private int adultTicket_qty;
     private int childTicket_qty;
@@ -48,7 +51,7 @@ public class Booking {
     public void countBooking_id() {
         this.booking_id=1;
         //this.ticket_id = ticket_id;
-        ArrayList<Booking> bookings=Booking.getBookedBookingList();
+        ArrayList<Booking> bookings=Booking.getBookingList();
         for(Booking b:bookings){
             this.booking_id++;
         }
@@ -380,34 +383,36 @@ public class Booking {
         }
     }
 
-    public static ArrayList<Booking> getBookedBookingList(){
-        boolean error = false;
-        ArrayList<Booking> bookings = new ArrayList<>();
 
-        try {
-            Object[] params = { };
-            ResultSet result = DatabaseUtils.selectQueryById("*", "booking",null,null);
-
-            while (result.next()) {
-                Booking booking =new Booking();
-                booking.setBooking_id(result.getInt("booking_id"));
-                booking.setAdultTicket_qty(result.getInt("adultTicket_qty"));
-                booking.setChildTicket_qty(result.getInt("childTicket_qty"));
-                booking.setBooking_status(result.getInt("booking_status"));
-
-                bookings.add(booking);
-
-            }
-
-            result.close();
-            //resultHall.close();
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return bookings;
-    }
+        //replace by getBookingList();
+//    public static ArrayList<Booking> getBookedBookingList(){
+//        boolean error = false;
+//        ArrayList<Booking> bookings = new ArrayList<>();
+//
+//        try {
+//            Object[] params = { };
+//            ResultSet result = DatabaseUtils.selectQueryById("*", "booking",null,null);
+//
+//            while (result.next()) {
+//                Booking booking =new Booking();
+//                booking.setBooking_id(result.getInt("booking_id"));
+//                booking.setAdultTicket_qty(result.getInt("adultTicket_qty"));
+//                booking.setChildTicket_qty(result.getInt("childTicket_qty"));
+//                booking.setBooking_status(result.getInt("booking_status"));
+//
+//                bookings.add(booking);
+//
+//            }
+//
+//            result.close();
+//            //resultHall.close();
+//        }
+//        catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return bookings;
+//    }
 
     public static ArrayList<Booking> getBookingList(){
         boolean error = false;
@@ -443,6 +448,7 @@ public class Booking {
         return bookingList;
     }
 
+    //For loading all exist booking's tickets
     public void loadingTicketList() throws SQLException {
         ArrayList<Ticket> tickets = new ArrayList<>();
 
@@ -483,6 +489,28 @@ public class Booking {
         this.setTicketList(ticketList);
 
     }
+
+    public boolean deleteBooking() throws SQLException {
+        int rowAffected = 0;
+
+        try {
+            Object[] params = {booking_id};
+            rowAffected = DatabaseUtils.deleteQueryById("booking", "booking_status", "booking_id", params);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if (rowAffected > 0) {
+            System.out.println("\nThe booking has been deleted.");
+            return true;
+        } else {
+            System.out.println("\nSomething went wrong...");
+            return false;
+        }
+    }
+
+
 }
 
 
