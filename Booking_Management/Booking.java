@@ -295,6 +295,12 @@ public class Booking {
                         System.out.println("This seat not available/already be booked...");
                     }
                 }
+                for(Ticket t:cartTicket){
+                    if (t.getSeat().getSeat_id().equals(combineSeatId)) {
+                        exist = true;
+                        System.out.println("This seat not available/already be booked...");
+                    }
+                }
                 schedule.getHall().initSeatList();
 
                 for (Seat seats:schedule.getHall().getSeats()){
