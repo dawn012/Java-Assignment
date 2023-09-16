@@ -1600,6 +1600,7 @@ public class SystemClass {
                                 back = false;
                             }
                         } else {
+                            continues = false;
                             back = false;
                         }
                     } while (continues);
