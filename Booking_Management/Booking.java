@@ -219,6 +219,7 @@ public class Booking {
 
 
         this.countBooking_id();
+        this.setBooking_status(0);
         Scanner scanner = new Scanner(System.in);
         String confirmStr="R";
         char confirmChar=confirmStr.charAt(0);
@@ -500,25 +501,25 @@ public class Booking {
 
     }
 
-    public boolean deleteBooking() throws SQLException {
-        int rowAffected = 0;
-
-        try {
-            Object[] params = {booking_id};
-            rowAffected = DatabaseUtils.deleteQueryById("booking", "booking_status", "booking_id", params);
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        if (rowAffected > 0) {
-            System.out.println("\nThe booking has been deleted.");
-            return true;
-        } else {
-            System.out.println("\nSomething went wrong...");
-            return false;
-        }
-    }
+//    public boolean deleteBooking() throws SQLException {
+//        int rowAffected = 0;
+//
+//        try {
+//            Object[] params = {booking_id};
+//            rowAffected = DatabaseUtils.deleteQueryById("booking", "booking_status", "booking_id", params);
+//        }
+//        catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//
+//        if (rowAffected > 0) {
+//            System.out.println("\nThe booking has been deleted.");
+//            return true;
+//        } else {
+//            System.out.println("\nSomething went wrong...");
+//            return false;
+//        }
+//    }
 
 
 }
