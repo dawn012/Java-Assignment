@@ -97,15 +97,15 @@ public class TimeTable implements DatabaseOperations {
     }
 
     public static void printing(ArrayList<TimeTable> schedules) {
-        System.out.println("\nMovie Schedule List for " + schedules.get(0).showDate.getDate() + " at Hall " + schedules.get(0).hall.getHallID() + ":\n");
         if (!schedules.isEmpty()) {
+            System.out.println("\nMovie Schedule List for " + schedules.get(0).showDate.getDate() + " at Hall " + schedules.get(0).hall.getHallID() + ":\n");
             System.out.printf("%-30s %15s %15s\n", "Movie Name", "Start Time", "End Time");
             for (int i = 0; i < schedules.size(); i++) {
                 System.out.printf((i + 1) + ". %-20s %17s %17s\n", schedules.get(i).movie.getMvName().getName(), schedules.get(i).startTime, schedules.get(i).endTime);
             }
         }
         else {
-            System.out.println("No schedules available for the selected date and hall!");
+            System.out.println("\nNo schedules available for the selected date and hall!");
         }
     }
 

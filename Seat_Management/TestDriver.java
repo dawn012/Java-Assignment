@@ -96,8 +96,8 @@ public class TestDriver {
 //        booking.executeBooking(schedule);
 
         Scanner scanner = new Scanner(System.in);
-        SystemClass systemClass = new SystemClass();
-        systemClass.manageHall(scanner);
+        //SystemClass systemClass = new SystemClass();
+        //systemClass.manageHall(scanner);
 //        Hall hl = new Hall();
 //        hl.setHallID(1);
 //
