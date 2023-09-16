@@ -4,7 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="change the directory to package" />
+    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="change the sql.txt">
+      <change beforePath="$PROJECT_DIR$/Connect/DatabaseUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/Database/DatabaseUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Driver/CrudOperations.java" beforeDir="false" afterPath="$PROJECT_DIR$/Driver/DatabaseOperations.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Driver/Name.java" beforeDir="false" afterPath="$PROJECT_DIR$/Driver/Name.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Driver/SystemClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/Driver/SystemClass.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/booking_management/Booking.java" beforeDir="false" afterPath="$PROJECT_DIR$/booking_management/Booking.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cinema_management/Cinema.java" beforeDir="false" afterPath="$PROJECT_DIR$/cinema_management/Cinema.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/genre_management/Genre.java" beforeDir="false" afterPath="$PROJECT_DIR$/genre_management/Genre.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/genre_management/GenreValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/genre_management/GenreValidator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hall_management/Hall.java" beforeDir="false" afterPath="$PROJECT_DIR$/hall_management/Hall.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/movie_management/DateTime.java" beforeDir="false" afterPath="$PROJECT_DIR$/Driver/DateTime.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/movie_management/Movie.java" beforeDir="false" afterPath="$PROJECT_DIR$/movie_management/Movie.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/movie_management/MovieUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/movie_management/MovieUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/movie_management/MovieValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/movie_management/MovieValidator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/seat_management/Seat.java" beforeDir="false" afterPath="$PROJECT_DIR$/seat_management/Seat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ticket_managemnet/Ticket.java" beforeDir="false" afterPath="$PROJECT_DIR$/ticket_managemnet/Ticket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/timetable_management/TimeTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/timetable_management/TimeTable.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -37,6 +54,9 @@
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\zheng\Downloads\Java Assignment\Cinema Ticketing System\lib" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="Driver" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -168,7 +188,23 @@
       <option name="project" value="LOCAL" />
       <updated>1694839720991</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="change the directory to package">
+      <option name="closed" value="true" />
+      <created>1694840088620</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1694840088620</updated>
+    </task>
+    <task id="LOCAL-00017" summary="change the sql.txt">
+      <option name="closed" value="true" />
+      <created>1694840174911</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1694840174911</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -224,7 +260,8 @@
     <MESSAGE value="change the hall package" />
     <MESSAGE value="change the SystemClass.java" />
     <MESSAGE value="change the directory to package" />
-    <option name="LAST_COMMIT_MESSAGE" value="change the directory to package" />
+    <MESSAGE value="change the sql.txt" />
+    <option name="LAST_COMMIT_MESSAGE" value="change the sql.txt" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

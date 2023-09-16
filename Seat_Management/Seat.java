@@ -1,13 +1,11 @@
-package seat_management;
+package Seat_Management;
 
-import Connect.DatabaseUtils;
-import hall_management.Hall;
+import Database.DatabaseUtils;
+import Hall_Management.Hall;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.Scanner;
 
 public class Seat {
     //Data Field

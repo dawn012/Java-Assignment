@@ -1,7 +1,6 @@
-package seat_management;
+package Seat_Management;
 
 import Driver.SystemClass;
-import hall_management.Hall;
 
 import java.util.Scanner;
 

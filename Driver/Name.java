@@ -1,7 +1,5 @@
 package Driver;
 
-import Connect.DatabaseUtils;
-
 import java.sql.ResultSet;
 
 public class Name {

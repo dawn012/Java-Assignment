@@ -1,10 +1,11 @@
-package movie_management;
+package Movie_Management;
 
-import Connect.DatabaseUtils;
-import Driver.CrudOperations;
+import Database.DatabaseUtils;
+import Driver.DatabaseOperations;
+import Driver.DateTime;
 import Driver.Name;
 import Driver.SystemClass;
-import genre_management.Genre;
+import Genre_Management.Genre;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class Movie implements CrudOperations {
+public class Movie implements DatabaseOperations {
     private int movieID;
     private Genre genre;
     private Name mvName;

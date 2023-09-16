@@ -1,7 +1,4 @@
-package movie_management;
-
-import Connect.DatabaseUtils;
-import java.sql.ResultSet;
+package Movie_Management;
 
 public class MovieValidator {
     private MovieValidator(){

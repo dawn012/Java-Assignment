@@ -1,14 +1,13 @@
-package timetable_management;
+package Schedule_Management;
 
-import Connect.DatabaseUtils;
-import Driver.CrudOperations;
+import Database.DatabaseUtils;
+import Driver.DatabaseOperations;
 import Driver.Name;
-import cinema_management.Cinema;
-import genre_management.Genre;
-import hall_management.Hall;
-import movie_management.DateTime;
-import movie_management.Movie;
-import movie_management.DateTime;
+import Cinema_Management.Cinema;
+import Genre_Management.Genre;
+import Hall_Management.Hall;
+import Driver.DateTime;
+import Movie_Management.Movie;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,7 +18,7 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class TimeTable implements CrudOperations {
+public class TimeTable implements DatabaseOperations {
     private int timetableID;
     private Movie movie;
     private Hall hall;

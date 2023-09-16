@@ -1,6 +1,6 @@
-package genre_management;
+package Genre_Management;
 
-import Connect.DatabaseUtils;
+import Database.DatabaseUtils;
 
 import java.sql.ResultSet;
 

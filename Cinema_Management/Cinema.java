@@ -1,9 +1,9 @@
-package cinema_management;
+package Cinema_Management;
 
-import Connect.DatabaseUtils;
-import Driver.CrudOperations;
+import Database.DatabaseUtils;
+import Driver.DatabaseOperations;
 import Driver.Name;
-import hall_management.Hall;
+import Hall_Management.Hall;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,7 +13,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Cinema implements CrudOperations {
+public class Cinema implements DatabaseOperations {
     private Hall hall;
     private int cinemaID;
     private Name cinemaName;

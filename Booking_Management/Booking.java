@@ -1,12 +1,12 @@
-package booking_management;
+package Booking_Management;
 
-import Connect.DatabaseUtils;
-import DateTime_management.DateTime;
-import hall_management.Hall;
-import seat_management.Seat;
+import Database.DatabaseUtils;
+import DateTime_Management.DateTime;
+import Hall_Management.Hall;
+import Seat_Management.Seat;
 
-import ticket_managemnet.Ticket;
-import timetable_management.TimeTable;
+import Ticket_Managemnet.Ticket;
+import Schedule_Management.TimeTable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

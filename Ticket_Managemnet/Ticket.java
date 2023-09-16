@@ -1,11 +1,9 @@
-package ticket_managemnet;
+package Ticket_Managemnet;
 
-import Connect.DatabaseUtils;
-import booking_management.Booking;
-import hall_management.Hall;
-import movie_management.Movie;
-import seat_management.Seat;
-import timetable_management.TimeTable;
+import Database.DatabaseUtils;
+import Booking_Management.Booking;
+import Seat_Management.Seat;
+import Schedule_Management.TimeTable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

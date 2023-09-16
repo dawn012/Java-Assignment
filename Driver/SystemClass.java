@@ -1,16 +1,15 @@
 package Driver;
 
-import Connect.DatabaseUtils;
-import cinema_management.Address;
-import cinema_management.Cinema;
-import genre_management.Genre;
-import hall_management.Hall;
-import movie_management.Movie;
-import movie_management.MovieUtils;
-import movie_management.MovieValidator;
-import movie_management.DateTime;
-import timetable_management.TimeTable;
-import booking_management.Booking;
+import Database.DatabaseUtils;
+import Cinema_Management.Address;
+import Cinema_Management.Cinema;
+import Genre_Management.Genre;
+import Hall_Management.Hall;
+import Movie_Management.Movie;
+import Movie_Management.MovieUtils;
+import Movie_Management.MovieValidator;
+import Schedule_Management.TimeTable;
+import Booking_Management.Booking;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

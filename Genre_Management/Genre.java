@@ -1,14 +1,14 @@
-package genre_management;
+package Genre_Management;
 
-import Connect.DatabaseUtils;
-import Driver.CrudOperations;
+import Database.DatabaseUtils;
+import Driver.DatabaseOperations;
 import Driver.Name;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class Genre implements CrudOperations {
+public class Genre implements DatabaseOperations {
     private int genreID;
     private Name genreName;
     private int post;

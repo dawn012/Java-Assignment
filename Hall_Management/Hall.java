@@ -1,8 +1,8 @@
-package hall_management;
+package Hall_Management;
 
-import Connect.DatabaseUtils;
+import Database.DatabaseUtils;
 import Driver.Name;
-import seat_management.Seat;
+import Seat_Management.Seat;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

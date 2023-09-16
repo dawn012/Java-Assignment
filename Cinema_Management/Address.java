@@ -1,4 +1,4 @@
-package cinema_management;
+package Cinema_Management;
 
 import java.sql.ResultSet;
 import java.util.*;
