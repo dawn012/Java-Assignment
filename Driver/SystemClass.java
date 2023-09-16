@@ -2610,7 +2610,37 @@ public class SystemClass {
                     back = true;
                     break;
                 case 1:
-                    ArrayList<TimeTable> viewTimeTables = TimeTable.viewSchedule(sc);
+                    // Cinema
+                    int cinemaNo = 0;
+                    error = true;
+                    ArrayList<Cinema> cinemas = new ArrayList<>();
+                    do {
+                        try {
+                            System.out.print("\nSelect the cinema you want to view the schedule: ");
+                            cinemas = Cinema.viewCinemaList(1);
+                            System.out.print("\nEnter the cinema no: ");
+                            cinemaNo = sc.nextInt();
+                            sc.nextLine();
+
+                            if (cinemaNo > 0 && cinemaNo <= cinemas.size() && cinemas.get(cinemaNo - 1).getStatus() == 1) {
+                                error = false;
+                            }
+                            else {
+                                System.out.println("Your choice is not among the available options! PLease try again.");
+                            }
+                        }
+                        catch (InputMismatchException e) {
+                            System.out.println("Please enter a valid cinema no!");
+                            sc.nextLine();
+                        }
+                    } while (error);
+
+                    TimeTable timeTable = TimeTable.acceptViewScheduleListInput(sc, cinemas.get(cinemaNo - 1));
+
+                    ArrayList<TimeTable> schedules = timeTable.viewSchedule();
+
+                    TimeTable.printing(schedules);
+
                     break;
                 case 2:
                     TimeTable newSchedule = new TimeTable();
@@ -2648,9 +2678,10 @@ public class SystemClass {
                         newSchedule.setMovie(moviesAfterFiltered.get(movieID - 1));
 
                         // Cinema
-                        int cinemaNo = 0;
+                        cinemaNo = 0;
                         error = true;
-                        ArrayList<Cinema> cinemas = new ArrayList<>();
+                        cinemas = new ArrayList<>();
+
                         do {
                             try {
                                 System.out.print("\nSelect the cinema you want to view the schedule: ");
@@ -2779,7 +2810,37 @@ public class SystemClass {
                     // Modify Schedule
                     error = true;
                     int scheduleNo = 0;
-                    ArrayList<TimeTable> timeTables = TimeTable.viewSchedule(sc);
+
+                    // Cinema
+                    cinemaNo = 0;
+                    error = true;
+                    cinemas = new ArrayList<>();
+
+                    do {
+                        try {
+                            System.out.print("\nSelect the cinema you want to view the schedule: ");
+                            cinemas = Cinema.viewCinemaList(1);
+                            System.out.print("\nEnter the cinema no: ");
+                            cinemaNo = sc.nextInt();
+                            sc.nextLine();
+
+                            if (cinemaNo > 0 && cinemaNo <= cinemas.size() && cinemas.get(cinemaNo - 1).getStatus() == 1) {
+                                error = false;
+                            }
+                            else {
+                                System.out.println("Your choice is not among the available options! PLease try again.");
+                            }
+                        }
+                        catch (InputMismatchException e) {
+                            System.out.println("Please enter a valid cinema no!");
+                            sc.nextLine();
+                        }
+                    } while (error);
+
+                    timeTable = TimeTable.acceptViewScheduleListInput(sc, cinemas.get(cinemaNo - 1));
+
+                    ArrayList<TimeTable> timeTables = timeTable.viewSchedule();
+
                     do {
                         try {
                             System.out.print("\nEnter the schedule no. you want to modify (0 - Back): ");
@@ -2984,7 +3045,37 @@ public class SystemClass {
                     back = false;
                     break;
                 case 4:
-                    timeTables = TimeTable.viewSchedule(sc);
+                    // Cinema
+                    cinemaNo = 0;
+                    error = true;
+                    cinemas = new ArrayList<>();
+
+                    do {
+                        try {
+                            System.out.print("\nSelect the cinema you want to view the schedule: ");
+                            cinemas = Cinema.viewCinemaList(1);
+                            System.out.print("\nEnter the cinema no: ");
+                            cinemaNo = sc.nextInt();
+                            sc.nextLine();
+
+                            if (cinemaNo > 0 && cinemaNo <= cinemas.size() && cinemas.get(cinemaNo - 1).getStatus() == 1) {
+                                error = false;
+                            }
+                            else {
+                                System.out.println("Your choice is not among the available options! PLease try again.");
+                            }
+                        }
+                        catch (InputMismatchException e) {
+                            System.out.println("Please enter a valid cinema no!");
+                            sc.nextLine();
+                        }
+                    } while (error);
+
+                    timeTable = TimeTable.acceptViewScheduleListInput(sc, cinemas.get(cinemaNo - 1));
+
+                    timeTables = timeTable.viewSchedule();
+
+                    error = true;
                     scheduleNo = 1;
                     String delete;
 
@@ -2994,7 +3085,7 @@ public class SystemClass {
                             scheduleNo = sc.nextInt();
                             sc.nextLine();
 
-                            if (scheduleNo >= 0 || scheduleNo <= timeTables.size()) {
+                            if (scheduleNo >= 0 && scheduleNo <= timeTables.size()) {
                                 error = false;
                             }
                             else {

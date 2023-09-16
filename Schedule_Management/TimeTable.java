@@ -39,47 +39,85 @@ public class TimeTable implements DatabaseOperations {
         calculateEndTime(movie, startTime);
     }
 
-    public TimeTable(Movie movie, Hall hall, DateTime showDate){
-        this.movie = movie;
+    public TimeTable(Hall hall, DateTime showDate){
         this.hall = hall;
         this.showDate= showDate;
     }
 
     // Method
-    public static ArrayList<TimeTable> viewSchedule(Scanner sc) throws Exception {
-        // Cinema
-        int cinemaNo = 0;
-        boolean error = true;
-        ArrayList<Cinema> cinemas = new ArrayList<>();
-        do {
+    public ArrayList<TimeTable> viewSchedule() throws Exception {
+        ResultSet result = null;
+        try {
+            Object[] params = {hall.getHallID(), String.valueOf(showDate.getDate()), 1};
+            result = DatabaseUtils.selectQueryById("*", "timeTable", "hall_id = ? AND movie_showDate = ? AND timeTable_status = ?", params);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<TimeTable> schedules = new ArrayList<>();
+
+        while (result.next()) {
+            int timetableID = result.getInt("schedule_id");
+            int movieID = result.getInt("movie_id");
+            LocalTime startTime = result.getTime("movie_startTime").toLocalTime();
+
+            // Movie
+            ResultSet result2 = null;
+            Movie movie = new Movie();
+
             try {
-                System.out.print("\nSelect the cinema you want to view the schedule: ");
-                cinemas = Cinema.viewCinemaList(1);
-                System.out.print("\nEnter the cinema no: ");
-                cinemaNo = sc.nextInt();
-                sc.nextLine();
-
-                if (cinemaNo > 0 && cinemaNo <= cinemas.size() && cinemas.get(cinemaNo - 1).getStatus() == 1) {
-                    error = false;
-                }
-                else {
-                    System.out.println("Your choice is not among the available options! PLease try again.");
-                }
+                Object[] params = {movieID};
+                result2 = DatabaseUtils.selectQueryById("*", "movie", "movie_id = ? LIMIT 1", params);
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-            catch (InputMismatchException e) {
-                System.out.println("Please enter a valid cinema no!");
-                sc.nextLine();
-            }
-        } while (error);
 
+            while (result2.next()) {
+                movie.setMovieID(result2.getInt("movie_id"));
+                movie.setGenre(new Genre(result2.getInt("genre_id")));
+                movie.setMvName(new Name(result2.getString("mv_name")));
+                movie.setReleaseDate(new DateTime(result2.getDate("release_date").toLocalDate()));
+                movie.setDuration(result2.getInt("duration"));
+                movie.setLang(result2.getString("lang"));
+                movie.setDirector(result2.getString("director"));
+                movie.setWritter(result2.getString("writter"));
+                movie.setStarring(result2.getString("starring"));
+                movie.setMusicProvider(result2.getString("music"));
+                movie.setCountry(result2.getString("country"));
+                movie.setMetaDescription(result2.getString("meta_description"));
+                movie.setBasicTicketPrice(result2.getDouble("basic_TicketPrice"));
+            }
+
+            TimeTable schedule = new TimeTable(timetableID, movie, hall, showDate, startTime);
+            schedules.add(schedule);
+        }
+
+        return schedules;
+    }
+
+    public static void printing(ArrayList<TimeTable> schedules) {
+        System.out.println("\nMovie Schedule List for " + schedules.get(0).showDate.getDate() + " at Hall " + schedules.get(0).hall.getHallID() + ":\n");
+        if (!schedules.isEmpty()) {
+            System.out.printf("%-30s %15s %15s\n", "Movie Name", "Start Time", "End Time");
+            for (int i = 0; i < schedules.size(); i++) {
+                System.out.printf((i + 1) + ". %-20s %17s %17s\n", schedules.get(i).movie.getMvName().getName(), schedules.get(i).startTime, schedules.get(i).endTime);
+            }
+        }
+        else {
+            System.out.println("No schedules available for the selected date and hall!");
+        }
+    }
+
+    public static TimeTable acceptViewScheduleListInput(Scanner sc, Cinema cinemaSelected) {
         // Hall
         int hallNo = 0;
-        error = true;
+        boolean error = true;
         ArrayList<Hall> halls = new ArrayList<>();
         do {
             try {
                 System.out.println("\nSelect the hall: ");
-                halls = cinemas.get(cinemaNo - 1).getHallList(1);
+                halls = cinemaSelected.getHallList(1);
 
                 for (int i = 0; i < halls.size(); i++) {
                     System.out.println((i + 1) + ". " + halls.get(i).getHallName().getName());
@@ -99,6 +137,8 @@ public class TimeTable implements DatabaseOperations {
             catch (InputMismatchException e) {
                 System.out.println("Please enter a valid hall no!");
                 sc.nextLine();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
         } while (error);
 
@@ -136,64 +176,8 @@ public class TimeTable implements DatabaseOperations {
             }
         } while (error);
 
-        ResultSet result = null;
-        try {
-            Object[] params2 = {halls.get(hallNo - 1).getHallID(), date, 1};
-            result = DatabaseUtils.selectQueryById("*", "timeTable", "hall_id = ? AND movie_showDate = ? AND timeTable_status = ?", params2);
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        ArrayList<TimeTable> schedules = new ArrayList<>();
-        while (result.next()) {
-            int timetableID = result.getInt("schedule_id");
-            int movieID = result.getInt("movie_id");
-            LocalTime startTime = result.getTime("movie_startTime").toLocalTime();
-
-            // Movie
-            ResultSet result2 = null;
-            Movie movie = new Movie();
-
-            try {
-                Object[] params = {movieID};
-                result2 = DatabaseUtils.selectQueryById("*", "movie", "movie_id = ? LIMIT 1", params);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-            while (result2.next()) {
-                movie.setMovieID(result2.getInt("movie_id"));
-                movie.setGenre(new Genre(result2.getInt("genre_id")));
-                movie.setMvName(new Name(result2.getString("mv_name")));
-                movie.setReleaseDate(new DateTime(result2.getDate("release_date").toLocalDate()));
-                movie.setDuration(result2.getInt("duration"));
-                movie.setLang(result2.getString("lang"));
-                movie.setDirector(result2.getString("director"));
-                movie.setWritter(result2.getString("writter"));
-                movie.setStarring(result2.getString("starring"));
-                movie.setMusicProvider(result2.getString("music"));
-                movie.setCountry(result2.getString("country"));
-                movie.setMetaDescription(result2.getString("meta_description"));
-                movie.setBasicTicketPrice(result2.getDouble("basic_TicketPrice"));
-            }
-
-            TimeTable schedule = new TimeTable(timetableID, movie, halls.get(hallNo - 1), viewDate, startTime);
-            schedules.add(schedule);
-        }
-
-        System.out.println("\nMovie Schedule List for " + date + " at Hall " + halls.get(hallNo - 1).getHallID() + ":\n");
-        if (!schedules.isEmpty()) {
-            System.out.printf("%-30s %15s %15s\n", "Movie Name", "Start Time", "End Time");
-            for (int i = 0; i < schedules.size(); i++) {
-                System.out.printf((i + 1) + ". %-20s %17s %17s\n", schedules.get(i).movie.getMvName().getName(), schedules.get(i).startTime, schedules.get(i).endTime);
-            }
-        }
-        else {
-            System.out.println("No schedules available for the selected date and hall!");
-        }
-
-        return schedules;
+        TimeTable timeTable = new TimeTable(halls.get(hallNo - 1), viewDate);
+        return timeTable;
     }
 
     public boolean add() throws SQLException {
