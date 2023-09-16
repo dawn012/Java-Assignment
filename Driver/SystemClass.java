@@ -9,6 +9,7 @@ import movie_management.Movie;
 import movie_management.MovieUtils;
 import movie_management.MovieValidator;
 import movie_management.DateTime;
+import seat_management.Seat;
 import timetable_management.TimeTable;
 import booking_management.Booking;
 
@@ -1423,6 +1424,76 @@ public class SystemClass {
                                         break;
                                     case 3:
                                         System.out.println("Hall capacity cannot be modified! Please retry.");
+                                        break;
+                                    case 4: //ChinYong Part
+                                        //System.out.println(hallsModified.get(hallModified-1).getHallID());
+                                        hallsModified.get(hallModified-1).initSeatList();
+
+                                        int row = 0, col = 0;
+                                        Scanner scanner=new Scanner(System.in);
+                                        boolean validInput = false;
+                                        String strCon="Y";
+                                        char chCon = strCon.charAt(0);
+                                        while (chCon=='Y') {
+                                            hallsModified.get(hallModified-1).viewSeat_status();
+                                            while (!validInput) {
+                                                try {
+                                                    System.out.print("\nSelect Row    : ");
+                                                    row = scanner.nextInt();
+
+                                                    System.out.print("Select Column : ");
+                                                    col = scanner.nextInt();
+
+                                                    if (!Seat.checkSeatValidation(row, col)) {
+                                                        System.out.println("Invalid Input");
+                                                        continue;
+                                                    } else {
+                                                        validInput = true;
+                                                    }
+                                                } catch (Exception e) {
+                                                    System.out.println("Something wrong...");
+                                                    scanner.nextLine();
+                                                }
+                                            }
+                                            validInput=false;
+                                            String letter2 = Integer.toString(hallsModified.get(hallModified - 1).getHallID());
+                                            char letter = (char) ('A' + row - 1);
+                                            String combineSeatId = letter2 + letter + Integer.toString(col);
+
+                                            int seatStatus = 1;
+                                            do {
+                                                System.out.print("Enter Status (1=Available 0=Unavailable) : ");
+                                                try {
+                                                    seatStatus = sc.nextInt();
+                                                    if (seatStatus != 1 && seatStatus != 0) {
+                                                        System.out.println("Invalid Input");
+                                                    }
+                                                } catch (Exception e) {
+                                                    System.out.println("Something wrong...");
+                                                    scanner.nextLine();
+                                                }
+                                            } while (seatStatus != 1 && seatStatus != 0);
+                                            String str = " ";
+                                            char ch = str.charAt(0);
+                                            do {
+                                                System.out.print("Confirm ? (Y=Yes N=No) : ");
+                                                str = scanner.next().toUpperCase();
+                                                ch = str.charAt(0);
+                                            } while (ch != 'Y' && ch != 'N');
+                                            if (ch == 'Y') {
+                                                for (Seat seats : hallsModified.get(hallModified - 1).getSeats()) {
+                                                    if (seats.getSeat_id().equals(combineSeatId)) {
+                                                        seats.setSeat_status(seatStatus);
+                                                        seats.updateSeatStatus();
+                                                    }
+                                                }
+                                            }
+                                            do {
+                                                System.out.print("Continue ? (Y=Yes N=No) : ");
+                                                strCon = scanner.next().toUpperCase();
+                                                chCon = str.charAt(0);
+                                            } while (chCon != 'Y' && chCon != 'N');
+                                        }
                                         break;
                                 }
                             } while (stop);
