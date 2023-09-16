@@ -260,6 +260,8 @@ public class SystemClass {
                 case 3:
                     error = true;
                     int searchingMethod = 0;
+                    boolean continues = true;
+
                     do {
                         try {
                             System.out.println("\nSelect the searching method:");
@@ -288,27 +290,76 @@ public class SystemClass {
                             break;
                         case 1:
                             // Search by movie name
-                            error = true;
-                            String searchedMvName;
-
+                            ArrayList<Movie> searchResults = null;
                             do {
-                                System.out.print("\nEnter the movie name you want to search for: ");
-                                searchedMvName = sc.nextLine();
+                                error = true;
+                                String searchedMvName;
+                                String confirmation;
+                                int movieNum = 0;
 
-                                if (searchedMvName.trim().isEmpty()) {
-                                    System.out.println("Please enter the movie name!");
+                                do {
+                                    System.out.print("\nEnter the movie name you want to search for: ");
+                                    searchedMvName = sc.nextLine();
+
+                                    if (searchedMvName.trim().isEmpty()) {
+                                        System.out.println("Please enter the movie name!");
+                                    } else {
+                                        error = false;
+                                    }
+                                } while (error);
+
+                                searchResults = MovieUtils.queryMovieByName(searchedMvName);
+
+                                error = true;
+                                System.out.println("\nSearch Results: ");
+
+                                if (!searchResults.isEmpty()) {
+                                    for (int i = 0; i < searchResults.size(); i++) {
+                                        System.out.println((i + 1) + ". " + searchResults.get(i).getMvName().getName());
+                                    }
+
+                                    do {
+                                        try {
+                                            System.out.print("\nEnter your selection (0 - Back): ");
+                                            movieNum = sc.nextInt();
+                                            sc.nextLine();
+
+                                            if (movieNum >= 0 && movieNum <= searchResults.size()) {
+                                                error = false;
+                                            }
+                                            else {
+                                                System.out.println("Your choice is not among the available options! PLease try again.");
+                                            }
+                                        }
+                                        catch (InputMismatchException e) {
+                                            System.out.println("Please enter a valid choice!");
+                                            sc.nextLine();
+                                        }
+                                    } while (error);
+
+                                    if (movieNum != 0) {
+                                        Movie searchedMovie = searchResults.get(movieNum - 1);
+                                        searchedMovie.viewMovieDetails();
+                                    }
+                                } else {
+                                    System.out.println("Sorry, no movie was found!");
+                                }
+
+                                do {
+                                    System.out.println("\nDo you want to search another movie(s)? (Y / N)");
+                                    System.out.print("Answer: ");
+                                    String answer = sc.nextLine();
+
+                                    confirmation = SystemClass.askForContinue(answer);
+                                } while (confirmation.equals("Invalid"));
+
+                                if (confirmation.equals("Y")) {
+                                    continues = true;
                                 }
                                 else {
-                                    error = false;
+                                    continues = false;
                                 }
-                            } while (error);
-
-                            ArrayList<Movie> searchResults = MovieUtils.queryMovieByName(searchedMvName);
-
-                            System.out.println("\nSearch Results: ");
-                            for (int i = 0; i < searchResults.size(); i++) {
-                                System.out.println((i + 1) + ". " + searchResults.get(i).getMvName().getName());
-                            }
+                            } while (continues);
                             break;
                         case 2:
                             // Search by genre
