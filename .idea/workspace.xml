@@ -4,17 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="change the view schedule">
-      <change afterPath="$PROJECT_DIR$/lib/.idea/libraries/mysql_connector_java_8_0_28.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="change the cinema class">
+      <change afterPath="$PROJECT_DIR$/Cinema_Management/AddressUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Driver/Driver.java" beforeDir="false" afterPath="$PROJECT_DIR$/Driver/Driver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cinema_Management/Address.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cinema_Management/Address.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Driver/SystemClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/Driver/SystemClass.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Schedule_Management/TimeTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/Schedule_Management/TimeTable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Seat_Management/TestDriver.java" beforeDir="false" afterPath="$PROJECT_DIR$/Seat_Management/TestDriver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Genre_Management/Genre.java" beforeDir="false" afterPath="$PROJECT_DIR$/Genre_Management/Genre.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Genre_Management/GenreValidator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hall_Management/Hall.java" beforeDir="false" afterPath="$PROJECT_DIR$/Hall_Management/Hall.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Movie_Management/Movie.java" beforeDir="false" afterPath="$PROJECT_DIR$/Movie_Management/Movie.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Movie_Management/MovieUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/Movie_Management/MovieUtils.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -215,7 +214,31 @@
       <option name="project" value="LOCAL" />
       <updated>1694845299907</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="change the manage schedule method">
+      <option name="closed" value="true" />
+      <created>1694852855929</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1694852855929</updated>
+    </task>
+    <task id="LOCAL-00021" summary="fix the delete hall bug in manage hall method">
+      <option name="closed" value="true" />
+      <created>1694853138500</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1694853138500</updated>
+    </task>
+    <task id="LOCAL-00022" summary="change the cinema class">
+      <option name="closed" value="true" />
+      <created>1694853437806</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1694853437806</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -274,7 +297,10 @@
     <MESSAGE value="change the sql.txt" />
     <MESSAGE value="change the package name" />
     <MESSAGE value="change the view schedule" />
-    <option name="LAST_COMMIT_MESSAGE" value="change the view schedule" />
+    <MESSAGE value="change the manage schedule method" />
+    <MESSAGE value="fix the delete hall bug in manage hall method" />
+    <MESSAGE value="change the cinema class" />
+    <option name="LAST_COMMIT_MESSAGE" value="change the cinema class" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

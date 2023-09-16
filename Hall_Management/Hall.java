@@ -195,7 +195,6 @@ public class Hall {
                 seat.setSeat_status(result.getInt("seat_status"));
 
                 seats.add(seat);
-
             }
 
             result.close();
@@ -204,7 +203,6 @@ public class Hall {
             e.printStackTrace();
         }
         this.setSeats(seats);
-
     }
 
     public void viewSeat_status() {
@@ -218,10 +216,10 @@ public class Hall {
             largestCol=seats.getSeatCol();
         }
 
-
         System.out.println("\t\t\t1\t\t2\t\t3\t\t4\t\t5\t\t6\t\t7\t\t8");
         int j=0;
-        for(int i=1;i<=largestRow;i++) {
+
+        for(int i = 1 ; i <= largestRow ; i++) {
             System.out.printf("\t\t");
             char letter = (char) ('A' + i - 1);
             System.out.print(letter+" ");
@@ -236,20 +234,21 @@ public class Hall {
                 System.out.printf("[%s]:%c ",seats.get(j).getSeat_id(),st);
                 j++;
             } while (seats.get(j).getSeatCol()+1 <= largestCol);
+
             char st;
+
             if(seats.get(j).getSeat_status()==1) {
                 st='O';
             }else{
                 st='X';
             }
+
             System.out.printf("[%s]:%c ",seats.get(j).getSeat_id(),st);
             System.out.printf("\n");
             j += 1;
         }
+
         System.out.printf("\nO = Available/intact and undamaged\tX = Unavailable/damaged");
         //return 0;
     }
-
-
-
 }

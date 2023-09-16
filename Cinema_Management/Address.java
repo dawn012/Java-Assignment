@@ -142,56 +142,6 @@ public class Address {
         return street.toUpperCase() + ", " + postcode + " " + city.toUpperCase() + ", " + state.toUpperCase();
     }
 
-    public static void viewStateList() {
-        int count = 0;
-
-        for (String state : stateToCities.keySet()) {
-            System.out.println((count + 1) + ". " + state);
-            count++;
-        }
-    }
-
-    public static String getStateName(int stateIndex) {
-        List<String> states = new ArrayList<>(stateToCities.keySet());
-
-        return states.get(stateIndex);
-    }
-
-    public static int viewCityList(int stateSelected) {
-        List<String> states = new ArrayList<>(stateToCities.keySet());  // 使 stateToCities 里面的 state 可以被索引
-
-        String selectedState = states.get(stateSelected);
-        int count = 0;
-
-        for (String city : stateToCities.get(selectedState)) {
-            System.out.println((count + 1) + ". " + city);
-            count++;
-        }
-        return count;
-    }
-
-    public static String getCityName(String stateName, int cityIndex) {
-        List<String> cities = stateToCities.get(stateName);  // 根据州名来获取 city 列表
-
-        return cities.get(cityIndex);  // 返回所选的 city 名字
-    }
-
-    public static int viewPostcodeList(String citySelected) {
-        int count = 0;
-
-        for (String postcode : cityToPostcode.get(citySelected)) {
-            System.out.println((count + 1) + ". " + postcode);
-            count++;
-        }
-        return count;
-    }
-
-    public static String getPostcodeSelected(String cityName, int postcodeIndex) {
-        List<String> postcodes = cityToPostcode.get(cityName);  // 根据 city 名来获取 postcode 列表
-
-        return postcodes.get(postcodeIndex);  // 返回所选的 postcode
-    }
-
     public boolean checkAddressDuplicate(ResultSet result, String searchThing) {
         try {
             while (result.next()) {

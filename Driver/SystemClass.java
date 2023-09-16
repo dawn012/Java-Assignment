@@ -1,5 +1,6 @@
 package Driver;
 
+import Cinema_Management.AddressUtils;
 import Database.DatabaseUtils;
 import Cinema_Management.Address;
 import Cinema_Management.Cinema;
@@ -94,25 +95,25 @@ public class SystemClass {
                                 LocalDate oneWeekAgo = currentDate.minusWeeks(1);
 
                                 System.out.println("\nOpening This Week");
-                                moviesAfterFiltered = Movie.showMovieListAfterFiltered(oneWeekAgo, currentDate, 1);
+                                moviesAfterFiltered = MovieUtils.showMovieListAfterFiltered(oneWeekAgo, currentDate, 1);
                                 break;
                             case 2:
                                 LocalDate oneMonthAgo = currentDate.minusMonths(1);
 
                                 System.out.println("\nOpening This Month");
-                                moviesAfterFiltered = Movie.showMovieListAfterFiltered(oneMonthAgo, currentDate, 1);
+                                moviesAfterFiltered = MovieUtils.showMovieListAfterFiltered(oneMonthAgo, currentDate, 1);
                                 break;
                             case 3:
                                 LocalDate threeMonthAgo = currentDate.minusMonths(3);
 
                                 System.out.println("\nRelease within 3 months");
-                                moviesAfterFiltered = Movie.showMovieListAfterFiltered(threeMonthAgo, currentDate, 1);
+                                moviesAfterFiltered = MovieUtils.showMovieListAfterFiltered(threeMonthAgo, currentDate, 1);
                                 break;
                             case 4:
                                 LocalDate comingSoon = currentDate.plusDays(1);
 
                                 System.out.println("\nComing Soon");
-                                moviesAfterFiltered = Movie.showMovieListAfterFiltered(comingSoon, null, 1);
+                                moviesAfterFiltered = MovieUtils.showMovieListAfterFiltered(comingSoon, null, 1);
                                 break;
                         }
 
@@ -506,7 +507,7 @@ public class SystemClass {
                             do {
                                 try {
                                     System.out.println("\nSelect the state: ");
-                                    Address.viewStateList();
+                                    AddressUtils.viewStateList();
                                     System.out.print("\nEnter your selection: ");
                                     stateSelected = sc.nextInt();
                                     sc.nextLine();
@@ -523,13 +524,13 @@ public class SystemClass {
                                 }
                             } while (error);
 
-                            String stateName = Address.getStateName(stateSelected - 1);
+                            String stateName = AddressUtils.getStateName(stateSelected - 1);
 
                             int citySelected = 0;
                             do {
                                 try {
                                     System.out.println("\nSelect the city: ");
-                                    int count = Address.viewCityList(stateSelected - 1);
+                                    int count = AddressUtils.viewCityList(stateSelected - 1);
                                     System.out.print("\nEnter your selection: ");
                                     citySelected = sc.nextInt();
                                     sc.nextLine();
@@ -546,13 +547,13 @@ public class SystemClass {
                                 }
                             } while (error);
 
-                            String cityName = Address.getCityName(stateName, citySelected - 1);
+                            String cityName = AddressUtils.getCityName(stateName, citySelected - 1);
 
                             int postcodeSelected = 0;
                             do {
                                 try {
                                     System.out.println("\nSelect the city: ");
-                                    int count = Address.viewPostcodeList(cityName);
+                                    int count = AddressUtils.viewPostcodeList(cityName);
                                     System.out.print("\nEnter your selection: ");
                                     postcodeSelected = sc.nextInt();
                                     sc.nextLine();
@@ -569,7 +570,7 @@ public class SystemClass {
                                 }
                             } while (error);
 
-                            String postcode = Address.getPostcodeSelected(cityName, postcodeSelected - 1);
+                            String postcode = AddressUtils.getPostcodeSelected(cityName, postcodeSelected - 1);
 
                             String streetName;
                             do {
@@ -815,7 +816,7 @@ public class SystemClass {
                                             do {
                                                 try {
                                                     System.out.println("\nSelect the state: ");
-                                                    Address.viewStateList();
+                                                    AddressUtils.viewStateList();
                                                     System.out.print("\nEnter your selection: ");
                                                     stateSelected = sc.nextInt();
                                                     sc.nextLine();
@@ -832,13 +833,13 @@ public class SystemClass {
                                                 }
                                             } while (error);
 
-                                            String stateName = Address.getStateName(stateSelected - 1);
+                                            String stateName = AddressUtils.getStateName(stateSelected - 1);
 
                                             int citySelected = 0;
                                             do {
                                                 try {
                                                     System.out.println("\nSelect the city: ");
-                                                    int count = Address.viewCityList(stateSelected - 1);
+                                                    int count = AddressUtils.viewCityList(stateSelected - 1);
                                                     System.out.print("\nEnter your selection: ");
                                                     citySelected = sc.nextInt();
                                                     sc.nextLine();
@@ -855,13 +856,13 @@ public class SystemClass {
                                                 }
                                             } while (error);
 
-                                            String cityName = Address.getCityName(stateName, citySelected - 1);
+                                            String cityName = AddressUtils.getCityName(stateName, citySelected - 1);
 
                                             int postcodeSelected = 0;
                                             do {
                                                 try {
                                                     System.out.println("\nSelect the city: ");
-                                                    int count = Address.viewPostcodeList(cityName);
+                                                    int count = AddressUtils.viewPostcodeList(cityName);
                                                     System.out.print("\nEnter your selection: ");
                                                     postcodeSelected = sc.nextInt();
                                                     sc.nextLine();
@@ -878,7 +879,7 @@ public class SystemClass {
                                                 }
                                             } while (error);
 
-                                            String postcode = Address.getPostcodeSelected(cityName, postcodeSelected - 1);
+                                            String postcode = AddressUtils.getPostcodeSelected(cityName, postcodeSelected - 1);
 
                                             String streetName;
                                             do {
@@ -1625,7 +1626,7 @@ public class SystemClass {
                     // View Movie
                     do {
                         int choice1 = 0;
-                        ArrayList<Movie> moviesAfterFiltered = Movie.showMovieListAfterFiltered(null, null, 1);
+                        ArrayList<Movie> moviesAfterFiltered = MovieUtils.showMovieListAfterFiltered(null, null, 1);
 
                         do {
                             try {
@@ -1814,33 +1815,33 @@ public class SystemClass {
                         // Movie Language
                         String[] languages = {"English", "Chinese", "Japanese", "Korean", "German", "Italian", "Spanish", "Cantonese", "French", "Russian", "Arabic", "Hindi", "Tamil"};
 
-                        String mvLanguage = Movie.getMultipleChosens(sc, languages, "languages");
+                        String mvLanguage = MovieUtils.getMultipleChosens(sc, languages, "languages");
                         newMovie.setLang(mvLanguage);
 
                         // Movie Director
-                        String mvDirector = Movie.getMultipleValues(sc, "director", "directors");
+                        String mvDirector = MovieUtils.getMultipleValues(sc, "director", "directors");
                         newMovie.setDirector(mvDirector);
 
                         // Movie Writter
-                        String mvWritter = Movie.getMultipleValues(sc, "writter", "writters");
+                        String mvWritter = MovieUtils.getMultipleValues(sc, "writter", "writters");
                         newMovie.setWritter(mvWritter);
 
                         // Movie Starring
-                        String mvStarring = Movie.getMultipleValues(sc, "starring", "starrings");
+                        String mvStarring = MovieUtils.getMultipleValues(sc, "starring", "starrings");
                         newMovie.setStarring(mvStarring);
 
                         // Movie Music Provider
-                        String mvMusicProvider = Movie.getMultipleValues(sc, "music provider", "music prodivers");
+                        String mvMusicProvider = MovieUtils.getMultipleValues(sc, "music provider", "music prodivers");
                         newMovie.setMusicProvider(mvMusicProvider);
 
                         // Movie Country
                         String[] countries = {"United States", "United Kingdom", "Canada", "China", "Taiwan", "Malaysia", "Singapore", "Japan", "North Korea", "Italy", "Hong Kong", "France", "Russia", "India"};
 
-                        String mvCountry = Movie.getMultipleChosens(sc, countries, "countries");
+                        String mvCountry = MovieUtils.getMultipleChosens(sc, countries, "countries");
                         newMovie.setCountry(mvCountry);
 
                         // Movie Basic Ticket Price
-                        double mvBasicTicketPrice = Movie.getTicketPrice(sc, "basic");
+                        double mvBasicTicketPrice = MovieUtils.getTicketPrice(sc, "basic");
                         newMovie.setBasicTicketPrice(mvBasicTicketPrice);
 
                         // Movie Meta Description
@@ -1925,7 +1926,7 @@ public class SystemClass {
 
                     do {
                         System.out.println("\nSelect the movie you want to modify: ");
-                        moviesAfterFiltered = Movie.showMovieListAfterFiltered(null, null, 1);
+                        moviesAfterFiltered = MovieUtils.showMovieListAfterFiltered(null, null, 1);
 
                         do {
                             try {
@@ -2156,39 +2157,39 @@ public class SystemClass {
                                         // Movie Language
                                         String[] languages = {"English", "Chinese", "Japanese", "Korean", "German", "Italian", "Spanish", "Cantonese", "French", "Russian", "Arabic", "Hindi", "Tamil"};
 
-                                        String editMvLanguage = movie.getMultipleChosens(sc, languages, "languages");
+                                        String editMvLanguage = MovieUtils.getMultipleChosens(sc, languages, "languages");
                                         movie.setLang(editMvLanguage);
                                         break;
                                     case 6:
                                         // Movie Director
-                                        String editMvDirector = movie.getMultipleValues(sc, "director", "directors");
+                                        String editMvDirector = MovieUtils.getMultipleValues(sc, "director", "directors");
                                         movie.setDirector(editMvDirector);
                                         break;
                                     case 7:
                                         // Movie Writter
-                                        String editMvWritter = movie.getMultipleValues(sc, "writter", "writters");
+                                        String editMvWritter = MovieUtils.getMultipleValues(sc, "writter", "writters");
                                         movie.setWritter(editMvWritter);
                                         break;
                                     case 8:
                                         // Movie Starring
-                                        String editMvStarring = movie.getMultipleValues(sc, "starring", "starrings");
+                                        String editMvStarring = MovieUtils.getMultipleValues(sc, "starring", "starrings");
                                         movie.setStarring(editMvStarring);
                                         break;
                                     case 9:
                                         // Movie Music Provider
-                                        String editMvMusicProvider = movie.getMultipleValues(sc, "music provider", "music prodivers");
+                                        String editMvMusicProvider = MovieUtils.getMultipleValues(sc, "music provider", "music prodivers");
                                         movie.setMusicProvider(editMvMusicProvider);
                                         break;
                                     case 10:
                                         // Movie Country
                                         String[] countries = {"United States", "United Kingdom", "Canada", "China", "Taiwan", "Malaysia", "Singapore", "Japan", "North Korea", "Italy", "Hong Kong", "France", "Russia", "India"};
 
-                                        String editMvCountry = movie.getMultipleChosens(sc, countries, "countries");
+                                        String editMvCountry = MovieUtils.getMultipleChosens(sc, countries, "countries");
                                         movie.setCountry(editMvCountry);
                                         break;
                                     case 11:
                                         // Movie Basic Ticket Price
-                                        double editMvBasicTicketPrice = Movie.getTicketPrice(sc, "basic");
+                                        double editMvBasicTicketPrice = MovieUtils.getTicketPrice(sc, "basic");
                                         movie.setBasicTicketPrice(editMvBasicTicketPrice);
                                         System.out.println(movie.getBasicTicketPrice());
                                         break;
@@ -2222,7 +2223,7 @@ public class SystemClass {
                     movieID = 0;
                     do {
                         System.out.println("\nSelect the movie you want to delete: ");
-                        moviesAfterFiltered = Movie.showMovieListAfterFiltered(null, null, 1);
+                        moviesAfterFiltered = MovieUtils.showMovieListAfterFiltered(null, null, 1);
 
                         do {
                             try {
@@ -2353,7 +2354,7 @@ public class SystemClass {
 
                     if (genreSelected != 0) {
                         Genre viewGenre = genres.get(genreSelected - 1);
-                        viewGenre.view();
+                        viewGenre.viewGenreDetails();
                     }
                     back = false;
                     break;
@@ -2744,7 +2745,7 @@ public class SystemClass {
                     error = true;
 
                     do {
-                        moviesAfterFiltered = Movie.viewMovieListByFilter(sc);  // return null means user select 0 (back), return empty ArrayList means no movie was found
+                        moviesAfterFiltered = MovieUtils.viewMovieListByFilter(sc);  // return null means user select 0 (back), return empty ArrayList means no movie was found
 
                         if (moviesAfterFiltered != null) {
                             do {
@@ -3095,7 +3096,7 @@ public class SystemClass {
                                     movieID = 1;
 
                                     do {
-                                        moviesAfterFiltered = Movie.viewMovieListByFilter(sc);
+                                        moviesAfterFiltered = MovieUtils.viewMovieListByFilter(sc);
 
                                         if (moviesAfterFiltered != null) {
                                             do {
