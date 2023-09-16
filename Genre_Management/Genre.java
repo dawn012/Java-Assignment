@@ -58,7 +58,7 @@ public class Genre implements DatabaseOperations {
         return genres;
     }
 
-    public void view() throws SQLException {
+    public void viewGenreDetails() throws SQLException {
         System.out.printf("\nGenre Detail:\n");
         System.out.println("Genre Name: " + genreName.getName());
         System.out.println("Number of post: " + getPost());
