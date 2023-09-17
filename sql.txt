@@ -10,6 +10,7 @@ CREATE TABLE User (
     accStatus VARCHAR(255)
 );
 
+
 CREATE TABLE `cinema` (
   `cinema_id` int(11) AUTO_INCREMENT NOT NULL,
   `cinema_name` varchar(30) NOT NULL,
