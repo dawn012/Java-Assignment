@@ -14,6 +14,7 @@ import Promotion_Management.*;
 import Schedule_Management.Schedule;
 import Booking_Management.Booking;
 import Seat_Management.Seat;
+import Ticket_Managemnet.Ticket;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -258,8 +259,29 @@ public class SystemClass {
 
                                         // 4. Select the seat chin yong part
                                         Booking booking = new Booking();
-
-                                        if (booking.executeBooking(schedule)) {
+                                        String confirmStr="R";
+                                        while (confirmStr.equals("R")) {
+                                            if(booking.executeBooking(schedule)){
+                                                booking.printBookingDetail();
+                                                do {
+                                                    try {
+                                                        System.out.println("Confirm This Booking ? (Y=Yes R=No, Select Again N=No Confirm, Exit) : ");
+                                                        confirmStr = sc.next().toUpperCase();
+                                                        if (confirmStr.equals("Y")) {
+                                                            Booking.insertBooking(booking);
+                                                            for (Ticket t : booking.getTicketList()) {
+                                                                Ticket.insertTicket(t);
+                                                            }
+                                                        }
+                                                    } catch (Exception e){
+                                                        System.out.println("Something wrong...");
+                                                        sc.nextLine();
+                                                    }
+                                                }while(!confirmStr.equals("Y") && !confirmStr.equals("N") && !confirmStr.equals("R"));
+                                            }
+                                        }
+                                        if (confirmStr.equals("Y")) {
+                                            //booking.printBookingDetail();
                                             // Apply promotion
                                             Promotion promotion = applyPromotion(sc, 1, booking);
 
