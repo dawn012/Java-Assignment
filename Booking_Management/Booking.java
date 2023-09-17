@@ -620,9 +620,10 @@ public class Booking {
             System.out.print("Enter No. Booking to Show Detail : ");
             no = scanner.nextInt();
         }while(no>bookingList.size());
-
-        System.out.println("Booking ID : ");
+        bookingList.get(no+1).printBookingDetail();
     }
+
+
     public void printBookingDetail(){
         //System.out.println("\t\t-------------------------\n");
         System.out.println("Booking Details : ");
@@ -644,6 +645,27 @@ public class Booking {
         System.out.println("\t\t-------------------------------------------");
     }
 
+    public boolean updateStatus() throws SQLException {
+        int rowAffected = 0;
+
+        try {
+            String updateSql = "UPDATE `booking` SET `booking_status`= ? WHERE `booking_id` = ?";
+            Object[] params = {getBooking_status(),getBooking_id()};
+            rowAffected = DatabaseUtils.updateQuery(updateSql, params);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if (rowAffected > 0) {
+            System.out.println("\nThe changes have been saved.");
+            return true;
+        }
+        else {
+            System.out.println("\nSomething went wrong...");
+            return false;
+        }
+    }
 }
 
 
