@@ -382,7 +382,7 @@ public class MovieUtils {
                 movie.setMvName(new Name(result.getString("mv_name")));
                 movie.setReleaseDate(new DateTime(result.getDate("release_date").toLocalDate()));
                 movie.setDuration(result.getInt("duration"));
-                movie.setLang(result.getString("lang"));
+                movie.setLanguage(result.getString("lang"));
                 movie.setDirector(result.getString("director"));
                 movie.setWritter(result.getString("writter"));
                 movie.setStarring(result.getString("starring"));
