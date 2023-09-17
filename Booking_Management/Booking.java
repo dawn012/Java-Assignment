@@ -243,7 +243,7 @@ public class Booking {
         return 0;
     }
 
-    public void executeBooking(Schedule schedule) throws Exception {
+    public boolean executeBooking(Schedule schedule) throws Exception {
 
 
         this.countBooking_id();
@@ -412,7 +412,7 @@ public class Booking {
                             for (Ticket t : cartTicket) {
                                 Ticket.insertTicket(t);
                             }
-
+                            return true;
                         }
                     }catch (Exception e){
                         System.out.println("Something wrong...");
@@ -425,6 +425,7 @@ public class Booking {
                 confirmChar='N';
             }
         }
+        return false;
     }
 
 
