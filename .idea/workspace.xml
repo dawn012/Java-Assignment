@@ -33,6 +33,13 @@
       </UrlAndAccount>
     </option>
   </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
   <component name="ProjectId" id="2VScJffwsxrMXTAnbRaLkJefcbV" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -289,7 +296,14 @@
       <option name="project" value="LOCAL" />
       <updated>1694946347805</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="Add Promotion">
+      <created>1694954172519</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1694954172519</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -355,9 +369,9 @@
     <MESSAGE value="update the search movie by name" />
     <MESSAGE value="update the search movie by genre" />
     <MESSAGE value="update something" />
-    <MESSAGE value="Add Promotion" />
     <MESSAGE value="Add Payment" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add Payment" />
+    <MESSAGE value="Add Promotion" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add Promotion" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
