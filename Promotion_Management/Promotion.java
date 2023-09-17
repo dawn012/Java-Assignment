@@ -1,6 +1,7 @@
 package Promotion_Management;
 
 import Database.DatabaseUtils;
+import Driver.DatabaseOperations;
 import Driver.DateTime;
 
 import java.sql.ResultSet;
@@ -8,7 +9,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 
-public class Promotion {
+public class Promotion implements DatabaseOperations {
     private int promotionId;
     private String description;
     private double discountValue;
@@ -116,7 +117,6 @@ public class Promotion {
         this.promotionStatus = promotionStatus;
     }
 
-
     static {
         String sql = "UPDATE PROMOTION_HISTORY SET PROMOTION_STATUS = ? " +
                 "WHERE PROMOTION_ID IN ( " +
@@ -133,83 +133,44 @@ public class Promotion {
         }
     }
 
-    public static ArrayList<Promotion> showFilteredPromotionList(LocalDate startDate, LocalDate endDate, int status) {
-        ArrayList<Promotion> promotions = new ArrayList<>(); // 创建一个列表来存储 Promotion 对象
-
-        ResultSet rs;
-        Object[] params = {status};
-
-        try {
-            rs = DatabaseUtils.selectQueryById("*", "PROMOTION", "PROMOTION_STATUS = ?", params);
-
-            while (rs.next()) {
-                Promotion promotion = new Promotion();
-
-                promotion.setPromotionId(rs.getInt("PROMOTION_ID"));
-                promotion.setDescription(rs.getString("DESCRIPTION"));
-                promotion.setDiscountValue(rs.getDouble("DISCOUNT_VALUE"));
-                promotion.setMinSpend(rs.getDouble("MIN_SPEND"));
-                promotion.setPerLimit(rs.getInt("PER_LIMIT"));
-                promotion.setStartDate(new DateTime(rs.getDate("START_DATE").toLocalDate()));
-                promotion.setEndDate(new DateTime(rs.getDate("START_DATE").toLocalDate()));
-                promotion.setPublishCount(rs.getInt("PUBLISH_COUNT"));
-                promotion.setReceiveCount(rs.getInt("RECEIVE_COUNT"));
-                promotion.setPromotionStatus(rs.getInt("PROMOTION_STATUS"));
-
-                promotions.add(promotion);
-            }
-
-            rs.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-        ArrayList<Promotion> filteredPromotions = new ArrayList<>();
-        int count = 0;
-
-        for (Promotion eachPromotion : promotions) {
-            // All promotions
-            if (startDate == null && endDate == null) {
-                filteredPromotions.add(eachPromotion);
-                count++;
-                System.out.printf("%d.     %s\n", count, eachPromotion.description);
-            }
-
-            else {
-                if (eachPromotion.startDate.getDate().isAfter(startDate) && eachPromotion.endDate.getDate().isBefore(endDate)) {
-                    filteredPromotions.add(eachPromotion);
-                    count++;
-                    System.out.printf("%d.     %s\n", count, eachPromotion.description);
-                }
-            }
-        }
-
-        return filteredPromotions;
-    }
-
-    public int add() {
+    @Override
+    public boolean add() {
         String sql = "INSERT INTO PROMOTION (DESCRIPTION, DISCOUNT_VALUE, MIN_SPEND, PER_LIMIT, START_DATE, END_DATE, PUBLISH_COUNT, RECEIVE_COUNT) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         Object[] params = {description, discountValue, minSpend, perLimit, String.valueOf(startDate.getDate()), String.valueOf(endDate.getDate()), publishCount, receiveCount};
 
         try {
-            return DatabaseUtils.insertQuery(sql, params);
+            int insert = DatabaseUtils.insertQuery(sql, params);
+
+            if (insert == 1) {
+                return true;
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
+        return false;
     }
 
-    public int modify() {
+    @Override
+    public boolean modify() {
         String sql = "UPDATE PROMOTION SET DESCRIPTION = ?, DISCOUNT_VALUE = ?, MIN_SPEND = ?, PER_LIMIT = ?, START_DATE = ?, END_DATE = ?, PUBLISH_COUNT = ?, RECEIVE_COUNT = ? WHERE PROMOTION_ID = ?";
         Object[] params = {description, discountValue, minSpend, perLimit, String.valueOf(startDate.getDate()), String.valueOf(endDate.getDate()), publishCount, receiveCount, promotionId};
 
         try {
-            return DatabaseUtils.updateQuery(sql, params);
+            int update = DatabaseUtils.updateQuery(sql, params);
+
+            if (update == 1) {
+                return true;
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
+        return false;
     }
 
-    public void delete() {
+    @Override
+    public boolean delete() {
         Object[] params = {promotionId};
 
         int delete;
@@ -220,59 +181,15 @@ public class Promotion {
             throw new RuntimeException(e);
         }
 
-        if (delete > 0) {
+        if (delete == 1) {
             System.out.println("\nThe promotion has been deleted.");
+
+            return true;
         } else {
             System.out.println("\nSomething went wrong...");
         }
-    }
 
-    public static ArrayList<Promotion> showValidPromotionList(int custId, Scanner input) {
-        ArrayList<Promotion> promotions = new ArrayList<>();
-
-        DateTime currentDate = new DateTime();
-        ResultSet rs;
-
-        Object[] params = {currentDate.getCurrentDate(), custId};
-
-        try {
-            rs = DatabaseUtils.selectQueryById("*", "PROMOTION", "? BETWEEN START_DATE AND END_DATE AND RECEIVE_COUNT < PUBLISH_COUNT AND PROMOTION_ID NOT IN (SELECT PROMOTION_ID FROM PROMOTION_HISTORY WHERE USER_ID = ?);", params);
-
-            while(rs.next()) {
-                Promotion promotion = new Promotion();
-
-                promotion.setPromotionId(rs.getInt("PROMOTION_ID"));
-                promotion.setDescription(rs.getString("DESCRIPTION"));
-                promotion.setDiscountValue(rs.getDouble("DISCOUNT_VALUE"));
-                promotion.setMinSpend(rs.getDouble("MIN_SPEND"));
-                promotion.setPerLimit(rs.getInt("PER_LIMIT"));
-                promotion.setStartDate(new DateTime(rs.getDate("START_DATE").toLocalDate()));
-                promotion.setEndDate(new DateTime(rs.getDate("END_DATE").toLocalDate()));
-                promotion.setPublishCount(rs.getInt("PUBLISH_COUNT"));
-                promotion.setReceiveCount(rs.getInt("RECEIVE_COUNT"));
-
-                promotions.add(promotion);
-            }
-
-            rs.close();
-
-            int count = 0;
-
-            if (!promotions.isEmpty()) {
-                System.out.println("\nThese are the promotion you can get now: ");
-
-                for(Promotion details: promotions) {
-                    count++;
-                    System.out.printf("%d. %s\n", count, details.description);
-                }
-
-                return promotions;
-            }
-
-            return null;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        return false;
     }
 
     public void custClaimedPromotion(int custId) {
@@ -306,7 +223,7 @@ public class Promotion {
         }
     }
 
-    public static ArrayList<Promotion> showOwnPromotionList(int custId) {
+    public static ArrayList<Promotion> ownPromotionList(int custId) {
         ArrayList<Promotion> promotions = new ArrayList<>();
 
         Object[] params = {custId, "UNUSED"};
@@ -334,20 +251,7 @@ public class Promotion {
 
             rs.close();
 
-            int count = 0;
-
-            if (!promotions.isEmpty()) {
-                System.out.println("\nYour promotion: ");
-
-                for(Promotion details: promotions) {
-                    count++;
-                    System.out.printf("%d. %s\n", count, details.description);
-                }
-
-                return promotions;
-            }
-
-            return null;
+            return promotions;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -373,20 +277,25 @@ public class Promotion {
         return 0;
     }
 
-    public void custApplyPromotion(int custId) {
+    public void custApplyPromotion(int paymentId, int custId) {
         String sql = "UPDATE PROMOTION_HISTORY " +
-                "SET PROMOTION_STATUS = ? " +
+                "SET PROMOTION_STATUS = ?, " +
+                "PAYMENT_ID = ? " +
                 "WHERE PROMOTION_ID = ? " +
                 "AND USER_ID = ? " +
                 "AND ID = ( " +
-                "SELECT MIN(ID) " +
-                "FROM PROMOTION_HISTORY " +
-                "WHERE PROMOTION_ID = ? " +
-                "AND USER_ID = ? " +
-                "AND PROMOTION_STATUS = ? " +
+                    "SELECT ID " +
+                    "FROM ( " +
+                        "SELECT ID " +
+                        "FROM PROMOTION_HISTORY " +
+                        "WHERE PROMOTION_ID = ? " +
+                        "AND USER_ID = ? " +
+                        "AND PROMOTION_STATUS = ? " +
+                        "LIMIT 1 " +
+                    ") AS subquery " +
                 ");";
 
-        Object[] params = {"USED", promotionId, custId, promotionId, custId, "UNUSED"};
+        Object[] params = {"USED", paymentId, promotionId, custId, promotionId, custId, "UNUSED"};
 
         try {
             DatabaseUtils.updateQuery(sql, params);

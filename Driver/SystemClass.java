@@ -9,6 +9,7 @@ import Hall_Management.Hall;
 import Movie_Management.Movie;
 import Movie_Management.MovieUtils;
 import Movie_Management.MovieValidator;
+import Payment_Management.*;
 import Promotion_Management.*;
 import Schedule_Management.Schedule;
 import Booking_Management.Booking;
@@ -29,6 +30,8 @@ public class SystemClass {
     }
 
     public static void run(Scanner sc) throws Exception {
+        SystemClass system = new SystemClass();
+
         int choice = 0;
         boolean error = true, back = false;
 
@@ -245,7 +248,14 @@ public class SystemClass {
 
                                         // 4. Select the seat chin yong part
                                         Booking booking = new Booking();
-                                        booking.executeBooking(schedule);
+
+                                        if (booking.executeBooking(schedule)) {
+                                            // Apply promotion
+                                            Promotion promotion = applyPromotion(sc, 1, booking);
+
+                                            // Make Payment
+                                            system.makePayment(sc, 1, booking, promotion);
+                                        }
 
                                     } else {
                                         back = false;
@@ -3575,7 +3585,7 @@ public class SystemClass {
 
                         } else if (!error) {
                             while (true) {
-                                filteredPromotions = Promotion.showFilteredPromotionList(startDate, endDate, 1);
+                                filteredPromotions = PromotionUtils.filteredPromotionList(startDate, endDate, 1);
 
                                 if (filteredPromotions.size() > 0) {
                                     int detailsChoice;
@@ -3711,7 +3721,7 @@ public class SystemClass {
                     while (true) {
                         System.out.println("\nSelect the promotion you want to modify: \n");
                         System.out.println("No     Promotion Description");
-                        filteredPromotions = Promotion.showFilteredPromotionList(null, null, 1);
+                        filteredPromotions = PromotionUtils.filteredPromotionList(null, null, 1);
 
                         if (filteredPromotions == null) {
                             break;
@@ -3825,7 +3835,7 @@ public class SystemClass {
 
                     do {
                         System.out.println("\nSelect the promotion you want to delete: ");
-                        filteredPromotions = Promotion.showFilteredPromotionList(null, null, 1);
+                        filteredPromotions = PromotionUtils.filteredPromotionList(null, null, 1);
 
                         do {
                             try {
@@ -3915,16 +3925,24 @@ public class SystemClass {
                         do {
                             error = false;
 
-                            validPromotions = Promotion.showValidPromotionList(custId, sc);
+                            validPromotions = PromotionUtils.validPromotionList(custId, sc);
 
-                            if (validPromotions == null) {
+                            if (validPromotions.isEmpty()) {
                                 System.out.println("\nOops! There is no other promotion you can claim now.\n");
 
                                 pressEnterToBack();
 
                                 back = true;
-                                error = true;
                                 break;
+                            }
+
+                            int count = 0;
+
+                            System.out.println("\nThese are the promotion you can get now: ");
+
+                            for(Promotion details: validPromotions) {
+                                count++;
+                                System.out.printf("%d. %s\n", count, details.getDescription());
                             }
 
                             try {
@@ -3944,7 +3962,7 @@ public class SystemClass {
                                     String claim;
 
                                     do {
-                                        System.out.println("Do you want to claim this promotion? (Y / N)");
+                                        System.out.println("\nDo you want to claim this promotion? (Y / N)");
                                         System.out.print("Answer: ");
                                         String answer = sc.next().trim();
                                         sc.nextLine();
@@ -3982,16 +4000,25 @@ public class SystemClass {
                             error = false;
                             back = false;
 
-                            validPromotions = Promotion.showOwnPromotionList(custId);
+                            validPromotions = Promotion.ownPromotionList(custId);
 
-                            if (validPromotions == null) {
+
+                            if (validPromotions.isEmpty()) {
                                 System.out.println("\nOops! You don't have any promotion.\n");
 
                                 pressEnterToBack();
 
                                 back = true;
-                                error = true;
                                 break;
+                            }
+
+                            System.out.println("\nYour promotion: ");
+
+                            int count = 0;
+
+                            for(Promotion details: validPromotions) {
+                                count++;
+                                System.out.printf("%d. %s\n", count, details.getDescription());
                             }
 
                             try {
@@ -4039,6 +4066,274 @@ public class SystemClass {
         } while (!back);
 
         return true;
+    }
+
+    private static Promotion applyPromotion(Scanner sc, int custId, Booking booking) {
+        String apply;
+        Promotion applyPromotion = null;
+
+        do {
+            System.out.println("\nDo you want to apply promotion code? (Y/N) : ");
+            System.out.print("Answer: ");
+            String answer = sc.next().trim();
+            sc.nextLine();
+
+            apply = SystemClass.askForContinue(answer);
+        } while (apply.equals("Invalid"));
+
+
+        if (apply.equals("Y")) {
+            ArrayList<Promotion> ownPromotions = Promotion.ownPromotionList(custId);
+            ArrayList<Promotion> validPromotions = new ArrayList<>();
+            Promotion bestPromotion = null; // 用于跟踪最佳促销
+            double maxDiscount = 0;
+            int i = 0;
+            int record = 0;
+
+            if (!ownPromotions.isEmpty()) {
+                for (Promotion ownPromotion : ownPromotions) {
+                    if (ownPromotion.getMinSpend() <= booking.getTotalPrice()) {
+                        // Compare promotion min spend with booking total price to find out the valid promotion
+                        validPromotions.add(ownPromotion);
+
+                        if (ownPromotion.getDiscountValue() > maxDiscount) {
+                            maxDiscount = ownPromotion.getDiscountValue();
+                            bestPromotion = ownPromotion; // 更新最佳促销
+                            record = i; // Record the position of best promotion in validPromotions
+                        }
+
+                        i++;
+                    }
+                }
+            }
+
+            if (bestPromotion != null) {
+                Promotion firstValidPromotion = validPromotions.get(0);
+                validPromotions.set(0, bestPromotion);
+                validPromotions.set(record, firstValidPromotion);
+            }
+
+            System.out.println("\nValid Promotion: ");
+            i = 1;
+
+            for (Promotion validPromotion : validPromotions) {
+                if (i == 1) {
+                    System.out.printf("%d. %s (Most Prefer)\n", i, validPromotion.getDescription());
+                } else {
+                    System.out.printf("%d. %s\n", i, validPromotion.getDescription());
+                }
+
+                i++;
+            }
+
+            boolean ctn = false;
+
+            do {
+                try {
+                    System.out.println("\nEnter the promotion no. to apply the promotion (0 - Continue with no promotion): ");
+                    int applyChoice = sc.nextInt();
+                    sc.nextLine();
+
+                    if (applyChoice == 0) {
+                        ctn = true;
+                    }
+
+                    else if (applyChoice > 0 && applyChoice <= validPromotions.size()) {
+                        return validPromotions.get(applyChoice - 1);
+                    }
+
+                    else {
+                        System.out.println("\nYour choice is not among the available options! PLease try again.");
+                    }
+                }
+
+                catch (InputMismatchException e) {
+                    System.out.println("\nPlease enter a valid choice!");
+                    sc.nextLine();
+                }
+            } while (!ctn);
+        }
+
+        return null;
+    }
+
+    private boolean makePayment(Scanner sc, int custId, Booking booking, Promotion promotion) {
+        // Deduct discount value
+        if (promotion != null) {
+            booking.setTotalPrice(booking.getTotalPrice() - promotion.getDiscountValue());
+        }
+
+        String ctnMakePayment;
+
+        do {
+            System.out.println("\nContinue to make payment? (Y/N) : ");
+            System.out.print("Answer: ");
+            String answer = sc.next().trim();
+            sc.nextLine();
+
+            ctnMakePayment = SystemClass.askForContinue(answer);
+        } while (ctnMakePayment.equals("Invalid"));
+
+        if (ctnMakePayment.equals("N")) {
+
+        }
+
+        System.out.println("\nPayment Method: ");
+        System.out.println("1. Credit/Debit Card");
+        System.out.println("2. Touch 'n Go");
+        System.out.print("\nSelect your payment method (0 - Back): ");
+
+        String paymentMethod = sc.nextLine().trim();
+
+        // Payment payment;
+        Payment payment;
+        Payment validPayment = null;
+        boolean back = false;
+
+        do {
+            switch (paymentMethod) {
+                case "0":
+                    back = true;
+                    break;
+                case "1":
+                    // Process Credit/Debit Card Payment
+                    while (true) {
+                        payment = cardPaymentInfo(sc);
+
+                        validPayment = validPayment(payment, booking);
+
+                        if(validPayment != null) {
+                            back = true;
+                            break;
+                        }
+                    }
+
+                    break;
+                case "2":
+                    // Process TNG Payment
+                    payment = tngPaymentInfo(sc);
+
+                    validPayment = validPayment(payment, booking);
+
+                    back = true;
+
+                    break;
+                default:
+                    System.out.println("Invalid selection. Please retry.");
+            }
+        } while (!back);
+
+        validPayment.addPayment();
+        validPayment.pay();
+
+        if(promotion != null) {
+            // User use promotion code, update promotion code status
+            promotion.custApplyPromotion(validPayment.getPaymentId(), custId);
+        }
+
+        return true;
+    }
+
+    private Payment validPayment(Payment payment, Booking booking) {
+        DateTime dateTime = new DateTime();
+
+        if (payment instanceof Card) {
+            Card card = (Card) payment;
+            card.setPaymentAmount(booking.getTotalPrice());
+
+            if(card.stripeValidator()) {
+                return new Card(booking.getBooking_id(), booking.getTotalPrice(), "MYR", "CREDIT/DEBIT CARD", dateTime.getCurrentDate(), dateTime.getCurrentTime(), "PAID", card.getCardNo(), card.getExpiredDate(), card.getCvc(), card.getEmail());
+            }
+
+        } else {
+            TNG tng = (TNG) payment;
+
+            return new TNG(booking.getBooking_id(), booking.getTotalPrice(), "MYR", "TNG", dateTime.getCurrentDate(), dateTime.getCurrentTime(), "PAID", tng.getPhoneNo(), tng.getPinNo());
+        }
+
+        return null;
+    }
+
+    private Card cardPaymentInfo(Scanner input) {
+        Card card = new Card();
+
+        // Card Number
+        String cardNo;
+
+        while (true) {
+            System.out.print("\nEnter card number: ");
+            cardNo = input.nextLine().trim();
+
+            if (CardValidator.cardNoFormatValidator(cardNo)) {
+                break;
+            }
+        }
+
+        card.setCardNo(cardNo);
+
+        // Expired Date
+        String expiredDate;
+
+        while (true){
+            System.out.print("\nEnter expired date (mm/yy): ");
+            expiredDate = input.nextLine().trim();
+
+            if (CardValidator.expiredDateFormatValidator(expiredDate)) {
+                break;
+            }
+        }
+
+        card.setExpiredDate(expiredDate);
+
+        // Cvc
+        String cvc;
+
+        while (true){
+            System.out.print("\nEnter Cvc: ");
+            cvc = input.nextLine().trim();
+
+            if (CardValidator.cvcFormatValidator(cvc)) {
+                break;
+            }
+        }
+
+        card.setCvc(cvc);
+
+        System.out.print("\nEnter email: ");
+        String email = input.nextLine().trim();
+
+        card.setEmail(email);
+
+        return card;
+    }
+
+    private TNG tngPaymentInfo(Scanner input) {
+        TNG tng = new TNG();
+
+        while (true) {
+            System.out.print("\nEnter your phone number (10-12 digits: 01xxxxxxxx) : ");
+            String phoneNo = input.nextLine().trim();
+
+            if (TNGValidator.phoneNoValidator(phoneNo)) {
+                // While phone number is valid, set phoneNo
+                tng.setPhoneNo(phoneNo);
+
+                break;
+            }
+        }
+
+        while (true) {
+            System.out.print("\nEnter your pin number (6-digits): ");
+            String pinNo = input.nextLine().trim();
+
+            if (TNGValidator.pinNoValidator(pinNo)) {
+                // While pin code is valid, set PIN
+                tng.setPinNo(pinNo);
+                break;
+            }
+        }
+
+        return tng;
     }
 
     public void registration(Scanner sc) {
