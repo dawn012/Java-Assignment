@@ -30,6 +30,7 @@ public class Booking {
     private LocalTime bookingTime;
     private int booking_status;
     private ArrayList<Ticket> ticketList;
+
     public Booking() {
         this.childTicket_qty=0;
         this.adultTicket_qty=0;
@@ -48,6 +49,7 @@ public class Booking {
     public int getBooking_id() {
         return booking_id;
     }
+
     public void countBooking_id() {
         this.booking_id=1;
         //this.ticket_id = ticket_id;

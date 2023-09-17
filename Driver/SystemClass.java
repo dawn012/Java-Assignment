@@ -1537,7 +1537,7 @@ public class SystemClass {
                                         String strCon="Y";
                                         char chCon = strCon.charAt(0);
                                         while (chCon=='Y') {
-                                            hallsModified.get(hallModified-1).viewSeat_status();
+                                            hallsModified.get(hallModified-1).viewSeatStatus();
                                             while (!validInput) {
                                                 try {
                                                     System.out.print("\nSelect Row    : ");
@@ -1919,7 +1919,7 @@ public class SystemClass {
                         String[] languages = {"English", "Chinese", "Japanese", "Korean", "German", "Italian", "Spanish", "Cantonese", "French", "Russian", "Arabic", "Hindi", "Tamil"};
 
                         String mvLanguage = MovieUtils.getMultipleChosens(sc, languages, "languages");
-                        newMovie.setLang(mvLanguage);
+                        newMovie.setLanguage(mvLanguage);
 
                         // Movie Director
                         String mvDirector = MovieUtils.getMultipleValues(sc, "director", "directors");
@@ -2052,7 +2052,7 @@ public class SystemClass {
 
                         if (movieID != 0) {
                             Movie orgMovie = moviesAfterFiltered.get(movieID - 1);
-                            Movie movie = new Movie(orgMovie.getMovieID(), orgMovie.getGenre(), orgMovie.getMvName(), orgMovie.getReleaseDate(), orgMovie.getDuration(), orgMovie.getLang(), orgMovie.getDirector(), orgMovie.getWritter(), orgMovie.getStarring(), orgMovie.getMusicProvider(), orgMovie.getCountry(), orgMovie.getMetaDescription(), orgMovie.getBasicTicketPrice());
+                            Movie movie = new Movie(orgMovie.getMovieID(), orgMovie.getGenre(), orgMovie.getMvName(), orgMovie.getReleaseDate(), orgMovie.getDuration(), orgMovie.getLanguage(), orgMovie.getDirector(), orgMovie.getWritter(), orgMovie.getStarring(), orgMovie.getMusicProvider(), orgMovie.getCountry(), orgMovie.getMetaDescription(), orgMovie.getBasicTicketPrice());
                             boolean stop = true;
 
                             do {
@@ -2261,7 +2261,7 @@ public class SystemClass {
                                         String[] languages = {"English", "Chinese", "Japanese", "Korean", "German", "Italian", "Spanish", "Cantonese", "French", "Russian", "Arabic", "Hindi", "Tamil"};
 
                                         String editMvLanguage = MovieUtils.getMultipleChosens(sc, languages, "languages");
-                                        movie.setLang(editMvLanguage);
+                                        movie.setLanguage(editMvLanguage);
                                         break;
                                     case 6:
                                         // Movie Director

@@ -452,7 +452,7 @@ CREATE TABLE `booking` (
 ALTER TABLE `booking` ADD PRIMARY KEY (`booking_id`);
 
 create table ticket(
-	ticket_id int(11),
+    ticket_id int(11),
     booking_id int(11),
     seat_id varchar(3),
     schedule_id int(255),
@@ -460,8 +460,8 @@ create table ticket(
     price_rate decimal(11,2),
     ticket_status int(11) NOT NULL DEFAULT 1,
     primary key(ticket_id),
-	FOREIGN KEY(seat_id) REFERENCES seat(seat_id),
-	FOREIGN KEY(schedule_id) REFERENCES timetable(schedule_id)
+    FOREIGN KEY(seat_id) REFERENCES seat(seat_id),
+    FOREIGN KEY(schedule_id) REFERENCES timetable(schedule_id)
 );
 ALTER TABLE ticket
 ADD FOREIGN KEY (booking_id) REFERENCES booking(booking_id);

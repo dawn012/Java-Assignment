@@ -13,6 +13,7 @@ public class Ticket {
     private int ticket_id;
     private Seat seat;
     private Booking booking;
+    private TimeTable timeTable;
     private String ticketType;
     private double price_rate;
     private int ticketStatus;
@@ -33,6 +34,7 @@ public class Ticket {
         this.timeTable = timeTable;
         this.ticketStatus=1;
     }
+
     public Ticket(int ticket_id, Seat seat, Booking booking, String ticketType, double price_rate, TimeTable timeTable) {
         this.ticket_id = ticket_id;
         this.seat = seat;
@@ -42,7 +44,6 @@ public class Ticket {
         this.timeTable = timeTable;
     }
 
-    private TimeTable timeTable;
     //Getter
     public int getTicket_id() {
         return ticket_id;
@@ -62,6 +63,7 @@ public class Ticket {
     public double getPrice_rate() {
         return price_rate;
     }
+
     //Setter
     public void setTicket_id(int ticket_id) {
         this.ticket_id=ticket_id;

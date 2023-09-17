@@ -79,7 +79,7 @@ public class TimeTable implements DatabaseOperations {
                 movie.setMvName(new Name(result2.getString("mv_name")));
                 movie.setReleaseDate(new DateTime(result2.getDate("release_date").toLocalDate()));
                 movie.setDuration(result2.getInt("duration"));
-                movie.setLang(result2.getString("lang"));
+                movie.setLanguage(result2.getString("lang"));
                 movie.setDirector(result2.getString("director"));
                 movie.setWritter(result2.getString("writter"));
                 movie.setStarring(result2.getString("starring"));

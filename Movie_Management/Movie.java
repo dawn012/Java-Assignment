@@ -20,7 +20,7 @@ public class Movie implements DatabaseOperations {
     private Name mvName;
     private DateTime releaseDate;
     private int duration;
-    private String lang;
+    private String language;
     private String director;
     private String writter;
     private String starring;
@@ -33,13 +33,13 @@ public class Movie implements DatabaseOperations {
     public Movie(){
     }
 
-    public Movie(int movieID, Genre genre, Name mvName, DateTime releaseDate, int duration, String lang, String director, String writter, String starring, String musicProvider, String country, String metaDescription, double basicTicketPrice) {
+    public Movie(int movieID, Genre genre, Name mvName, DateTime releaseDate, int duration, String language, String director, String writter, String starring, String musicProvider, String country, String metaDescription, double basicTicketPrice) {
         this.movieID = movieID;
         this.genre = genre;
         this.mvName = mvName;
         this.releaseDate = releaseDate;
         this.duration = duration;
-        this.lang = lang;
+        this.language = language;
         this.director = director;
         this.writter = writter;
         this.starring = starring;
@@ -68,7 +68,7 @@ public class Movie implements DatabaseOperations {
         }
         System.out.println("Release Date: " + releaseDate.getDate());
         System.out.println("Duration: " + duration + " minutes");
-        System.out.println("Language: " + lang);
+        System.out.println("Language: " + language);
         System.out.println("Director: " + director);
         System.out.println("Writter: " + writter);
         System.out.println("Starring: " + starring);
@@ -83,7 +83,7 @@ public class Movie implements DatabaseOperations {
 
         try {
             String insertSql = "INSERT INTO `movie`(`genre_id`, `mv_name`, `release_date`, `duration`, `lang`, `director`, `writter`, `starring`, `music`, `country`,`meta_description`, `basic_TicketPrice`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            Object[] params = {genre.getGenreID(), mvName.getName(), String.valueOf(releaseDate.getDate()), duration, lang, director, writter, starring, musicProvider, country, metaDescription, basicTicketPrice};
+            Object[] params = {genre.getGenreID(), mvName.getName(), String.valueOf(releaseDate.getDate()), duration, language, director, writter, starring, musicProvider, country, metaDescription, basicTicketPrice};
             rowAffected = DatabaseUtils.insertQuery(insertSql, params);
         }
         catch (SQLException e) {
@@ -121,7 +121,7 @@ public class Movie implements DatabaseOperations {
                     count++;
                     System.out.println(count + ". Duration: " + duration + " minutes");
                     count++;
-                    System.out.println(count + ". Language: " + lang);
+                    System.out.println(count + ". Language: " + language);
                     count++;
                     System.out.println(count + ". Director: " + director);
                     count++;
@@ -168,7 +168,7 @@ public class Movie implements DatabaseOperations {
                     "`release_date`= ?,`duration`= ?,`lang`= ?," +
                     "`director`= ?,`writter`= ?,`starring`= ?,`music`= ?," +
                     "`country`= ?,`meta_description`= ?, `basic_TicketPrice`= ? WHERE `movie_id` = ?";
-            Object[] params = {genre.getGenreID(), mvName.getName(), String.valueOf(releaseDate.getDate()), duration, lang, director, writter, starring, musicProvider, country, metaDescription, basicTicketPrice, movieID};
+            Object[] params = {genre.getGenreID(), mvName.getName(), String.valueOf(releaseDate.getDate()), duration, language, director, writter, starring, musicProvider, country, metaDescription, basicTicketPrice, movieID};
             rowAffected = DatabaseUtils.updateQuery(updateSql, params);
         }
         catch (SQLException e) {
@@ -225,8 +225,8 @@ public class Movie implements DatabaseOperations {
         this.duration = duration;
     }
 
-    public void setLang(String lang) {
-        this.lang = lang;
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
     public void setDirector(String director) {
@@ -281,8 +281,8 @@ public class Movie implements DatabaseOperations {
         return duration;
     }
 
-    public String getLang() {
-        return lang;
+    public String getLanguage() {
+        return language;
     }
 
     public String getDirector() {
