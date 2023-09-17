@@ -115,13 +115,10 @@ public abstract class Payment {
         Object[] params = {bookingId, paymentMethod, paymentAmount, currency, paymentDate, paymentTime, paymentStatus};
 
         try {
-            int insert = DatabaseUtils.insertQuery(sql, params);
-
-            if(insert == 1) {
-                System.out.println("Insert payment successfully.");
-            }
+            DatabaseUtils.insertQuery(sql, params);
 
         } catch (SQLException e) {
+            System.out.println("\nOops! Something went wrong. Please try again!");
             throw new RuntimeException(e);
         }
     }

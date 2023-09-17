@@ -388,7 +388,7 @@ public class Booking {
 
                             return true;
                         }
-                    }catch (Exception e){
+                    } catch (Exception e){
                         System.out.println("Something wrong...");
                         scanner.nextLine();
                     }

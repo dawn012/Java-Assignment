@@ -4203,75 +4203,123 @@ public class SystemClass {
             booking.setTotalPrice(booking.getTotalPrice() - promotion.getDiscountValue());
         }
 
-        String ctnMakePayment;
-
-        do {
-            System.out.println("\nContinue to make payment? (Y/N) : ");
-            System.out.print("Answer: ");
-            String answer = sc.next().trim();
-            sc.nextLine();
-
-            ctnMakePayment = SystemClass.askForContinue(answer);
-        } while (ctnMakePayment.equals("Invalid"));
-
-        if (ctnMakePayment.equals("N")) {
-
-        }
-
-        System.out.println("\nPayment Method: ");
-        System.out.println("1. Credit/Debit Card");
-        System.out.println("2. Touch 'n Go");
-        System.out.print("\nSelect your payment method (0 - Back): ");
-
-        String paymentMethod = sc.nextLine().trim();
+        String paymentMethod;
 
         // Payment payment;
         Payment payment;
         Payment validPayment = null;
-        boolean back = false;
+
+        boolean back;
+        boolean successPayment = false;
 
         do {
-            switch (paymentMethod) {
-                case "0":
-                    back = true;
-                    break;
-                case "1":
-                    // Process Credit/Debit Card Payment
-                    while (true) {
-                        payment = cardPaymentInfo(sc);
+            System.out.println("\nPayment Method: ");
+            System.out.println("1. Credit/Debit Card");
+            System.out.println("2. Touch 'n Go");
+            System.out.print("\nSelect your payment method (0 - Back): ");
+
+            paymentMethod = sc.nextLine().trim();
+
+            do {
+                back = false;
+
+                switch (paymentMethod) {
+                    case "0":
+                        return false;
+
+                    case "1":
+                        // Process Credit/Debit Card Payment
+                        while (true) {
+                            payment = cardPaymentInfo(sc);
+
+                            validPayment = validPayment(payment, booking);
+
+                            if(validPayment != null) {
+                                back = true;
+                                successPayment = true;
+                                break;
+                            }
+
+                            String changePaymentMtd;
+
+                            do {
+                                System.out.println("\nDo you want to change your payment method? (Y / N)");
+                                System.out.print("Answer: ");
+                                String answer = sc.next().trim();
+                                sc.nextLine();
+
+                                changePaymentMtd = SystemClass.askForContinue(answer);
+                            } while (changePaymentMtd.equals("Invalid"));
+
+                            if (changePaymentMtd.equals("Y")) {
+                                back = true;
+                                break;
+                            }
+                        }
+
+                        break;
+                    case "2":
+                        // Process TNG Payment
+                        payment = tngPaymentInfo(sc);
 
                         validPayment = validPayment(payment, booking);
 
-                        if(validPayment != null) {
-                            back = true;
-                            break;
-                        }
-                    }
+                        back = true;
 
-                    break;
-                case "2":
-                    // Process TNG Payment
-                    payment = tngPaymentInfo(sc);
+                        break;
+                    default:
+                        System.out.println("Invalid selection. Please retry.");
+                }
 
-                    validPayment = validPayment(payment, booking);
+            } while (!back);
 
-                    back = true;
-
-                    break;
-                default:
-                    System.out.println("Invalid selection. Please retry.");
+            if (back) {
+                back = false;
             }
-        } while (!back);
 
-        validPayment.addPayment();
-        validPayment.pay();
+        } while (!back && !successPayment);
 
-        if(promotion != null) {
-            // User use promotion code, update promotion code status
-            promotion.custApplyPromotion(validPayment.getPaymentId(), custId);
-        }
+        String ctnMakePayment;
+        String cancelPayment;
 
-        return true;
+        do {
+            do {
+                System.out.println("\nContinue to make payment? (Y / N)");
+                System.out.print("Answer: ");
+                String answer = sc.next().trim();
+                sc.nextLine();
+
+                ctnMakePayment = SystemClass.askForContinue(answer);
+            } while (ctnMakePayment.equals("Invalid"));
+
+            if (ctnMakePayment.equals("Y")) {
+                // Confirm to make payment
+                validPayment.addPayment();
+                validPayment.pay();
+
+                if(promotion != null) {
+                    // User use promotion code, update promotion code status
+                    promotion.custApplyPromotion(validPayment.getPaymentId(), custId);
+                }
+
+                System.out.println("\nPayment Successfully! Thanks for your payment.");
+
+                return true;
+            }
+
+            else {
+                do {
+                    System.out.println("\nConfirm to cancel your payment? (Y / N)");
+                    System.out.print("Answer: ");
+                    String answer = sc.next().trim();
+                    sc.nextLine();
+
+                    cancelPayment = SystemClass.askForContinue(answer);
+                } while (cancelPayment.equals("Invalid"));
+            }
+        } while (cancelPayment.equals("N"));
+
+        return false;
     }
 
     private Payment validPayment(Payment payment, Booking booking) {
