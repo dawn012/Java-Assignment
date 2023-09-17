@@ -9,14 +9,17 @@ import Hall_Management.Hall;
 import Movie_Management.Movie;
 import Movie_Management.MovieUtils;
 import Movie_Management.MovieValidator;
+import Promotion_Management.*;
 import Schedule_Management.Schedule;
 import Booking_Management.Booking;
 import Seat_Management.Seat;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -35,8 +38,9 @@ public class SystemClass {
                     System.out.println("\nSelect the operation: ");
                     System.out.println("1. View Profile");
                     System.out.println("2. View Movie");
-                    System.out.println("3. Search Movie");
-                    System.out.println("4. Log out");
+                    System.out.println("3. View Promotion");
+                    System.out.println("4. Search Movie");
+                    System.out.println("5. Log out");
                     System.out.print("\nEnter your selection: ");
 
                     choice = sc.nextInt();
@@ -258,6 +262,9 @@ public class SystemClass {
                     } while (back == false);
                     break;
                 case 3:
+                    back = customerPromotion(sc, 1);
+                    break;
+                case 4:
                     do {
                         error = true;
                         int searchingMethod = 0;
@@ -451,7 +458,7 @@ public class SystemClass {
                     } while (back == false);
                     back = false;
                     break;
-                case 4:
+                case 5:
                     back = true;
                     break;
             }
@@ -470,7 +477,8 @@ public class SystemClass {
                     System.out.println("3. Manage Movie");
                     System.out.println("4. Manage Genre");
                     System.out.println("5. Manage Schedule");
-                    System.out.println("6. Log out");
+                    System.out.println("6. Manage Promotion");
+                    System.out.println("7. Log out");
                     System.out.print("\nEnter your selection: ");
 
                     choice = sc.nextInt();
@@ -500,6 +508,9 @@ public class SystemClass {
                     manageSchedule(sc);
                     break;
                 case 6:
+                    back = managePromotion(sc);
+                    break;
+                case 7:
                     back = true;
                     break;
                 default:
@@ -3486,6 +3497,550 @@ public class SystemClass {
         } while (back == false);
     }
 
+    private static boolean managePromotion(Scanner sc) {
+        boolean back = false;
+        boolean error = false;
+
+        do {
+            int choice = displayMenu("Promotion", sc);
+
+            switch (choice) {
+                case 0:
+                    back = true;
+                    break;
+                case 1:
+                    // View Promotion
+                    LocalDate startDate = null;
+                    LocalDate endDate = null;
+                    ArrayList<Promotion> filteredPromotions;
+
+                    do {
+                        error = false;
+
+                        System.out.println("\nSelect the operation: ");
+                        System.out.println("1. All Promotion");
+                        System.out.println("2. Custom\n");
+                        System.out.print("Enter your selection (0 - Back): ");
+
+                        int filterChoice = sc.nextInt();
+                        sc.nextLine();
+
+                        switch (filterChoice) {
+                            case 0:
+                                back = true;
+                                break;
+                            case 1:
+                                // No action
+                                break;
+                            case 2:
+                                while (true) {
+                                    try {
+                                        System.out.print("\nEnter the start date (yyyy-MM-dd): ");
+                                        String startDateStr = sc.nextLine();
+                                        startDate = LocalDate.parse(startDateStr);
+                                        break; // 日期有效，退出循环
+                                    } catch (DateTimeParseException e) {
+                                        System.out.println("Invalid date format. Please enter a valid date (yyyy-MM-dd).\n");
+                                    }
+                                }
+
+                                while (true) {
+                                    try {
+                                        System.out.print("\nEnter the end date (yyyy-MM-dd): ");
+                                        String endDateStr = sc.nextLine();
+                                        endDate = LocalDate.parse(endDateStr);
+
+                                        // 验证结束日期是否晚于开始日期
+                                        if (endDate.isAfter(startDate)) {
+                                            break; // 日期有效，退出循环
+                                        } else {
+                                            System.out.println("End date must be after start date. Please enter a valid date (yyyy-MM-dd).\n");
+                                        }
+                                    } catch (DateTimeParseException e) {
+                                        System.out.println("Invalid date format. Please enter a valid date (yyyy-MM-dd).\n");
+                                    }
+                                }
+
+                                break;
+                            default:
+                                System.out.println("Invalid input. Please retry.");
+                                error = true;
+                        }
+
+                        if (back) {
+                            // if no this code, it will directly back back back and no stop
+                            back = false;
+                            error = true;
+                            break;
+
+                        } else if (!error) {
+                            while (true) {
+                                filteredPromotions = Promotion.showFilteredPromotionList(startDate, endDate, 1);
+
+                                if (filteredPromotions.size() > 0) {
+                                    int detailsChoice;
+
+                                    do {
+                                        try {
+                                            System.out.print("\nEnter the promotion no. to view the details (0 - Back): ");
+                                            detailsChoice = sc.nextInt();
+                                            sc.nextLine();
+
+                                            if (detailsChoice == 0) {
+                                                back = true;
+                                                break;
+                                            }
+
+                                            else if (detailsChoice > 0 && detailsChoice <= filteredPromotions.size()) {
+                                                Promotion viewPromotionDetails = filteredPromotions.get(detailsChoice - 1);
+                                                System.out.println(viewPromotionDetails);
+                                            }
+
+                                            else {
+                                                System.out.println("Your choice is not among the available options! PLease try again.");
+                                                error = true;
+                                            }
+                                        }
+                                        catch (InputMismatchException e) {
+                                            System.out.println("Please enter a valid choice!");
+                                            sc.nextLine();
+                                            error = true;
+                                        }
+                                    } while (error);
+                                }
+
+                                else {
+                                    System.out.println("\nNo record found!");
+                                    error = true;
+                                    break;
+                                }
+
+                                String ctnViewPromotion;
+
+                                do {
+                                    System.out.println("\nDo you want view another promotion? (Y / N)");
+                                    System.out.print("Answer: ");
+                                    String answer = sc.next();
+                                    sc.nextLine();
+
+                                    ctnViewPromotion = SystemClass.askForContinue(answer);
+                                } while (ctnViewPromotion.equals("Invalid"));
+
+                                if (!ctnViewPromotion.equals("Y") || back) {
+                                    back = false;
+                                    break;
+                                }
+                            }
+
+                        }
+                    } while (error);
+
+                    break;
+
+                case 2:
+                    // Add Promotion
+                    while (true) {
+                        // Create promotion object
+                        Promotion newPromotion = new Promotion();
+
+                        System.out.println("\nPlease fill in all the following required information: ");
+
+                        // Set promotion description
+                        Promotion_Management.PromotionValidator.checkDescription(sc, newPromotion);
+
+                        // Set promotion discount value
+                        Promotion_Management.PromotionValidator.checkDiscountValue(sc, newPromotion);
+
+                        // Set promotion minimum spend
+                        Promotion_Management.PromotionValidator.checkMinSpend(sc, newPromotion);
+
+                        // Set promotion per limit
+                        Promotion_Management.PromotionValidator.checkPerLimit(sc, newPromotion);
+
+                        // Set promotion start date
+                        Promotion_Management.PromotionValidator.checkStartDate(sc, newPromotion);
+
+                        // Set promotion end date
+                        Promotion_Management.PromotionValidator.checkEndDate(sc, newPromotion, newPromotion.getStartDate());
+
+
+                        // Set promotion publish count
+                        Promotion_Management.PromotionValidator.checkPublishCount(sc, newPromotion);
+
+                        String confirmAddPromotion;
+
+                        while (true) {
+                            do {
+                                System.out.println("\nConfirm to add new Promotion? (Y / N)");
+                                System.out.print("Answer: ");
+                                String confirmAdd = sc.next();
+                                sc.nextLine();
+
+                                confirmAddPromotion = SystemClass.askForContinue(confirmAdd);
+                            } while (confirmAddPromotion.equals("Invalid"));
+
+                            if (confirmAddPromotion.equals("Y")) {
+                                newPromotion.add();
+                                break;
+                            }
+                        }
+
+                        String ctnAddPromotion;
+
+                        do {
+                            System.out.println("\nDo you want to continue to add new Promotion? (Y / N)");
+                            System.out.print("Answer: ");
+                            String answer = sc.next();
+                            sc.nextLine();
+
+                            ctnAddPromotion = SystemClass.askForContinue(answer);
+                        } while (ctnAddPromotion.equals("Invalid"));
+
+                        if (ctnAddPromotion.equals("N")) {
+                            error = true;
+                            break;
+                        }
+                    }
+
+                    break;
+
+                case 3:
+                    // Modify Promotion
+                    int promotionId = 1;
+
+                    while (true) {
+                        System.out.println("\nSelect the promotion you want to modify: \n");
+                        System.out.println("No     Promotion Description");
+                        filteredPromotions = Promotion.showFilteredPromotionList(null, null, 1);
+
+                        if (filteredPromotions == null) {
+                            break;
+                        }
+
+                        do {
+                            try {
+                                System.out.print("\nEnter the promotion id (0 - Back): ");
+                                promotionId = sc.nextInt();
+                                sc.nextLine();
+
+                                if (promotionId >= 0 && promotionId <= filteredPromotions.size()) {
+                                    error = false;
+                                } else {
+                                    System.out.println("Your choice is not among the available options! PLease try again.");
+                                    error = true;
+                                }
+                            } catch (InputMismatchException e) {
+                                System.out.println("Please enter a valid promotion id!");
+                                sc.nextLine();
+                                error = true;
+                            }
+                        } while (error);
+
+                        if (promotionId == 0) {
+                            break;
+                        } else {
+                            Promotion orgPromotion = filteredPromotions.get(promotionId - 1);
+                            Promotion modifiedPromotion = new Promotion(orgPromotion.getPromotionId(), orgPromotion.getDescription(), orgPromotion.getDiscountValue(), orgPromotion.getMinSpend(), orgPromotion.getPerLimit(), orgPromotion.getStartDate(), orgPromotion.getEndDate(), orgPromotion.getPublishCount(), orgPromotion.getReceiveCount(), orgPromotion.getPromotionStatus());
+
+                            do {
+                                back = false;
+
+                                System.out.println(modifiedPromotion);
+                                System.out.println("\n(Note: Receive count can't be changed)");
+                                System.out.print("\nEnter the serial number of the promotion information you want to change (0 - Stop): ");
+                                String serialNo = sc.nextLine();
+
+                                System.out.print("\n");
+
+                                DateTime modifiedStartDate = modifiedPromotion.getStartDate();
+
+                                switch (serialNo) {
+                                    case "0":
+                                        String save;
+
+                                        do {
+                                            System.out.println("\nDo you want to save the changes? (Y / N)");
+                                            System.out.print("Answer: ");
+                                            String answer = sc.next();
+                                            sc.nextLine();
+
+                                            save = SystemClass.askForContinue(answer);
+                                        } while (save.equals("Invalid"));
+
+                                        if (save.equals("Y")) {
+                                            modifiedPromotion.modify();
+                                        }
+
+                                        else {
+                                            modifiedPromotion = orgPromotion;
+                                            System.out.println("\nThe changes have not been saved.");
+                                        }
+
+                                        back = true;
+
+                                        break;
+                                    case "1":
+                                        // Promotion description
+                                        Promotion_Management.PromotionValidator.checkDescription(sc, modifiedPromotion);
+                                        break;
+                                    case "2":
+                                        // Promotion discount Value
+                                        Promotion_Management.PromotionValidator.checkDiscountValue(sc, modifiedPromotion);
+                                        break;
+                                    case "3":
+                                        // Promotion min. spend
+                                        Promotion_Management.PromotionValidator.checkMinSpend(sc, modifiedPromotion);
+                                        break;
+                                    case "4":
+                                        // Promotion per limit
+                                        Promotion_Management.PromotionValidator.checkPerLimit(sc, modifiedPromotion);
+                                        break;
+                                    case "5":
+                                        // Promotion start date
+                                        Promotion_Management.PromotionValidator.checkStartDate(sc, modifiedPromotion);
+                                        break;
+                                    case "6":
+                                        // Promotion end date
+                                        Promotion_Management.PromotionValidator.checkEndDate(sc, modifiedPromotion, modifiedStartDate);
+                                        break;
+                                    case "7":
+                                        // Promotion publish count
+                                        Promotion_Management.PromotionValidator.checkPublishCount(sc, modifiedPromotion);
+                                        break;
+                                    default:
+                                        System.out.println("Your choice is not among the available options! PLease try again.");
+                                }
+                            } while (!back);
+                        }
+                    }
+
+                    back = false;
+                    error = true;
+
+                    break;
+
+                case 4:
+                    // Delete Promotion
+                    promotionId = 0;
+
+                    do {
+                        System.out.println("\nSelect the promotion you want to delete: ");
+                        filteredPromotions = Promotion.showFilteredPromotionList(null, null, 1);
+
+                        do {
+                            try {
+                                System.out.print("\nEnter the promotion id (0 - Back): ");
+                                promotionId = sc.nextInt();
+                                sc.nextLine();
+
+                                if (promotionId >= 0 && promotionId <= filteredPromotions.size()) {
+                                    error = false;
+                                } else {
+                                    System.out.println("Your choice is not among the available options! PLease try again.");
+                                    error = true;
+                                }
+                            } catch (InputMismatchException e) {
+                                System.out.println("Please enter a valid movie id!");
+                                sc.nextLine();
+                                error = true;
+                            }
+                        } while (error);
+
+                        if (promotionId != 0) {
+                            Promotion promotion = filteredPromotions.get(promotionId - 1);
+                            System.out.println(promotion);
+
+                            String delete;
+                            do {
+                                System.out.println("\nDo you want to delete this promotion? (Y / N)");
+                                System.out.print("Answer: ");
+                                String answer = sc.next();
+                                sc.nextLine();
+
+                                delete = SystemClass.askForContinue(answer);
+                            } while (delete.equals("Invalid"));
+
+                            if (delete.equals("Y")) {
+                                promotion.delete();
+                            }
+                            else {
+                                System.out.println("\nThe movie is saved.");
+                            }
+                            back = true;
+                        } else {
+                            back = false;
+                        }
+                    } while (back);
+
+                    back = false;
+                    error = true;
+
+                    break;
+
+                default:
+                    System.out.println("Invalid input. Please retry.");
+                    error = true;
+            }
+
+            if (back) {
+                break;
+            }
+        } while (error);
+
+        return back;
+    }
+
+    private static boolean customerPromotion(Scanner sc, int custId) {
+        boolean back = false;
+        boolean error = false;
+
+        ArrayList<Promotion> validPromotions;
+
+        do {
+            System.out.println("\nSelect the operation: ");
+            System.out.println("1. New promotion");
+            System.out.println("2. My promotion");
+            // System.out.println("3. Past promotion\n");
+            System.out.print("\nEnter your selection (0 - Back): ");
+            String operation = sc.nextLine();
+
+            while (true) {
+                switch (operation) {
+                    case "0":
+                        return false;
+
+                    case "1":
+                        int detailsChoice;
+
+                        do {
+                            error = false;
+
+                            validPromotions = Promotion.showValidPromotionList(custId, sc);
+
+                            if (validPromotions == null) {
+                                System.out.println("\nOops! There is no other promotion you can claim now.\n");
+
+                                pressEnterToBack();
+
+                                back = true;
+                                error = true;
+                                break;
+                            }
+
+                            try {
+                                System.out.print("\nEnter the promotion no. to view the details (0 - Back): ");
+                                detailsChoice = sc.nextInt();
+                                sc.nextLine();
+
+                                if (detailsChoice == 0) {
+                                    error = true;
+                                    back = true;
+                                }
+
+                                else if (detailsChoice > 0 && detailsChoice <= validPromotions.size()) {
+                                    Promotion promotion = validPromotions.get(detailsChoice - 1);
+                                    System.out.println(promotion.viewNewPromotionDetails());
+
+                                    String claim;
+
+                                    do {
+                                        System.out.println("Do you want to claim this promotion? (Y / N)");
+                                        System.out.print("Answer: ");
+                                        String answer = sc.next().trim();
+                                        sc.nextLine();
+
+                                        claim = SystemClass.askForContinue(answer);
+                                    } while (claim.equals("Invalid"));
+
+                                    if (claim.equals("Y")) {
+                                        for (int i = 0; i < promotion.getPerLimit(); i++) {
+                                            promotion.custClaimedPromotion(custId);
+                                        }
+
+                                        promotion.updateReceiveCount();
+                                    } else {
+                                        back = false;
+                                    }
+                                }
+
+                                else {
+                                    System.out.println("\nYour choice is not among the available options! PLease try again.");
+                                    error = true;
+                                }
+                            }
+
+                            catch (InputMismatchException e) {
+                                System.out.println("\nPlease enter a valid choice!");
+                                sc.nextLine();
+                                error = true;
+                            }
+                        } while (!back);
+
+                        break;
+                    case "2":
+                        do {
+                            error = false;
+                            back = false;
+
+                            validPromotions = Promotion.showOwnPromotionList(custId);
+
+                            if (validPromotions == null) {
+                                System.out.println("\nOops! You don't have any promotion.\n");
+
+                                pressEnterToBack();
+
+                                back = true;
+                                error = true;
+                                break;
+                            }
+
+                            try {
+                                System.out.print("\nEnter the promotion no. to view the details (0 - Back): ");
+                                detailsChoice = sc.nextInt();
+                                sc.nextLine();
+
+                                if (detailsChoice == 0) {
+                                    back = true;
+                                    error = true;
+
+                                    break;
+                                }
+
+                                else if (detailsChoice > 0 && detailsChoice <= validPromotions.size()) {
+                                    Promotion promotion = validPromotions.get(detailsChoice - 1);
+                                    System.out.println(promotion.viewOwnPromotionDetails(custId) + "\n");
+
+                                    pressEnterToBack();
+                                }
+
+                                else {
+                                    System.out.println("Your choice is not among the available options! PLease try again.");
+                                }
+                            }
+
+                            catch (InputMismatchException e) {
+                                System.out.println("Please enter a valid choice!");
+                                sc.nextLine();
+                            }
+                        } while (!back);
+
+                        break;
+
+                    default:
+                        System.out.println("Invalid input. Please try again.");
+                }
+
+                if (back) {
+                    back = false;
+
+                    break;
+                }
+            }
+        } while (!back);
+
+        return true;
+    }
+
     public void registration(Scanner sc) {
 
     }
@@ -3533,6 +4088,16 @@ public class SystemClass {
         else {
             System.out.println("Please enter Y / N.");
             return "Invalid";
+        }
+    }
+
+    private static void pressEnterToBack() {
+        System.out.print("Press Enter to back...");
+
+        try {
+            System.in.read();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }
