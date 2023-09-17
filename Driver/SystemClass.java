@@ -11,6 +11,8 @@ import Movie_Management.MovieUtils;
 import Movie_Management.MovieValidator;
 import Payment_Management.*;
 import Promotion_Management.*;
+import Report_Management.Report;
+import Report_Management.TopMovieReport;
 import Schedule_Management.Schedule;
 import Booking_Management.Booking;
 import Seat_Management.Seat;
@@ -498,7 +500,8 @@ public class SystemClass {
                     System.out.println("4. Manage Genre");
                     System.out.println("5. Manage Schedule");
                     System.out.println("6. Manage Promotion");
-                    System.out.println("7. Log out");
+                    System.out.println("7. View Report");
+                    System.out.println("8. Log out");
                     System.out.print("\nEnter your selection: ");
 
                     choice = sc.nextInt();
@@ -531,6 +534,9 @@ public class SystemClass {
                     back = managePromotion(sc);
                     break;
                 case 7:
+                    viewReport(sc);
+                    break;
+                case 8:
                     back = true;
                     break;
                 default:
@@ -4041,7 +4047,6 @@ public class SystemClass {
 
                             validPromotions = Promotion.ownPromotionList(custId);
 
-
                             if (validPromotions.isEmpty()) {
                                 System.out.println("\nOops! You don't have any promotion.\n");
 
@@ -4105,6 +4110,106 @@ public class SystemClass {
         } while (!back);
 
         return true;
+    }
+
+    public static void viewReport(Scanner sc) {
+        int choice = 0;
+        boolean error = true;
+
+        do {
+            try {
+                System.out.println("\nSelect the report you want to view: ");
+                System.out.println("1. Monthly Sales Report");
+                System.out.println("2. Movie Box Office Report");
+                System.out.print("\nEnter your selection (0 - Back): ");
+                choice = sc.nextInt();
+
+                if (choice >= 0 && choice <= 2) {
+                    error = false;
+                }
+                else {
+                    System.out.println("Your choice is not among the available options! PLease try again.");
+                }
+            }
+            catch (InputMismatchException e) {
+                System.out.println("Please enter a valid choice!");
+                sc.nextLine();
+            }
+        } while (error);
+
+        switch (choice) {
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                int selection = 0;
+                error = true;
+                LocalDate currentDate = LocalDate.now();
+                ArrayList<Report> reports = new ArrayList<>();
+
+                do {
+                    do {
+                        try {
+                            System.out.println("\nPlease select a report filtering from the list below: ");
+                            System.out.println("1. Daily Box Office Ranking");
+                            System.out.println("2. Weekly Box Office Ranking");
+                            System.out.println("3. Monthly Box Office Ranking");
+                            System.out.println("4. Yearly within 3 months");
+                            System.out.print("\nEnter your selection (0 - Back): ");
+                            selection = sc.nextInt();
+                            sc.nextLine();
+
+                            if (selection >= 0 && selection <= 4) {
+                                error = false;
+                            } else {
+                                System.out.println("Your choice is not among the available options! PLease try again.");
+                            }
+                        } catch (InputMismatchException e) {
+                            System.out.println("Please enter a valid choice!");
+                            sc.nextLine();
+                        }
+                    } while (error);
+
+                    ArrayList<Movie> movies = MovieUtils.getMovieListAfterFiltered(null, null, 1);
+                    Report reportAfterRanking = new TopMovieReport();
+                    Report report = new TopMovieReport();
+
+                    switch (selection) {
+                        case 0:
+                            break;
+                        case 1:
+                            LocalDate today = currentDate;
+                            ((TopMovieReport)report).setReportValue(today, movies);
+                            break;
+                        case 2:
+                            LocalDate oneWeekAgo = currentDate.minusWeeks(1);
+                            ((TopMovieReport)report).setReportValue(oneWeekAgo, movies);
+                            break;
+                        case 3:
+                            LocalDate oneMonthAgo = currentDate.minusMonths(1);
+                            ((TopMovieReport)report).setReportValue(oneMonthAgo, movies);
+                            break;
+                        case 4:
+                            LocalDate oneYearAgo = currentDate.minusYears(1);
+                            ((TopMovieReport)report).setReportValue(oneYearAgo, movies);
+                            break;
+                    }
+
+                    reportAfterRanking = TopMovieReport.getRanking(report);
+
+                    if (!((TopMovieReport) reportAfterRanking).getMovie().isEmpty()) {
+                        System.out.printf("\n%-5s %-25s %s\n", "No", "Movie Name", "Total Box Office");
+                        for (int i = 0; i < ((TopMovieReport) reportAfterRanking).getMovie().size(); i++) {
+                            System.out.printf("%-5d %-25s %s\n", (i + 1), ((TopMovieReport)reportAfterRanking).getMovie().get(i).getMvName().getName(), ((TopMovieReport)reportAfterRanking).getTotalBoxOffices().get(i));
+                        }
+                    }
+                    else {
+                        System.out.println("Sorry, no movie found!");
+                    }
+                } while (reports.isEmpty() && selection != 0);
+                break;
+        }
     }
 
     private static Promotion applyPromotion(Scanner sc, int custId, Booking booking) {
