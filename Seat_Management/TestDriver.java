@@ -1,8 +1,11 @@
 package Seat_Management;
 
+import Booking_Management.Booking;
 import Movie_Management.Movie;
 import Movie_Management.MovieUtils;
+import Ticket_Managemnet.Ticket;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class TestDriver {
@@ -110,8 +113,19 @@ public class TestDriver {
 //        hl.viewSeat_status();
 //        hl.getSeats().get(0).setSeat_status(0);
 //        hl.getSeats().get(0).updateSeatStatus();
-        for(Movie movies:MovieUtils.getAllMovieList()){
-            System.out.println(movies.getMvName().getName());
-        }
+//        Booking booking=new Booking();
+//        booking.setCustomerId(1);
+//        ArrayList<Booking> bookingList=Booking.getBookingList(1);
+//
+//
+//        for(Booking b:bookingList){
+//            b.loadingTicketList();
+//            System.out.println("Booking id : "+b.getBooking_id());
+//            for(Ticket t:b.getTicketList()){
+//                System.out.printf(" %d:[%s]",t.getTicket_id(),t.getSeat().getSeat_id());
+//            }
+//            System.out.println(" ");
+//        }
+        Booking.viewBookingHistory(1);
     }
 }
