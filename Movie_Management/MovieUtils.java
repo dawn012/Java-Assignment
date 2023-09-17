@@ -342,4 +342,65 @@ public class MovieUtils {
 
         return 0;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public static ArrayList<Movie> getAllMovieList(){
+        ArrayList<Movie> movies = new ArrayList<>();
+
+        try {
+            Object[] params = {};
+            ResultSet result = DatabaseUtils.selectQueryById("*", "movie", null, null);
+
+            while (result.next()) {
+                Movie movie = new Movie();
+
+                movie.setMovieID(result.getInt("movie_id"));
+                movie.setGenre(new Genre(result.getInt("genre_id")));
+                movie.setMvName(new Name(result.getString("mv_name")));
+                movie.setReleaseDate(new DateTime(result.getDate("release_date").toLocalDate()));
+                movie.setDuration(result.getInt("duration"));
+                movie.setLang(result.getString("lang"));
+                movie.setDirector(result.getString("director"));
+                movie.setWritter(result.getString("writter"));
+                movie.setStarring(result.getString("starring"));
+                movie.setMusicProvider(result.getString("music"));
+                movie.setCountry(result.getString("country"));
+                movie.setMetaDescription(result.getString("meta_description"));
+                movie.setBasicTicketPrice(result.getDouble("basic_TicketPrice"));
+                movie.setStatus(result.getInt("movie_status"));
+
+                movies.add(movie);
+            }
+
+            result.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return movies;
+    }
 }

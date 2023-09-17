@@ -1,7 +1,7 @@
 package Seat_Management;
 
-import Driver.SystemClass;
-import Hall_Management.Hall;
+import Movie_Management.Movie;
+import Movie_Management.MovieUtils;
 
 import java.util.Scanner;
 
@@ -110,5 +110,8 @@ public class TestDriver {
 //        hl.viewSeat_status();
 //        hl.getSeats().get(0).setSeat_status(0);
 //        hl.getSeats().get(0).updateSeatStatus();
+        for(Movie movies:MovieUtils.getAllMovieList()){
+            System.out.println(movies.getMvName().getName());
+        }
     }
 }
