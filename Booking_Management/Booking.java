@@ -2,6 +2,7 @@ package Booking_Management;
 
 import Database.DatabaseUtils;
 import Driver.DateTime;
+import Driver.SystemClass;
 import Hall_Management.Hall;
 import Schedule_Management.Schedule;
 import Seat_Management.Seat;
@@ -15,6 +16,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Scanner;
 
 
@@ -22,27 +25,48 @@ public class Booking {
     /////////////////////////////////////////////////////////
     private int customerId;  //暂时用，暂时代替Customer class///
     /////////////////////////////////////////////////////////
+    public int getCustomerId() {
+        return customerId;
+    }
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
+    }
+    ////////////////////////////////////////////////////////
+
+
     private int booking_id;
     private int adultTicket_qty;
+
     private int childTicket_qty;
     private double totalPrice;
     private DateTime bookingDateTime;
     private LocalTime bookingTime;
-    private int booking_status;
+    private int booking_status;      //0=paid  1=unpaid
     private ArrayList<Ticket> ticketList;
 
+//    public Booking(int customerId) {
+//        this.childTicket_qty=0;
+//        this.adultTicket_qty=0;
+//        this.totalPrice=0;
+//        this.booking_status=0;
+//        this.customerId=customerId;
+//    }
     public Booking() {
         this.childTicket_qty=0;
         this.adultTicket_qty=0;
         this.totalPrice=0;
+        this.booking_status=0;
+        //this.customerId=customerId;
     }
 
-    public Booking(int booking_id, int adultTicket_qty, int childTicket_qty, double totalPrice, int booking_status) {
+
+    public Booking(int booking_id, int adultTicket_qty, int childTicket_qty, double totalPrice, int booking_status,int customerId) {
         this.booking_id = booking_id;
         this.adultTicket_qty = adultTicket_qty;
         this.childTicket_qty = childTicket_qty;
         this.totalPrice = totalPrice;
         this.booking_status = booking_status;
+        this.customerId=customerId;
     }
 
     //Getter
@@ -123,8 +147,8 @@ public class Booking {
         int rowAffected = 0;
 
         try {
-            String insertSql = "INSERT INTO `booking` (`booking_id`,`adultTicket_qty`,`childTicket_qty`,`total_price`,`booking_date`,`booking_time`,`booking_status`) value(?,?,?,?,?,?,?);";
-            Object[] params = {b.getBooking_id(),b.getAdultTicket_qty(),b.getChildTicket_qty(),b.getTotalPrice(),b.getBookingDateTime().getDate(),b.getBookingTime(),b.getBooking_status()};
+            String insertSql = "INSERT INTO `booking` (`booking_id`,`adultTicket_qty`,`childTicket_qty`,`total_price`,`booking_date`,`booking_time`,`booking_status`,`customer_id`) value(?,?,?,?,?,?,?,?);";
+            Object[] params = {b.getBooking_id(),b.getAdultTicket_qty(),b.getChildTicket_qty(),b.getTotalPrice(),b.getBookingDateTime().getDate(),b.getBookingTime(),b.getBooking_status(),b.getCustomerId()};
             rowAffected = DatabaseUtils.insertQuery(insertSql, params);
         }
         catch (SQLException e) {
@@ -139,7 +163,7 @@ public class Booking {
         }
     }
 
-    public static int viewSeat_status(Schedule schedule) {
+    public static int viewSeatBooking_status(Schedule schedule) {
         boolean error = false;
         ArrayList<Seat> seats = new ArrayList<>();
         int largestRow=0;
@@ -232,7 +256,7 @@ public class Booking {
             this.adultTicket_qty=0;
             this.totalPrice=0;
             System.out.println("Time table id : "+schedule.getScheduleID());
-            Booking.viewSeat_status(schedule);
+            Booking.viewSeatBooking_status(schedule);
             ArrayList<Ticket> tickets = Ticket.getBookedTicketList(schedule.getScheduleID());
             ArrayList<Ticket> cartTicket = new ArrayList<>();
             System.out.println("Booking ID : " + this.booking_id);
@@ -383,6 +407,7 @@ public class Booking {
                         str = scanner.next().toUpperCase();
                         confirmChar = str.charAt(0);
                         if (confirmChar == 'Y') {
+                            this.setTicketList(cartTicket);
                             Booking.insertBooking(this);
                             for (Ticket t : cartTicket) {
                                 Ticket.insertTicket(t);
@@ -452,7 +477,40 @@ public class Booking {
                 booking.setBooking_status(result.getInt("booking_status"));
                 Time time =result.getTime("booking_time");
                 booking.setBookingTime(time.toLocalTime());
+                booking.setCustomerId(result.getInt("customer_id"));
+                bookingList.add(booking);
 
+            }
+
+            result.close();
+
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return bookingList;
+    }
+    public static ArrayList<Booking> getBookingList(int customerId){
+        boolean error = false;
+        ArrayList<Booking> bookingList = new ArrayList<>();
+
+        try {
+            Object[] params = {customerId};
+            ResultSet result = DatabaseUtils.selectQueryById("*", "booking","customer_id=?",params);
+
+            while (result.next()) {
+
+                Booking booking = new Booking();
+                booking.setBooking_id(result.getInt("booking_id"));
+                booking.setAdultTicket_qty(result.getInt("adultTicket_qty"));
+                booking.setBookingDateTime(new DateTime(result.getDate("booking_date").toLocalDate()));
+                booking.setChildTicket_qty(result.getInt("childTicket_qty"));
+                booking.setTotalPrice(result.getDouble("total_price"));
+                booking.setBooking_status(result.getInt("booking_status"));
+                Time time =result.getTime("booking_time");
+                booking.setBookingTime(time.toLocalTime());
+                booking.setCustomerId(result.getInt("customer_id"));
                 bookingList.add(booking);
 
             }
@@ -505,7 +563,7 @@ public class Booking {
         catch (SQLException e) {
             e.printStackTrace();
         }
-        this.setTicketList(ticketList);
+        this.setTicketList(tickets);
 
     }
 
@@ -528,6 +586,42 @@ public class Booking {
 //            return false;
 //        }
 //    }
+
+
+
+
+
+    //For Customer View Their Booking History
+    public static void viewBookingHistory(int customerId) throws SQLException {
+        Scanner scanner=new Scanner(System.in);
+        ArrayList<Booking> bookingList=Booking.getBookingList(customerId);
+        Collections.reverse(bookingList);
+        int count=1;
+        for(Booking b:bookingList){
+            b.loadingTicketList();
+            System.out.printf("%2d. Booking id : %d  ",count,b.getBooking_id());
+            System.out.print("Date : "+b.getBookingDateTime().getDate().toString()+"\n");
+            if(count%5==0){
+                String answer=" ";
+                do{
+                    System.out.print("Continue Show More History? (Y=YES N=NO) : ");
+
+                    answer=scanner.next().toUpperCase();
+
+                }while (SystemClass.askForContinue(answer).equals("Invalid"));
+                if(SystemClass.askForContinue(answer).equals("N"))
+                    break;
+            }
+            count++;
+        }
+        int no;
+        do {
+            System.out.print("Enter No. Booking to Show Detail : ");
+            no = scanner.nextInt();
+        }while(no>bookingList.size());
+
+        System.out.println("Booking ID : ");
+    }
 
 
 }

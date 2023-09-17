@@ -255,6 +255,7 @@ public class SystemClass {
 
                                         // 4. Select the seat chin yong part
                                         Booking booking = new Booking();
+                                        booking.setCustomerId(1);//暂时用
                                         booking.executeBooking(schedule);
 
                                     } else {
