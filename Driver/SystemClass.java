@@ -1552,7 +1552,7 @@ public class SystemClass {
                                         hallsModified.get(hallModified-1).initSeatList();
                                         String strRow=" ";
                                         int col = 0;
-                                        char row =strRow.charAt(0);
+                                        String row =" ";
                                         Scanner scanner=new Scanner(System.in);
                                         boolean validInput = false;
                                         String strCon="Y";
@@ -1562,8 +1562,8 @@ public class SystemClass {
                                             while (!validInput) {
                                                 try {
                                                     System.out.print("\nSelect Row    : ");
-                                                    strRow=scanner.next().toUpperCase();
-                                                    row=strRow.charAt(0);
+
+                                                    row=scanner.next().toUpperCase();
 
                                                     System.out.print("Select Column : ");
                                                     col = scanner.nextInt();
@@ -1582,7 +1582,7 @@ public class SystemClass {
                                             validInput=false;
                                             String letter2 = Integer.toString(hallsModified.get(hallModified - 1).getHallID());
                                             //char letter = (char) ('A' + row - 1);
-                                            String combineSeatId = letter2 + row + Integer.toString(col);
+                                            String combineSeatId = letter2 + row.charAt(0) + Integer.toString(col);
 
                                             int seatStatus = 1;
                                             do {

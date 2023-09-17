@@ -194,10 +194,12 @@ public class Seat {
         System.out.printf("test:OK");
         return 0;
     }
-    public static boolean checkSeatValidation(char row,int col){
+    public static boolean checkSeatValidation(String row,int col){
         if(col<1||col>8)
             return false;
-        else if (row < 'A' || row > 'H')
+        else if(row.length()>1)
+            return false;
+        else if (row.charAt(0) < 'A' || row.charAt(0) > 'H')
             return false;
         else
             return true;
