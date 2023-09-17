@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="Merge">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Booking_Management/Booking.java" beforeDir="false" afterPath="$PROJECT_DIR$/Booking_Management/Booking.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database/DatabaseUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/Database/DatabaseUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Driver/SystemClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/Driver/SystemClass.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Payment_Management/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/Payment_Management/Card.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Payment_Management/Payment.java" beforeDir="false" afterPath="$PROJECT_DIR$/Payment_Management/Payment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Payment_Management/TNG.java" beforeDir="false" afterPath="$PROJECT_DIR$/Payment_Management/TNG.java" afterDir="false" />
-    </list>
+    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="debug" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -304,15 +296,6 @@
       <option name="project" value="LOCAL" />
       <updated>1694946347805</updated>
     </task>
-    <task id="LOCAL-00029" summary="Merge">
-      <option name="closed" value="true" />
-      <created>1694947307684</created>
-      <option name="number" value="00029" />
-      <option name="presentableId" value="LOCAL-00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1694947307684</updated>
-    </task>
-    <option name="localTasksCounter" value="30" />
     <task id="LOCAL-00029" summary="Add Promotion">
       <created>1694954172519</created>
       <option name="number" value="00029" />
@@ -390,7 +373,6 @@
     <MESSAGE value="Add Promotion" />
     <MESSAGE value="Add Payment" />
     <MESSAGE value="Merge" />
-    <option name="LAST_COMMIT_MESSAGE" value="Merge" />
     <option name="LAST_COMMIT_MESSAGE" value="Add Promotion" />
   </component>
   <component name="XDebuggerManager">
