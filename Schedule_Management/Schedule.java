@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class TimeTable implements DatabaseOperations {
-    private int timetableID;
+public class Schedule implements DatabaseOperations {
+    private int scheduleID;
     private Movie movie;
     private Hall hall;
     private DateTime showDate;
@@ -27,11 +27,11 @@ public class TimeTable implements DatabaseOperations {
     private LocalTime endTime;
 
     // Constructor
-    public TimeTable() {
+    public Schedule() {
     }
 
-    public TimeTable(int timetableID, Movie movie, Hall hall, DateTime showDate, LocalTime startTime) {
-        this.timetableID = timetableID;
+    public Schedule(int scheduleID, Movie movie, Hall hall, DateTime showDate, LocalTime startTime) {
+        this.scheduleID = scheduleID;
         this.movie = movie;
         this.hall = hall;
         this.showDate = showDate;
@@ -39,13 +39,13 @@ public class TimeTable implements DatabaseOperations {
         calculateEndTime(movie, startTime);
     }
 
-    public TimeTable(Hall hall, DateTime showDate){
+    public Schedule(Hall hall, DateTime showDate){
         this.hall = hall;
         this.showDate= showDate;
     }
 
     // Method
-    public ArrayList<TimeTable> viewSchedule() throws Exception {
+    public ArrayList<Schedule> viewSchedule() throws Exception {
         ResultSet result = null;
         try {
             Object[] params = {hall.getHallID(), String.valueOf(showDate.getDate()), 1};
@@ -55,7 +55,7 @@ public class TimeTable implements DatabaseOperations {
             e.printStackTrace();
         }
 
-        ArrayList<TimeTable> schedules = new ArrayList<>();
+        ArrayList<Schedule> schedules = new ArrayList<>();
 
         while (result.next()) {
             int timetableID = result.getInt("schedule_id");
@@ -79,7 +79,7 @@ public class TimeTable implements DatabaseOperations {
                 movie.setMvName(new Name(result2.getString("mv_name")));
                 movie.setReleaseDate(new DateTime(result2.getDate("release_date").toLocalDate()));
                 movie.setDuration(result2.getInt("duration"));
-                movie.setLang(result2.getString("lang"));
+                movie.setLanguage(result2.getString("lang"));
                 movie.setDirector(result2.getString("director"));
                 movie.setWritter(result2.getString("writter"));
                 movie.setStarring(result2.getString("starring"));
@@ -89,14 +89,14 @@ public class TimeTable implements DatabaseOperations {
                 movie.setBasicTicketPrice(result2.getDouble("basic_TicketPrice"));
             }
 
-            TimeTable schedule = new TimeTable(timetableID, movie, hall, showDate, startTime);
+            Schedule schedule = new Schedule(timetableID, movie, hall, showDate, startTime);
             schedules.add(schedule);
         }
 
         return schedules;
     }
 
-    public static void printing(ArrayList<TimeTable> schedules) {
+    public static void printing(ArrayList<Schedule> schedules) {
         if (!schedules.isEmpty()) {
             System.out.println("\nMovie Schedule List for " + schedules.get(0).showDate.getDate() + " at Hall " + schedules.get(0).hall.getHallID() + ":\n");
             System.out.printf("%-30s %15s %15s\n", "Movie Name", "Start Time", "End Time");
@@ -109,7 +109,7 @@ public class TimeTable implements DatabaseOperations {
         }
     }
 
-    public static TimeTable acceptViewScheduleListInput(Scanner sc, Cinema cinemaSelected) {
+    public static Schedule acceptViewScheduleListInput(Scanner sc, Cinema cinemaSelected) {
         // Hall
         int hallNo = 0;
         boolean error = true;
@@ -176,8 +176,8 @@ public class TimeTable implements DatabaseOperations {
             }
         } while (error);
 
-        TimeTable timeTable = new TimeTable(halls.get(hallNo - 1), viewDate);
-        return timeTable;
+        Schedule schedule = new Schedule(halls.get(hallNo - 1), viewDate);
+        return schedule;
     }
 
     public boolean add() throws SQLException {
@@ -205,7 +205,7 @@ public class TimeTable implements DatabaseOperations {
         int rowAffected = 0;
 
         try {
-            Object[] params = {hall.getHallID(), movie.getMovieID(), String.valueOf(showDate.getDate()), startTime, endTime, timetableID};
+            Object[] params = {hall.getHallID(), movie.getMovieID(), String.valueOf(showDate.getDate()), startTime, endTime, scheduleID};
             String sql = "UPDATE `timeTable` SET `hall_id` = ?, `movie_id` = ?, `movie_showDate` = ?, `movie_startTime` = ?, `movie_endTime` = ? WHERE `schedule_id` = ?";
             rowAffected = DatabaseUtils.updateQuery(sql, params);
         } catch (SQLException e) {
@@ -225,7 +225,7 @@ public class TimeTable implements DatabaseOperations {
         int rowAffected = 0;
 
         try {
-            Object[] params = {timetableID};
+            Object[] params = {scheduleID};
             rowAffected = DatabaseUtils.deleteQueryById("timeTable", "timeTable_status", "schedule_id", params);
         }
         catch (SQLException e) {
@@ -255,7 +255,7 @@ public class TimeTable implements DatabaseOperations {
         return dateList;
     }
 
-    public int showHallAndTime(int count, ArrayList<TimeTable> timeTables) throws SQLException {
+    public int showHallAndTime(int count, ArrayList<Schedule> schedules) throws SQLException {
         ResultSet result = null;
         try {
             Object[] params = {hall.getHallID(), String.valueOf(showDate.getDate()), 1};
@@ -266,16 +266,16 @@ public class TimeTable implements DatabaseOperations {
         }
 
         while (result.next()) {
-            TimeTable timeTable = new TimeTable();
+            Schedule schedule = new Schedule();
 
-            timeTable.timetableID = result.getInt("schedule_id");
-            timeTable.startTime = result.getTime("movie_startTime").toLocalTime();
-            timeTable.endTime = result.getTime("movie_endTime").toLocalTime();
-            timeTable.setHall(hall);
+            schedule.scheduleID = result.getInt("schedule_id");
+            schedule.startTime = result.getTime("movie_startTime").toLocalTime();
+            schedule.endTime = result.getTime("movie_endTime").toLocalTime();
+            schedule.setHall(hall);
 
-            timeTables.add(timeTable);
+            schedules.add(schedule);
 
-            System.out.printf(count + ". %-20s %17s %17s\n", hall.getHallName().getName(), timeTable.startTime, timeTable.endTime);
+            System.out.printf(count + ". %-20s %17s %17s\n", hall.getHallName().getName(), schedule.startTime, schedule.endTime);
             count++;
         }
 
@@ -401,8 +401,8 @@ public class TimeTable implements DatabaseOperations {
     }
 
     // Setter
-    public void setTimetableID(int timetableID) {
-        this.timetableID = timetableID;
+    public void setScheduleID(int scheduleID) {
+        this.scheduleID = scheduleID;
     }
 
     public void setMovie(Movie movie) {
@@ -426,8 +426,8 @@ public class TimeTable implements DatabaseOperations {
     }
 
     // Getter
-    public int getTimetableID() {
-        return timetableID;
+    public int getScheduleID() {
+        return scheduleID;
     }
 
     public Movie getMovie() {

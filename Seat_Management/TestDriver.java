@@ -90,7 +90,7 @@ public class TestDriver {
 //        }
 
 
-//        TimeTable schedule=new TimeTable(4,movie,hall,sd, LocalTime.of(11,0,0));
+//        Schedule schedule=new Schedule(4,movie,hall,sd, LocalTime.of(11,0,0));
 
 //---------Start here----------------------------------------------------------------------------------------------------------------------
 //        Booking.viewSeat_status(schedule);

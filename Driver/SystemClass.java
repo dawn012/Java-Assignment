@@ -9,7 +9,7 @@ import Hall_Management.Hall;
 import Movie_Management.Movie;
 import Movie_Management.MovieUtils;
 import Movie_Management.MovieValidator;
-import Schedule_Management.TimeTable;
+import Schedule_Management.Schedule;
 import Booking_Management.Booking;
 import Seat_Management.Seat;
 
@@ -154,8 +154,8 @@ public class SystemClass {
                                     } while (bookNow.equals("Invalid"));
 
                                     if (bookNow.equals("Y")) {
-                                        TimeTable timeTable = new TimeTable();
-                                        timeTable.setMovie(movie);
+                                        Schedule schedule = new Schedule();
+                                        schedule.setMovie(movie);
 
                                         // 1. Select the cinema
                                         int cinemaNo = 0;
@@ -187,14 +187,14 @@ public class SystemClass {
                                         do {
                                             try {
                                                 System.out.println("\nSelect the date you want to view the schedule: ");
-                                                dateList = TimeTable.generateOneWeekDateList();
+                                                dateList = Schedule.generateOneWeekDateList();
                                                 System.out.print("\nEnter the date no: ");
                                                 dateNo = sc.nextInt();
                                                 sc.nextLine();
 
                                                 if (dateNo > 0 && dateNo <= dateList.size()) {
                                                     DateTime date = new DateTime(dateList.get(dateNo - 1));
-                                                    timeTable.setShowDate(date);
+                                                    schedule.setShowDate(date);
                                                     error = false;
                                                 } else {
                                                     System.out.println("Your choice is not among the available options! PLease try again.");
@@ -210,13 +210,13 @@ public class SystemClass {
                                         int scheduleSelected = 0;
                                         do {
                                             ArrayList<Hall> halls = cinemas.get(cinemaNo - 1).getHallList(1);
-                                            ArrayList<TimeTable> timeTables = new ArrayList<>();
+                                            ArrayList<Schedule> schedules = new ArrayList<>();
 
                                             int count = 1;
                                             System.out.printf("\n%-30s %15s %15s\n", "Hall Name", "Start Time", "End Time");
                                             for (int i = 0; i < halls.size(); i++) {
-                                                timeTable.setHall(halls.get(i));
-                                                count = timeTable.showHallAndTime(count, timeTables);
+                                                schedule.setHall(halls.get(i));
+                                                count = schedule.showHallAndTime(count, schedules);
                                             }
 
                                             try {
@@ -224,11 +224,11 @@ public class SystemClass {
                                                 scheduleSelected = sc.nextInt();
                                                 sc.nextLine();
 
-                                                if (scheduleSelected > 0 && scheduleSelected <= timeTables.size()) {
-                                                    timeTable.setTimetableID(timeTables.get(scheduleSelected - 1).getTimetableID());
-                                                    timeTable.setHall(timeTables.get(scheduleSelected - 1).getHall());
-                                                    timeTable.setStartTime(timeTables.get(scheduleSelected - 1).getStartTime());
-                                                    timeTable.setEndTime(timeTables.get(scheduleSelected - 1).getEndTime());
+                                                if (scheduleSelected > 0 && scheduleSelected <= schedules.size()) {
+                                                    schedule.setScheduleID(schedules.get(scheduleSelected - 1).getScheduleID());
+                                                    schedule.setHall(schedules.get(scheduleSelected - 1).getHall());
+                                                    schedule.setStartTime(schedules.get(scheduleSelected - 1).getStartTime());
+                                                    schedule.setEndTime(schedules.get(scheduleSelected - 1).getEndTime());
                                                     error = false;
                                                 } else {
                                                     System.out.println("Your choice is not among the available options! PLease try again.");
@@ -241,7 +241,7 @@ public class SystemClass {
 
                                         // 4. Select the seat chin yong part
                                         Booking booking = new Booking();
-                                        booking.executeBooking(timeTable);
+                                        booking.executeBooking(schedule);
 
                                     } else {
                                         back = false;
@@ -1537,7 +1537,7 @@ public class SystemClass {
                                         String strCon="Y";
                                         char chCon = strCon.charAt(0);
                                         while (chCon=='Y') {
-                                            hallsModified.get(hallModified-1).viewSeat_status();
+                                            hallsModified.get(hallModified-1).viewSeatStatus();
                                             while (!validInput) {
                                                 try {
                                                     System.out.print("\nSelect Row    : ");
@@ -1919,7 +1919,7 @@ public class SystemClass {
                         String[] languages = {"English", "Chinese", "Japanese", "Korean", "German", "Italian", "Spanish", "Cantonese", "French", "Russian", "Arabic", "Hindi", "Tamil"};
 
                         String mvLanguage = MovieUtils.getMultipleChosens(sc, languages, "languages");
-                        newMovie.setLang(mvLanguage);
+                        newMovie.setLanguage(mvLanguage);
 
                         // Movie Director
                         String mvDirector = MovieUtils.getMultipleValues(sc, "director", "directors");
@@ -2052,7 +2052,7 @@ public class SystemClass {
 
                         if (movieID != 0) {
                             Movie orgMovie = moviesAfterFiltered.get(movieID - 1);
-                            Movie movie = new Movie(orgMovie.getMovieID(), orgMovie.getGenre(), orgMovie.getMvName(), orgMovie.getReleaseDate(), orgMovie.getDuration(), orgMovie.getLang(), orgMovie.getDirector(), orgMovie.getWritter(), orgMovie.getStarring(), orgMovie.getMusicProvider(), orgMovie.getCountry(), orgMovie.getMetaDescription(), orgMovie.getBasicTicketPrice());
+                            Movie movie = new Movie(orgMovie.getMovieID(), orgMovie.getGenre(), orgMovie.getMvName(), orgMovie.getReleaseDate(), orgMovie.getDuration(), orgMovie.getLanguage(), orgMovie.getDirector(), orgMovie.getWritter(), orgMovie.getStarring(), orgMovie.getMusicProvider(), orgMovie.getCountry(), orgMovie.getMetaDescription(), orgMovie.getBasicTicketPrice());
                             boolean stop = true;
 
                             do {
@@ -2261,7 +2261,7 @@ public class SystemClass {
                                         String[] languages = {"English", "Chinese", "Japanese", "Korean", "German", "Italian", "Spanish", "Cantonese", "French", "Russian", "Arabic", "Hindi", "Tamil"};
 
                                         String editMvLanguage = MovieUtils.getMultipleChosens(sc, languages, "languages");
-                                        movie.setLang(editMvLanguage);
+                                        movie.setLanguage(editMvLanguage);
                                         break;
                                     case 6:
                                         // Movie Director
@@ -2812,11 +2812,11 @@ public class SystemClass {
                         } while (error);
 
                         if (cinemaNo != 0) {
-                            TimeTable timeTable = TimeTable.acceptViewScheduleListInput(sc, cinemas.get(cinemaNo - 1));
+                            Schedule schedule = Schedule.acceptViewScheduleListInput(sc, cinemas.get(cinemaNo - 1));
 
-                            ArrayList<TimeTable> schedules = timeTable.viewSchedule();
+                            ArrayList<Schedule> schedules = schedule.viewSchedule();
 
-                            TimeTable.printing(schedules);
+                            Schedule.printing(schedules);
 
                             String continueViewSchedule;
                             do {
@@ -2841,7 +2841,7 @@ public class SystemClass {
                     } while (continues);
                     break;
                 case 2:
-                    TimeTable newSchedule = new TimeTable();
+                    Schedule newSchedule = new Schedule();
 
                     ArrayList<Movie> moviesAfterFiltered;
                     int movieID = 1, hallID = 1;
@@ -3040,7 +3040,7 @@ public class SystemClass {
                             } while (continueAddSchedule.equals("Invalid"));
 
                             if (continueAddSchedule.equals("Y")) {
-                                newSchedule = new TimeTable();
+                                newSchedule = new Schedule();
                                 continues = true;
                             } else {
                                 continues = false;
@@ -3080,11 +3080,11 @@ public class SystemClass {
 
                     error = true;
                     if (cinemaNo != 0) {
-                        TimeTable timeTable = TimeTable.acceptViewScheduleListInput(sc, cinemas.get(cinemaNo - 1));
+                        Schedule schedule = Schedule.acceptViewScheduleListInput(sc, cinemas.get(cinemaNo - 1));
 
-                        ArrayList<TimeTable> schedules = timeTable.viewSchedule();
+                        ArrayList<Schedule> schedules = schedule.viewSchedule();
 
-                        TimeTable.printing(schedules);
+                        Schedule.printing(schedules);
 
                         if (!schedules.isEmpty()) {
                             do {
@@ -3104,7 +3104,7 @@ public class SystemClass {
                                 }
                             } while (error);
 
-                            TimeTable modifySchedule = new TimeTable(schedules.get(scheduleNo - 1).getTimetableID(), schedules.get(scheduleNo - 1).getMovie(), schedules.get(scheduleNo - 1).getHall(), schedules.get(scheduleNo - 1).getShowDate(), schedules.get(scheduleNo - 1).getStartTime());
+                            Schedule modifySchedule = new Schedule(schedules.get(scheduleNo - 1).getScheduleID(), schedules.get(scheduleNo - 1).getMovie(), schedules.get(scheduleNo - 1).getHall(), schedules.get(scheduleNo - 1).getShowDate(), schedules.get(scheduleNo - 1).getStartTime());
 
                             error = true;
                             int choice2 = 0;
@@ -3306,10 +3306,10 @@ public class SystemClass {
                                     } while (error);
 
                                     // Receive the input of hall and show date
-                                    timeTable = TimeTable.acceptViewScheduleListInput(sc, cinemas.get(cinemaNo - 1));
+                                    schedule = Schedule.acceptViewScheduleListInput(sc, cinemas.get(cinemaNo - 1));
 
-                                    modifySchedule.setHall(timeTable.getHall());
-                                    modifySchedule.setShowDate(timeTable.getShowDate());
+                                    modifySchedule.setHall(schedule.getHall());
+                                    modifySchedule.setShowDate(schedule.getShowDate());
 
                                     selectedTimeSlots = modifySchedule.availableTimeSlots(sc);
                                     modifySchedule.setStartTime(selectedTimeSlots[0]);
@@ -3389,12 +3389,12 @@ public class SystemClass {
                     } while (error);
 
                     if (cinemaNo != 0) {
-                        TimeTable timeTable = TimeTable.acceptViewScheduleListInput(sc, cinemas.get(cinemaNo - 1));
+                        Schedule schedule = Schedule.acceptViewScheduleListInput(sc, cinemas.get(cinemaNo - 1));
 
                         do {
-                            ArrayList<TimeTable> schedules = timeTable.viewSchedule();
+                            ArrayList<Schedule> schedules = schedule.viewSchedule();
 
-                            TimeTable.printing(schedules);
+                            Schedule.printing(schedules);
 
                             if (!schedules.isEmpty()) {
                                 error = true;
@@ -3418,7 +3418,7 @@ public class SystemClass {
                                     }
                                 } while (error);
 
-                                TimeTable deleteSchedule = new TimeTable(schedules.get(scheduleNo - 1).getTimetableID(), schedules.get(scheduleNo - 1).getMovie(), schedules.get(scheduleNo - 1).getHall(), schedules.get(scheduleNo - 1).getShowDate(), schedules.get(scheduleNo - 1).getStartTime());
+                                Schedule deleteSchedule = new Schedule(schedules.get(scheduleNo - 1).getScheduleID(), schedules.get(scheduleNo - 1).getMovie(), schedules.get(scheduleNo - 1).getHall(), schedules.get(scheduleNo - 1).getShowDate(), schedules.get(scheduleNo - 1).getStartTime());
 
                                 do {
                                     System.out.println("\nDo you want to delete this schedule? (Y / N)");
