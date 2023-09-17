@@ -130,39 +130,49 @@ public class MovieUtils {
                 case 1:
                     // 1. future movie
                     LocalDate futureMovie = currentDate.plusDays(1);
-                    moviesAfterFiltered = showMovieListAfterFiltered(futureMovie, null, 1);
+                    moviesAfterFiltered = getMovieListAfterFiltered(futureMovie, null, 1);
                     break;
                 case 2:
                     // 2. within 1 week
                     LocalDate oneWeekAgo = currentDate.minusWeeks(1);
-                    moviesAfterFiltered = showMovieListAfterFiltered(oneWeekAgo, currentDate, 1);
+                    moviesAfterFiltered = getMovieListAfterFiltered(oneWeekAgo, currentDate, 1);
                     break;
                 case 3:
                     // 3. within 1 month
                     LocalDate oneMonthAgo = currentDate.minusMonths(1);
-                    moviesAfterFiltered = showMovieListAfterFiltered(oneMonthAgo, currentDate, 1);
+                    moviesAfterFiltered = getMovieListAfterFiltered(oneMonthAgo, currentDate, 1);
                     break;
                 case 4:
                     // 4. within 3 month
                     LocalDate threeMonthAgo = currentDate.minusMonths(3);
-                    moviesAfterFiltered = showMovieListAfterFiltered(threeMonthAgo, currentDate, 1);
+                    moviesAfterFiltered = getMovieListAfterFiltered(threeMonthAgo, currentDate, 1);
                     break;
                 case 5:
                     // 5. within 1 year
                     LocalDate oneYearAgo = currentDate.minusYears(1);
-                    moviesAfterFiltered = showMovieListAfterFiltered(oneYearAgo, currentDate, 1);
+                    moviesAfterFiltered = getMovieListAfterFiltered(oneYearAgo, currentDate, 1);
                     break;
                 case 6:
                     // 6. all movie
-                    moviesAfterFiltered = showMovieListAfterFiltered(null, null, 1);
+                    moviesAfterFiltered = getMovieListAfterFiltered(null, null, 1);
                     break;
+            }
+
+            if (!moviesAfterFiltered.isEmpty()) {
+                System.out.printf("\n%-5s %s\n", "No", "Movie Name");
+                for (int i = 0; i < moviesAfterFiltered.size(); i++) {
+                    System.out.printf("%-5d %s\n", (i + 1), moviesAfterFiltered.get(i).getMvName().getName());
+                }
+            }
+            else {
+                System.out.println("Sorry, no movie found!");
             }
         } while (moviesAfterFiltered.isEmpty() && choice != 0);
 
         return moviesAfterFiltered;
     }
 
-    public static ArrayList<Movie> showMovieListAfterFiltered(LocalDate expectedDate, LocalDate currentDate, int status){
+    public static ArrayList<Movie> getMovieListAfterFiltered(LocalDate expectedDate, LocalDate currentDate, int status){
         ArrayList<Movie> movies = new ArrayList<>();
 
         try {
@@ -198,37 +208,21 @@ public class MovieUtils {
 
         ArrayList<Movie> moviesAfterFiltered = new ArrayList<>();
 
-        System.out.printf("\n%-5s %s\n", "No", "Movie Name");
-
-        int countFuture = 1;
-        int countAll = 1;
-        int countOther = 1;
-
         for (int i = 0; i < movies.size(); i++) {
             LocalDate localReleaseDate = movies.get(i).getReleaseDate().getDate();
 
             if (expectedDate != null && currentDate == null) {  // Future Movie(s)
                 if (localReleaseDate.equals(expectedDate) || localReleaseDate.isAfter(expectedDate)) {
-                    System.out.printf("%-5d %s\n", countFuture, movies.get(i).getMvName().getName());
                     moviesAfterFiltered.add(movies.get(i));
-                    countFuture++;
                 }
             } else if (expectedDate == null && currentDate == null) {  // All Movies
-                System.out.printf("%-5d %s\n", countAll, movies.get(i).getMvName().getName());
                 moviesAfterFiltered.add(movies.get(i));
-                countAll++;
             }
             else {
                 if (localReleaseDate.equals(expectedDate) || (localReleaseDate.isAfter(expectedDate) && localReleaseDate.isBefore(currentDate))) {
-                    System.out.printf("%-5d %s\n", countOther, movies.get(i).getMvName().getName());
                     moviesAfterFiltered.add(movies.get(i));
-                    countOther++;
                 }
             }
-        }
-
-        if (moviesAfterFiltered.isEmpty()) {
-            System.out.println("Sorry, no movie found!");
         }
 
         return moviesAfterFiltered;
