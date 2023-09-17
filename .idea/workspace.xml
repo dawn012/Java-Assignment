@@ -4,26 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="Add Promotion">
-      <change afterPath="$PROJECT_DIR$/Payment_Management/Card.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Payment_Management/CardValidator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Payment_Management/Payment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Payment_Management/StripeAPIKey.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Payment_Management/TNG.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Payment_Management/TNGValidator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Promotion_Management/PromotionUtils.java" afterDir="false" />
-    </list>
-    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="update something">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Booking_Management/Booking.java" beforeDir="false" afterPath="$PROJECT_DIR$/Booking_Management/Booking.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database/DatabaseUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/Database/DatabaseUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Driver/SystemClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/Driver/SystemClass.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Promotion_Management/Promotion.java" beforeDir="false" afterPath="$PROJECT_DIR$/Promotion_Management/Promotion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sql.txt" beforeDir="false" afterPath="$PROJECT_DIR$/sql.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Movie_Management/MovieUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/Movie_Management/MovieUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report_Management/Report.java" beforeDir="false" afterPath="$PROJECT_DIR$/Report_Management/Report.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report_Management/TopMovieReport.java" beforeDir="false" afterPath="$PROJECT_DIR$/Report_Management/TopMovieReport.java" afterDir="false" />
-    </list>
+    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="Add Promotion" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -300,7 +281,15 @@
       <option name="project" value="LOCAL" />
       <updated>1694925280492</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="Add Payment">
+      <option name="closed" value="true" />
+      <created>1694946347805</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1694946347805</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -367,7 +356,8 @@
     <MESSAGE value="update the search movie by genre" />
     <MESSAGE value="update something" />
     <MESSAGE value="Add Promotion" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add Promotion" />
+    <MESSAGE value="Add Payment" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add Payment" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
