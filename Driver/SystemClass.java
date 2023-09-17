@@ -11,9 +11,12 @@ import Movie_Management.MovieUtils;
 import Movie_Management.MovieValidator;
 import Payment_Management.*;
 import Promotion_Management.*;
+import Report_Management.Report;
+import Report_Management.TopMovieReport;
 import Schedule_Management.Schedule;
 import Booking_Management.Booking;
 import Seat_Management.Seat;
+import Ticket_Managemnet.Ticket;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -258,8 +261,29 @@ public class SystemClass {
 
                                         // 4. Select the seat chin yong part
                                         Booking booking = new Booking();
-
-                                        if (booking.executeBooking(schedule)) {
+                                        String confirmStr="R";
+                                        while (confirmStr.equals("R")) {
+                                            if(booking.executeBooking(schedule)){
+                                                booking.printBookingDetail();
+                                                do {
+                                                    try {
+                                                        System.out.println("Confirm This Booking ? (Y=Yes R=No, Select Again N=No Confirm, Exit) : ");
+                                                        confirmStr = sc.next().toUpperCase();
+                                                        if (confirmStr.equals("Y")) {
+                                                            Booking.insertBooking(booking);
+                                                            for (Ticket t : booking.getTicketList()) {
+                                                                Ticket.insertTicket(t);
+                                                            }
+                                                        }
+                                                    } catch (Exception e){
+                                                        System.out.println("Something wrong...");
+                                                        sc.nextLine();
+                                                    }
+                                                }while(!confirmStr.equals("Y") && !confirmStr.equals("N") && !confirmStr.equals("R"));
+                                            }
+                                        }
+                                        if (confirmStr.equals("Y")) {
+                                            //booking.printBookingDetail();
                                             // Apply promotion
                                             Promotion promotion = applyPromotion(sc, 1, booking);
 
@@ -498,7 +522,8 @@ public class SystemClass {
                     System.out.println("4. Manage Genre");
                     System.out.println("5. Manage Schedule");
                     System.out.println("6. Manage Promotion");
-                    System.out.println("7. Log out");
+                    System.out.println("7. View Report");
+                    System.out.println("8. Log out");
                     System.out.print("\nEnter your selection: ");
 
                     choice = sc.nextInt();
@@ -531,6 +556,9 @@ public class SystemClass {
                     back = managePromotion(sc);
                     break;
                 case 7:
+                    viewReport(sc);
+                    break;
+                case 8:
                     back = true;
                     break;
                 default:
@@ -3547,6 +3575,110 @@ public class SystemClass {
         } while (back == false);
     }
 
+    public static void viewReport(Scanner sc) {
+        int choice = 0;
+        boolean error = true;
+
+        do {
+            try {
+                System.out.println("\nSelect the report you want to view: ");
+                System.out.println("1. Monthly Sales Report");
+                System.out.println("2. Movie Box Office Report");
+                System.out.print("\nEnter your selection (0 - Back): ");
+                choice = sc.nextInt();
+
+                if (choice >= 0 && choice <= 2) {
+                    error = false;
+                }
+                else {
+                    System.out.println("Your choice is not among the available options! PLease try again.");
+                }
+            }
+            catch (InputMismatchException e) {
+                System.out.println("Please enter a valid choice!");
+                sc.nextLine();
+            }
+        } while (error);
+
+        switch (choice) {
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                int selection = 0;
+                error = true;
+                LocalDate currentDate = LocalDate.now();
+                ArrayList<Report> reports = new ArrayList<>();
+
+                do {
+                    do {
+                        try {
+                            System.out.println("\nPlease select a box office ranking report from the list below: ");
+                            System.out.println("1. Daily");
+                            System.out.println("2. Weekly");
+                            System.out.println("3. Monthly");
+                            System.out.println("4. Yearly");
+                            System.out.print("\nEnter your selection (0 - Back): ");
+                            selection = sc.nextInt();
+                            sc.nextLine();
+
+                            if (selection >= 0 && selection <= 4) {
+                                error = false;
+                            } else {
+                                System.out.println("Your choice is not among the available options! PLease try again.");
+                            }
+                        } catch (InputMismatchException e) {
+                            System.out.println("Please enter a valid choice!");
+                            sc.nextLine();
+                        }
+                    } while (error);
+
+                    ArrayList<Movie> movies = MovieUtils.getMovieListAfterFiltered(null, null, 1);
+                    Report reportAfterRanking = new TopMovieReport();
+                    Report report = new TopMovieReport();
+                    String title = null;
+
+                    switch (selection) {
+                        case 0:
+                            break;
+                        case 1:
+                            LocalDate today = currentDate;
+                            ((TopMovieReport)report).setReportValue(today, movies);
+                            title = "Daily Box Office Ranking Report";
+                            break;
+                        case 2:
+                            LocalDate oneWeekAgo = currentDate.minusWeeks(1);
+                            ((TopMovieReport)report).setReportValue(oneWeekAgo, movies);
+                            title = "Weekly Box Office Ranking Report";
+                            break;
+                        case 3:
+                            LocalDate oneMonthAgo = currentDate.minusMonths(1);
+                            ((TopMovieReport)report).setReportValue(oneMonthAgo, movies);
+                            title = "Monthly Box Office Ranking Report";
+                            break;
+                        case 4:
+                            LocalDate oneYearAgo = currentDate.minusYears(1);
+                            ((TopMovieReport)report).setReportValue(oneYearAgo, movies);
+                            title = "Yearly Box Office Ranking Report";
+                            break;
+                    }
+
+                    reportAfterRanking = TopMovieReport.getRanking(report);
+                    reportAfterRanking.setTitle(title);
+                    reportAfterRanking.setReportDate(currentDate);
+
+                    if (!((TopMovieReport) reportAfterRanking).getMovie().isEmpty()) {
+                        System.out.println(reportAfterRanking.toString());
+                    }
+                    else {
+                        System.out.println("Sorry, no movie found!");
+                    }
+                } while (reports.isEmpty() && selection != 0);
+                break;
+        }
+    }
+
     private static boolean managePromotion(Scanner sc) {
         boolean back = false;
         boolean error = false;
@@ -4042,7 +4174,6 @@ public class SystemClass {
 
                             validPromotions = Promotion.ownPromotionList(custId);
 
-
                             if (validPromotions.isEmpty()) {
                                 System.out.println("\nOops! You don't have any promotion.\n");
 
@@ -4203,75 +4334,123 @@ public class SystemClass {
             booking.setTotalPrice(booking.getTotalPrice() - promotion.getDiscountValue());
         }
 
-        String ctnMakePayment;
-
-        do {
-            System.out.println("\nContinue to make payment? (Y/N) : ");
-            System.out.print("Answer: ");
-            String answer = sc.next().trim();
-            sc.nextLine();
-
-            ctnMakePayment = SystemClass.askForContinue(answer);
-        } while (ctnMakePayment.equals("Invalid"));
-
-        if (ctnMakePayment.equals("N")) {
-
-        }
-
-        System.out.println("\nPayment Method: ");
-        System.out.println("1. Credit/Debit Card");
-        System.out.println("2. Touch 'n Go");
-        System.out.print("\nSelect your payment method (0 - Back): ");
-
-        String paymentMethod = sc.nextLine().trim();
+        String paymentMethod;
 
         // Payment payment;
         Payment payment;
         Payment validPayment = null;
-        boolean back = false;
+
+        boolean back;
+        boolean successPayment = false;
 
         do {
-            switch (paymentMethod) {
-                case "0":
-                    back = true;
-                    break;
-                case "1":
-                    // Process Credit/Debit Card Payment
-                    while (true) {
-                        payment = cardPaymentInfo(sc);
+            System.out.println("\nPayment Method: ");
+            System.out.println("1. Credit/Debit Card");
+            System.out.println("2. Touch 'n Go");
+            System.out.print("\nSelect your payment method (0 - Back): ");
+
+            paymentMethod = sc.nextLine().trim();
+
+            do {
+                back = false;
+
+                switch (paymentMethod) {
+                    case "0":
+                        return false;
+
+                    case "1":
+                        // Process Credit/Debit Card Payment
+                        while (true) {
+                            payment = cardPaymentInfo(sc);
+
+                            validPayment = validPayment(payment, booking);
+
+                            if(validPayment != null) {
+                                back = true;
+                                successPayment = true;
+                                break;
+                            }
+
+                            String changePaymentMtd;
+
+                            do {
+                                System.out.println("\nDo you want to change your payment method? (Y / N)");
+                                System.out.print("Answer: ");
+                                String answer = sc.next().trim();
+                                sc.nextLine();
+
+                                changePaymentMtd = SystemClass.askForContinue(answer);
+                            } while (changePaymentMtd.equals("Invalid"));
+
+                            if (changePaymentMtd.equals("Y")) {
+                                back = true;
+                                break;
+                            }
+                        }
+
+                        break;
+                    case "2":
+                        // Process TNG Payment
+                        payment = tngPaymentInfo(sc);
 
                         validPayment = validPayment(payment, booking);
 
-                        if(validPayment != null) {
-                            back = true;
-                            break;
-                        }
-                    }
+                        back = true;
 
-                    break;
-                case "2":
-                    // Process TNG Payment
-                    payment = tngPaymentInfo(sc);
+                        break;
+                    default:
+                        System.out.println("Invalid selection. Please retry.");
+                }
 
-                    validPayment = validPayment(payment, booking);
+            } while (!back);
 
-                    back = true;
-
-                    break;
-                default:
-                    System.out.println("Invalid selection. Please retry.");
+            if (back) {
+                back = false;
             }
-        } while (!back);
 
-        validPayment.addPayment();
-        validPayment.pay();
+        } while (!back && !successPayment);
 
-        if(promotion != null) {
-            // User use promotion code, update promotion code status
-            promotion.custApplyPromotion(validPayment.getPaymentId(), custId);
-        }
+        String ctnMakePayment;
+        String cancelPayment;
 
-        return true;
+        do {
+            do {
+                System.out.println("\nContinue to make payment? (Y / N)");
+                System.out.print("Answer: ");
+                String answer = sc.next().trim();
+                sc.nextLine();
+
+                ctnMakePayment = SystemClass.askForContinue(answer);
+            } while (ctnMakePayment.equals("Invalid"));
+
+            if (ctnMakePayment.equals("Y")) {
+                // Confirm to make payment
+                validPayment.addPayment();
+                validPayment.pay();
+
+                if(promotion != null) {
+                    // User use promotion code, update promotion code status
+                    promotion.custApplyPromotion(validPayment.getPaymentId(), custId);
+                }
+
+                System.out.println("\nPayment Successfully! Thanks for your payment.");
+
+                return true;
+            }
+
+            else {
+                do {
+                    System.out.println("\nConfirm to cancel your payment? (Y / N)");
+                    System.out.print("Answer: ");
+                    String answer = sc.next().trim();
+                    sc.nextLine();
+
+                    cancelPayment = SystemClass.askForContinue(answer);
+                } while (cancelPayment.equals("Invalid"));
+            }
+        } while (cancelPayment.equals("N"));
+
+        return false;
     }
 
     private Payment validPayment(Payment payment, Booking booking) {

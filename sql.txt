@@ -459,7 +459,7 @@ CREATE TABLE `booking` (
   `total_price` decimal(11,2) DEFAULT NULL,
   `booking_date` date DEFAULT NULL,
   `booking_time` time DEFAULT NULL,
-  `booking_status` int(1) DEFAULT NULL,
+  `booking_status` varchar(25) DEFAULT 'processing',
   `customer_id` int(11) DEFAULT NULL
 );
 ALTER TABLE `booking` ADD PRIMARY KEY (`booking_id`);

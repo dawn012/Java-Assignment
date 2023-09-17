@@ -75,13 +75,10 @@ public class Card extends Payment {
         Object[] params = {paymentId, cardNo, expiredDate, cvc};
 
         try {
-            int insert = DatabaseUtils.insertQuery(sql, params);
-
-            if (insert == 1) {
-                System.out.println("Insert card successfully.");
-            }
+            DatabaseUtils.insertQuery(sql, params);
 
         } catch (SQLException e) {
+            System.out.println("\nOops! Something went wrong. Please try again!");
             throw new RuntimeException(e);
         }
     }
@@ -93,11 +90,10 @@ public class Card extends Payment {
         PaymentIntent paymentIntent = createPaymentIntent();
 
         if (paymentIntent != null) {
-            System.out.println("Payment successful!");
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     private int getExpiredMonth(){
