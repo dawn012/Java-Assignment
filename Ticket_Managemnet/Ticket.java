@@ -70,10 +70,11 @@ public class Ticket {
     }
     public int countTicket_id(int count) {
         this.ticket_id=1;
-
+        int largeId=0;
         ArrayList<Ticket> tickets=Ticket.getBookedTicketList();
         for(Ticket t:tickets){
-            this.ticket_id++;
+            if(t.getTicket_id()>=largeId)
+                this.ticket_id=t.getTicket_id();
         }
         this.ticket_id+=count;
         return this.ticket_id;

@@ -369,8 +369,10 @@ public class Booking {
                 System.out.println("\t\t-------------------------------------------");
                 System.out.printf("\t\t Booking ID : %04d\t\tDate : %s\n", getBooking_id(), getBookingDateTime().getDate());
                 System.out.println("\t\t-------------------------------------------");
-                System.out.printf("\t\t Adult Ticket(RM%6.2f) x %d\n", schedule.getMovie().getBasicTicketPrice() * 1.2, getAdultTicket_qty());
-                System.out.printf("\t\t Child Ticket(RM%6.2f) X %d\n", schedule.getMovie().getBasicTicketPrice() * 0.8, getChildTicket_qty());
+                if(getAdultTicket_qty()>0)
+                    System.out.printf("\t\t Adult Ticket(RM%6.2f) x %d\n", schedule.getMovie().getBasicTicketPrice() * 1.2, getAdultTicket_qty());
+                if(getChildTicket_qty()>0)
+                    System.out.printf("\t\t Child Ticket(RM%6.2f) X %d\n", schedule.getMovie().getBasicTicketPrice() * 0.8, getChildTicket_qty());
                 System.out.printf("\t\t\t\tTotal : RM%.2f\n", totalPrice);
                 System.out.println("\t\t-------------------------------------------");
                 do {
