@@ -52,11 +52,13 @@ public class Booking {
 
     public void countBooking_id() {
         this.booking_id=1;
-        //this.ticket_id = ticket_id;
+        int largeId=0;
         ArrayList<Booking> bookings=Booking.getBookingList();
         for(Booking b:bookings){
-            this.booking_id++;
+            if(b.getBooking_id()>=largeId)
+                largeId=b.getBooking_id();
         }
+        this.booking_id=largeId+1;
 //        this.ticket_id+=count;
         //return this.booking_id;
     }
@@ -326,7 +328,7 @@ public class Booking {
                     ticket.setPrice_rate(priceRate);
                     ticket.setTicketType(ticketType);
                     ticket.setTicket_id(ticket.countTicket_id(count));
-                    ticket.setTicket_id(ticket.countTicket_id(count));
+                    //ticket.setTicket_id(ticket.countTicket_id(count));
                     ticket.setBooking(this);
                     ticket.setSeat(seat);
                     ticket.setTimeTable(schedule);

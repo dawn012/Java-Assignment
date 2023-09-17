@@ -74,8 +74,9 @@ public class Ticket {
         ArrayList<Ticket> tickets=Ticket.getBookedTicketList();
         for(Ticket t:tickets){
             if(t.getTicket_id()>=largeId)
-                this.ticket_id=t.getTicket_id();
+                largeId=t.getTicket_id();
         }
+        this.ticket_id=largeId;
         this.ticket_id+=count;
         return this.ticket_id;
     }
