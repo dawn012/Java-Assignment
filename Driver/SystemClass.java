@@ -49,7 +49,7 @@ public class SystemClass {
                     choice = sc.nextInt();
                     sc.nextLine();
 
-                    if (choice > 0 && choice <= 4) {
+                    if (choice > 0 && choice <= 5) {
                         error = false;
                     } else {
                         System.out.println("Your choice is not among the available options! PLease try again.");
@@ -102,26 +102,36 @@ public class SystemClass {
                                 LocalDate oneWeekAgo = currentDate.minusWeeks(1);
 
                                 System.out.println("\nOpening This Week");
-                                moviesAfterFiltered = MovieUtils.showMovieListAfterFiltered(oneWeekAgo, currentDate, 1);
+                                moviesAfterFiltered = MovieUtils.getMovieListAfterFiltered(oneWeekAgo, currentDate, 1);
                                 break;
                             case 2:
                                 LocalDate oneMonthAgo = currentDate.minusMonths(1);
 
                                 System.out.println("\nOpening This Month");
-                                moviesAfterFiltered = MovieUtils.showMovieListAfterFiltered(oneMonthAgo, currentDate, 1);
+                                moviesAfterFiltered = MovieUtils.getMovieListAfterFiltered(oneMonthAgo, currentDate, 1);
                                 break;
                             case 3:
                                 LocalDate threeMonthAgo = currentDate.minusMonths(3);
 
                                 System.out.println("\nRelease within 3 months");
-                                moviesAfterFiltered = MovieUtils.showMovieListAfterFiltered(threeMonthAgo, currentDate, 1);
+                                moviesAfterFiltered = MovieUtils.getMovieListAfterFiltered(threeMonthAgo, currentDate, 1);
                                 break;
                             case 4:
                                 LocalDate comingSoon = currentDate.plusDays(1);
 
                                 System.out.println("\nComing Soon");
-                                moviesAfterFiltered = MovieUtils.showMovieListAfterFiltered(comingSoon, null, 1);
+                                moviesAfterFiltered = MovieUtils.getMovieListAfterFiltered(comingSoon, null, 1);
                                 break;
+                        }
+
+                        if (!moviesAfterFiltered.isEmpty()) {
+                            System.out.printf("\n%-5s %s\n", "No", "Movie Name");
+                            for (int i = 0; i < moviesAfterFiltered.size(); i++) {
+                                System.out.printf("%-5d %s\n", (i + 1), moviesAfterFiltered.get(i).getMvName().getName());
+                            }
+                        }
+                        else {
+                            System.out.println("Sorry, no movie found!");
                         }
 
                         if (periodSelected != 0) {
@@ -1552,7 +1562,7 @@ public class SystemClass {
                                         hallsModified.get(hallModified-1).initSeatList();
                                         String strRow=" ";
                                         int col = 0;
-                                        char row =strRow.charAt(0);
+                                        String row =" ";
                                         Scanner scanner=new Scanner(System.in);
                                         boolean validInput = false;
                                         String strCon="Y";
@@ -1562,8 +1572,8 @@ public class SystemClass {
                                             while (!validInput) {
                                                 try {
                                                     System.out.print("\nSelect Row    : ");
-                                                    strRow=scanner.next().toUpperCase();
-                                                    row=strRow.charAt(0);
+
+                                                    row=scanner.next().toUpperCase();
 
                                                     System.out.print("Select Column : ");
                                                     col = scanner.nextInt();
@@ -1582,7 +1592,7 @@ public class SystemClass {
                                             validInput=false;
                                             String letter2 = Integer.toString(hallsModified.get(hallModified - 1).getHallID());
                                             //char letter = (char) ('A' + row - 1);
-                                            String combineSeatId = letter2 + row + Integer.toString(col);
+                                            String combineSeatId = letter2 + row.charAt(0) + Integer.toString(col);
 
                                             int seatStatus = 1;
                                             do {
@@ -1750,7 +1760,17 @@ public class SystemClass {
                     // View Movie
                     do {
                         int choice1 = 0;
-                        ArrayList<Movie> moviesAfterFiltered = MovieUtils.showMovieListAfterFiltered(null, null, 1);
+                        ArrayList<Movie> moviesAfterFiltered = MovieUtils.getMovieListAfterFiltered(null, null, 1);
+
+                        if (!moviesAfterFiltered.isEmpty()) {
+                            System.out.printf("\n%-5s %s\n", "No", "Movie Name");
+                            for (int i = 0; i < moviesAfterFiltered.size(); i++) {
+                                System.out.printf("%-5d %s\n", (i + 1), moviesAfterFiltered.get(i).getMvName().getName());
+                            }
+                        }
+                        else {
+                            System.out.println("Sorry, no movie found!");
+                        }
 
                         do {
                             try {
@@ -2050,7 +2070,17 @@ public class SystemClass {
 
                     do {
                         System.out.println("\nSelect the movie you want to modify: ");
-                        moviesAfterFiltered = MovieUtils.showMovieListAfterFiltered(null, null, 1);
+                        moviesAfterFiltered = MovieUtils.getMovieListAfterFiltered(null, null, 1);
+
+                        if (!moviesAfterFiltered.isEmpty()) {
+                            System.out.printf("\n%-5s %s\n", "No", "Movie Name");
+                            for (int i = 0; i < moviesAfterFiltered.size(); i++) {
+                                System.out.printf("%-5d %s\n", (i + 1), moviesAfterFiltered.get(i).getMvName().getName());
+                            }
+                        }
+                        else {
+                            System.out.println("Sorry, no movie found!");
+                        }
 
                         do {
                             try {
@@ -2347,7 +2377,17 @@ public class SystemClass {
                     movieID = 0;
                     do {
                         System.out.println("\nSelect the movie you want to delete: ");
-                        moviesAfterFiltered = MovieUtils.showMovieListAfterFiltered(null, null, 1);
+                        moviesAfterFiltered = MovieUtils.getMovieListAfterFiltered(null, null, 1);
+
+                        if (!moviesAfterFiltered.isEmpty()) {
+                            System.out.printf("\n%-5s %s\n", "No", "Movie Name");
+                            for (int i = 0; i < moviesAfterFiltered.size(); i++) {
+                                System.out.printf("%-5d %s\n", (i + 1), moviesAfterFiltered.get(i).getMvName().getName());
+                            }
+                        }
+                        else {
+                            System.out.println("Sorry, no movie found!");
+                        }
 
                         do {
                             try {

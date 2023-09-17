@@ -52,11 +52,13 @@ public class Booking {
 
     public void countBooking_id() {
         this.booking_id=1;
-        //this.ticket_id = ticket_id;
+        int largeId=0;
         ArrayList<Booking> bookings=Booking.getBookingList();
         for(Booking b:bookings){
-            this.booking_id++;
+            if(b.getBooking_id()>=largeId)
+                largeId=b.getBooking_id();
         }
+        this.booking_id=largeId+1;
 //        this.ticket_id+=count;
         //return this.booking_id;
     }
@@ -234,8 +236,8 @@ public class Booking {
             System.out.println("Booking ID : " + this.booking_id);
             String strRow=" ";
             int col = 0;
-            char row =strRow.charAt(0);
-
+            //char row =strRow.charAt(0);
+            String row =" ";
             String str = " ";
             char ch = str.charAt(0);
 
@@ -249,8 +251,8 @@ public class Booking {
                 while (!validInput) {
                     try {
                         System.out.print("\nSelect Row    : ");
-                        strRow=scanner.next().toUpperCase();
-                        row=strRow.charAt(0);
+
+                        row=scanner.next().toUpperCase();
 
                         //System.out.println(row);/////////////////////
                         System.out.print("Select Column : ");
@@ -291,7 +293,7 @@ public class Booking {
                 } while (inputType != 1 && inputType != 2);
                 String letter2 = Integer.toString(schedule.getHall().getHallID());
 //                char letter = (char) ('A' + row - 1);
-                String combineSeatId = letter2 + row + Integer.toString(col);
+                String combineSeatId = letter2 + row.charAt(0) + Integer.toString(col);
 
                 boolean exist = false;
                 for (Ticket t : tickets) {
@@ -319,12 +321,12 @@ public class Booking {
 
                 if (!exist) {
                     //seat
-                    Seat seat = new Seat(combineSeatId, row, col, 1);
+                    Seat seat = new Seat(combineSeatId, row.charAt(0), col, 1);
                     Ticket ticket = new Ticket();
                     ticket.setPrice_rate(priceRate);
                     ticket.setTicketType(ticketType);
-                    ticket.setTicket_id(ticket.countTicket_id(count+1));
-                    ticket.setTicket_id(ticket.countTicket_id(count+1));
+                    ticket.setTicket_id(ticket.countTicket_id(count));
+                    //ticket.setTicket_id(ticket.countTicket_id(count));
                     ticket.setBooking(this);
                     ticket.setSeat(seat);
                     ticket.setTimeTable(schedule);
@@ -367,8 +369,10 @@ public class Booking {
                 System.out.println("\t\t-------------------------------------------");
                 System.out.printf("\t\t Booking ID : %04d\t\tDate : %s\n", getBooking_id(), getBookingDateTime().getDate());
                 System.out.println("\t\t-------------------------------------------");
-                System.out.printf("\t\t Adult Ticket(RM%6.2f) x %d\n", schedule.getMovie().getBasicTicketPrice() * 1.2, getAdultTicket_qty());
-                System.out.printf("\t\t Child Ticket(RM%6.2f) X %d\n", schedule.getMovie().getBasicTicketPrice() * 0.8, getChildTicket_qty());
+                if(getAdultTicket_qty()>0)
+                    System.out.printf("\t\t Adult Ticket(RM%6.2f) x %d\n", schedule.getMovie().getBasicTicketPrice() * 1.2, getAdultTicket_qty());
+                if(getChildTicket_qty()>0)
+                    System.out.printf("\t\t Child Ticket(RM%6.2f) X %d\n", schedule.getMovie().getBasicTicketPrice() * 0.8, getChildTicket_qty());
                 System.out.printf("\t\t\t\tTotal : RM%.2f\n", totalPrice);
                 System.out.println("\t\t-------------------------------------------");
                 do {
