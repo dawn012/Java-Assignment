@@ -2,8 +2,8 @@ package Ticket_Managemnet;
 
 import Database.DatabaseUtils;
 import Booking_Management.Booking;
+import Schedule_Management.Schedule;
 import Seat_Management.Seat;
-import Schedule_Management.TimeTable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,7 +13,7 @@ public class Ticket {
     private int ticket_id;
     private Seat seat;
     private Booking booking;
-    private TimeTable timeTable;
+    private Schedule schedule;
     private String ticketType;
     private double price_rate;
     private int ticketStatus;
@@ -27,21 +27,21 @@ public class Ticket {
 //        this.seat = seat;
 //        this.booking = booking;
 //    }
-    public Ticket(int ticket_id, Seat seat, Booking booking, TimeTable timeTable) {
+    public Ticket(int ticket_id, Seat seat, Booking booking, Schedule schedule) {
         this.ticket_id = ticket_id;
         this.seat = seat;
         this.booking = booking;
-        this.timeTable = timeTable;
+        this.schedule = schedule;
         this.ticketStatus=1;
     }
 
-    public Ticket(int ticket_id, Seat seat, Booking booking, String ticketType, double price_rate, TimeTable timeTable) {
+    public Ticket(int ticket_id, Seat seat, Booking booking, String ticketType, double price_rate, Schedule schedule) {
         this.ticket_id = ticket_id;
         this.seat = seat;
         this.booking = booking;
         this.ticketType = ticketType;
         this.price_rate = price_rate;
-        this.timeTable = timeTable;
+        this.schedule = schedule;
     }
 
     //Getter
@@ -51,8 +51,8 @@ public class Ticket {
     public Seat getSeat() {
         return seat;
     }
-    public TimeTable getTimeTable() {
-        return timeTable;
+    public Schedule getTimeTable() {
+        return schedule;
     }
     public Booking getBooking() {
         return booking;
@@ -90,8 +90,8 @@ public class Ticket {
     public void setSeat(Seat seat) {
         this.seat = seat;
     }
-    public void setTimeTable(TimeTable timeTable) {
-        this.timeTable = timeTable;
+    public void setTimeTable(Schedule schedule) {
+        this.schedule = schedule;
     }
     public void setBooking(Booking booking) {
         this.booking = booking;
@@ -150,10 +150,10 @@ public class Ticket {
                 booking.setBooking_id(result.getInt("booking_id"));
                 ticket.setBooking(booking);
                 //ticket.booking.setBooking_id(result.getInt("booking_id"));
-                TimeTable timetable=new TimeTable();
-                timetable.setTimetableID(result.getInt("schedule_id"));
+                Schedule timetable=new Schedule();
+                timetable.setScheduleID(result.getInt("schedule_id"));
                 ticket.setBooking(booking);
-                //ticket.timeTable.setTimetableID(result.getInt("schedule_id"));
+                //ticket.schedule.setTimetableID(result.getInt("schedule_id"));
                 ticket.setPrice_rate(result.getDouble("price_rate"));
                 tickets.add(ticket);
 
@@ -199,10 +199,10 @@ public class Ticket {
                 booking.setBooking_id(result.getInt("booking_id"));
                 ticket.setBooking(booking);
                 //ticket.booking.setBooking_id(result.getInt("booking_id"));
-                TimeTable timetable=new TimeTable();
-                timetable.setTimetableID(result.getInt("schedule_id"));
+                Schedule timetable=new Schedule();
+                timetable.setScheduleID(result.getInt("schedule_id"));
                 ticket.setBooking(booking);
-                //ticket.timeTable.setTimetableID(result.getInt("schedule_id"));
+                //ticket.schedule.setTimetableID(result.getInt("schedule_id"));
                 ticket.setPrice_rate(result.getDouble("price_rate"));
                 tickets.add(ticket);
 
@@ -223,7 +223,7 @@ public class Ticket {
 
         try {
             String insertSql = "INSERT INTO `ticket` (`ticket_id`,`booking_id`,`seat_id`,`schedule_id`,`ticket_type`,`price_rate`,`ticket_status`) value(?,?,?,?,?,?,?);";
-            Object[] params = {ticket.getTicket_id(),ticket.getBooking().getBooking_id(),ticket.getSeat().getSeat_id(),ticket.timeTable.getTimetableID(),ticket.getTicketType(),ticket.getPrice_rate(),ticket.getTicketStatus()};
+            Object[] params = {ticket.getTicket_id(),ticket.getBooking().getBooking_id(),ticket.getSeat().getSeat_id(),ticket.schedule.getScheduleID(),ticket.getTicketType(),ticket.getPrice_rate(),ticket.getTicketStatus()};
             rowAffected = DatabaseUtils.insertQuery(insertSql, params);
         }
         catch (SQLException e) {
@@ -238,7 +238,7 @@ public class Ticket {
         }
     }
     public double calculateTicketPrice(){
-        return this.timeTable.getMovie().getBasicTicketPrice()*this.price_rate;
+        return this.schedule.getMovie().getBasicTicketPrice()*this.price_rate;
         //return movie.getBasicTicketPrice()*this.price_rate;
 
     }

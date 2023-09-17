@@ -4,16 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="update the search movie by genre">
-      <change afterPath="$PROJECT_DIR$/Report_Management/Report.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Report_Management/TopMovieReport.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="update something">
       <change beforePath="$PROJECT_DIR$/Booking_Management/Booking.java" beforeDir="false" afterPath="$PROJECT_DIR$/Booking_Management/Booking.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Driver/SystemClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/Driver/SystemClass.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Hall_Management/Hall.java" beforeDir="false" afterPath="$PROJECT_DIR$/Hall_Management/Hall.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Movie_Management/Movie.java" beforeDir="false" afterPath="$PROJECT_DIR$/Movie_Management/Movie.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Movie_Management/MovieUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/Movie_Management/MovieUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Schedule_Management/TimeTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/Schedule_Management/TimeTable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report_Management/TopMovieReport.java" beforeDir="false" afterPath="$PROJECT_DIR$/Report_Management/TopMovieReport.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Schedule_Management/TimeTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/Schedule_Management/Schedule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Seat_Management/TestDriver.java" beforeDir="false" afterPath="$PROJECT_DIR$/Seat_Management/TestDriver.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Ticket_Managemnet/Ticket.java" beforeDir="false" afterPath="$PROJECT_DIR$/Ticket_Managemnet/Ticket.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sql.txt" beforeDir="false" afterPath="$PROJECT_DIR$/sql.txt" afterDir="false" />
     </list>
@@ -32,11 +28,11 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;
   }
-}]]></component>
+}</component>
   <component name="GithubPullRequestsUISettings">
     <option name="selectedUrlAndAccountId">
       <UrlAndAccount>
@@ -277,7 +273,15 @@
       <option name="project" value="LOCAL" />
       <updated>1694864181130</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="update something">
+      <option name="closed" value="true" />
+      <created>1694918116518</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1694918116519</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -342,7 +346,8 @@
     <MESSAGE value="change the structure" />
     <MESSAGE value="update the search movie by name" />
     <MESSAGE value="update the search movie by genre" />
-    <option name="LAST_COMMIT_MESSAGE" value="update the search movie by genre" />
+    <MESSAGE value="update something" />
+    <option name="LAST_COMMIT_MESSAGE" value="update something" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

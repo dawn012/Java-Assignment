@@ -3,10 +3,10 @@ package Booking_Management;
 import Database.DatabaseUtils;
 import Driver.DateTime;
 import Hall_Management.Hall;
+import Schedule_Management.Schedule;
 import Seat_Management.Seat;
 
 import Ticket_Managemnet.Ticket;
-import Schedule_Management.TimeTable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -137,7 +137,7 @@ public class Booking {
         }
     }
 
-    public static int viewSeat_status(TimeTable schedule) {
+    public static int viewSeat_status(Schedule schedule) {
         boolean error = false;
         ArrayList<Seat> seats = new ArrayList<>();
         int largestRow=0;
@@ -173,7 +173,7 @@ public class Booking {
             e.printStackTrace();
         }
 
-        ArrayList<Ticket> tickets=Ticket.getBookedTicketList(schedule.getTimetableID());
+        ArrayList<Ticket> tickets=Ticket.getBookedTicketList(schedule.getScheduleID());
         System.out.printf("Movie : %s   Hall : %d   Date : %s   Start Time : %s:%s\n",schedule.getMovie().getMvName().getName(),schedule.getHall().getHallID(),schedule.getShowDate().getDate(),schedule.getStartTime().getHour(),schedule.getStartTime().getMinute());
         System.out.println("\t             [Screen]");
         //System.out.println("   1   2   3   4   5   6   7   8");
@@ -217,7 +217,7 @@ public class Booking {
         return 0;
     }
 
-    public void executeBooking(TimeTable schedule) throws Exception {
+    public void executeBooking(Schedule schedule) throws Exception {
 
 
         this.countBooking_id();
@@ -229,9 +229,9 @@ public class Booking {
             this.childTicket_qty=0;
             this.adultTicket_qty=0;
             this.totalPrice=0;
-            System.out.println("Time table id : "+schedule.getTimetableID());
+            System.out.println("Time table id : "+schedule.getScheduleID());
             Booking.viewSeat_status(schedule);
-            ArrayList<Ticket> tickets = Ticket.getBookedTicketList(schedule.getTimetableID());
+            ArrayList<Ticket> tickets = Ticket.getBookedTicketList(schedule.getScheduleID());
             ArrayList<Ticket> cartTicket = new ArrayList<>();
             System.out.println("Booking ID : " + this.booking_id);
             String strRow=" ";
@@ -485,8 +485,8 @@ public class Booking {
                 booking.setBooking_id(result.getInt("booking_id"));
                 ticket.setBooking(booking);
 
-                TimeTable timetable=new TimeTable();
-                timetable.setTimetableID(result.getInt("schedule_id"));
+                Schedule timetable=new Schedule();
+                timetable.setScheduleID(result.getInt("schedule_id"));
                 ticket.setBooking(booking);
 
                 ticket.setPrice_rate(result.getDouble("price_rate"));

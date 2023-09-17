@@ -86,7 +86,7 @@ INSERT INTO `movie` (`movie_id`, `genre_id`, `mv_name`, `release_date`, `duratio
 (9, 3, 'Anthem of the Heart', '2023-04-01', '119', 'Japanese', 'Tatsuyuki Nagai', 'Tatsuyuki Nagai', 'Inori Minase, Kōki Uchiyama', 'Mito, Masaru Yokoyama', 'Japan', 'A girl who carries the guilt of breaking up her family with carelessly uttered words when she was young is suddenly cursed by a mysterious Egg Fairy so that she can never hurt anybody with her words again.', 13.00, 1),
 (10, 3, 'A Silent Voice', '2023-10-26', '130', 'Japanese', 'Naoko Yamada', 'Yoshitoki Ōima', 'Miyu Irino, Saori Hayami', 'Kensuke Ushio', 'Japan', 'When a grade school student with impaired hearing is bullied mercilessly, she transfers to another school. Years later, one of her former tormentors sets out to make amends.', 13.00, 1);
 
-CREATE TABLE `timeTable` (
+CREATE TABLE `schedule` (
   `schedule_id` int(255) AUTO_INCREMENT NOT NULL,
   `hall_id` int(11) NOT NULL,
   `movie_id` int(11) NOT NULL,
@@ -100,7 +100,7 @@ CREATE TABLE `timeTable` (
   CONSTRAINT CHK_TIMETABLE_STATUS CHECK (TIMETABLE_STATUS IN (0, 1))
 );
 
-INSERT INTO `timeTable` (`schedule_id`, `hall_id`, `movie_id`, `movie_showDate`, `movie_startTime`, `movie_endTime`, `timeTable_status`) VALUES
+INSERT INTO `schedule` (`schedule_id`, `hall_id`, `movie_id`, `movie_showDate`, `movie_startTime`, `movie_endTime`, `timeTable_status`) VALUES
 (1, 2, 7, '2023-03-17', '11:00:00', '12:55:00', 1),
 (2, 3, 2, '2023-03-22', '11:00:00', '12:50:00', 1),
 (3, 1, 4, '2023-04-22', '11:00:00', '13:20:00', 1),

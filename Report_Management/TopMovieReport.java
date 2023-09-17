@@ -6,7 +6,7 @@ import Driver.DateTime;
 import Driver.Name;
 import Genre_Management.Genre;
 import Movie_Management.Movie;
-import Schedule_Management.TimeTable;
+import Schedule_Management.Schedule;
 import Ticket_Managemnet.Ticket;
 
 import java.sql.ResultSet;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class TopMovieReport extends Report {
     public static void main(String[] args) {
         ArrayList<Movie> movies = new ArrayList<>();
-        ArrayList<TimeTable> schedules = new ArrayList<>();
+        ArrayList<Schedule> schedules = new ArrayList<>();
         ArrayList<Ticket> tickets = new ArrayList<>();
         ArrayList<Booking> bookings = new ArrayList<>();
 
@@ -57,9 +57,9 @@ public class TopMovieReport extends Report {
                 ResultSet result = DatabaseUtils.selectQueryById("schedule_id", "timeTable", "movie_id = ?", params);
 
                 while (result.next()) {
-                    TimeTable schedule = new TimeTable();
+                    Schedule schedule = new Schedule();
 
-                    schedule.setTimetableID(result.getInt("schedule_id"));
+                    schedule.setScheduleID(result.getInt("schedule_id"));
 
                     schedules.add(schedule);
                 }
@@ -73,7 +73,7 @@ public class TopMovieReport extends Report {
 
         for (int i = 0; i < schedules.size(); i++) {
             try {
-                Object[] params = {schedules.get(i).getTimetableID()};  // 1
+                Object[] params = {schedules.get(i).getScheduleID()};  // 1
                 ResultSet result = DatabaseUtils.selectQueryById("DISTINCT booking_id", "ticket", "schedule_id = ?", params);
 
                 while (result.next()) {
