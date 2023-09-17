@@ -1,3 +1,15 @@
+CREATE TABLE User (
+    userID INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    gender VARCHAR(10) ,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    userType VARCHAR(255),
+    DOB VARCHAR(10),
+    phoneNo VARCHAR(20),
+    accStatus VARCHAR(255)
+);
+
 CREATE TABLE `cinema` (
   `cinema_id` int(11) AUTO_INCREMENT NOT NULL,
   `cinema_name` varchar(30) NOT NULL,
@@ -81,7 +93,7 @@ INSERT INTO `movie` (`movie_id`, `genre_id`, `mv_name`, `release_date`, `duratio
 (4, 3, 'Violet Evergarder', '2023-04-22', '140', 'Japanese', 'Taichi Ishidate', 'Reiko Yoshida', 'Yui Ishikawa, Daisuke Namikawa', 'Evan Call', 'Japan', 'After the aftermath of a war, a young girl who was used as a tool for war learns to properly live. With the scars of burns, she goes back to her past to discover her true feelings towards the Major.', 13.00, 1),
 (5, 3, 'Demon Slayer', '2023-02-03', '110', 'Japanese', 'Haruo Sotozaki', 'Ufotable', 'Natsuki Hanae, Akari Kitō', 'Yuki Kajiura, Go Shiina', 'Japan', 'As Tanjiro Kamado, Zenitsu Agatsuma, and Inosuke Hashibira assist the Sound Hashira Tengen Uzui against the sibling demons Gyutaro and Daki, holders of Upper Six of the Twelve Kizuki, they realize that the only way to kill the siblings is to behead them simultaneously.', 13.00, 1),
 (6, 6, 'Venom', '2021-09-14', '97', 'English', 'Andy Serkis', 'Tom Hardy, Kelly Marcel', 'Tom Hardy, Michelle Williams', 'Marco Beltrami', 'United States', 'Eddie Brock attempts to reignite his career by interviewing serial killer Cletus Kasady, who becomes the host of the symbiote Carnage and escapes prison after a failed execution.', 13.00, 1),
-(7, 3, 'Weathering with You', '2023-09-01', '112', 'Japanese', 'Makoto Shinkai', 'Makoto Shinkai', 'Kotaro Daigo, Nana Mori', 'Radwimps', 'Japan', 'Set during a period of exceptionally rainy weather, high-school boy Hodaka Morishima runs away from his troubled rural home to Tokyo and befriends an orphan girl who can manipulate the weather.', 13.00, 1),
+(7, 3, 'Weathering with You', '2023-03-17', '112', 'Japanese', 'Makoto Shinkai', 'Makoto Shinkai', 'Kotaro Daigo, Nana Mori', 'Radwimps', 'Japan', 'Set during a period of exceptionally rainy weather, high-school boy Hodaka Morishima runs away from his troubled rural home to Tokyo and befriends an orphan girl who can manipulate the weather.', 13.00, 1),
 (8, 3, 'The Tunnel To Summer', '2023-02-27', '83', 'Japanese', 'Tomohisa Taguchi', 'Tomohisa Taguchi', 'Marie Iitoyo, Oji Suzuka', 'Harumi Fuuki', 'Japan', 'One summer morning before school, Kaoru hears an unsettling rumor—of a mysterious tunnel that can grant any wish to those who enter it, but ages them dramatically in exchange. At first, he writes it off as nothing more than an urban legend, but that very night, he happens upon the selfsame passage: the Urashima Tunnel.', 13.00, 1),
 (9, 3, 'Anthem of the Heart', '2023-04-01', '119', 'Japanese', 'Tatsuyuki Nagai', 'Tatsuyuki Nagai', 'Inori Minase, Kōki Uchiyama', 'Mito, Masaru Yokoyama', 'Japan', 'A girl who carries the guilt of breaking up her family with carelessly uttered words when she was young is suddenly cursed by a mysterious Egg Fairy so that she can never hurt anybody with her words again.', 13.00, 1),
 (10, 3, 'A Silent Voice', '2023-10-26', '130', 'Japanese', 'Naoko Yamada', 'Yoshitoki Ōima', 'Miyu Irino, Saori Hayami', 'Kensuke Ushio', 'Japan', 'When a grade school student with impaired hearing is bullied mercilessly, she transfers to another school. Years later, one of her former tormentors sets out to make amends.', 13.00, 1);
@@ -101,7 +113,7 @@ CREATE TABLE `timeTable` (
 );
 
 INSERT INTO `timeTable` (`schedule_id`, `hall_id`, `movie_id`, `movie_showDate`, `movie_startTime`, `movie_endTime`, `timeTable_status`) VALUES
-(1, 2, 7, '2023-09-22', '11:00:00', '12:55:00', 1),
+(1, 2, 7, '2023-03-17', '11:00:00', '12:55:00', 1),
 (2, 3, 2, '2023-03-22', '11:00:00', '12:50:00', 1),
 (3, 1, 4, '2023-04-22', '11:00:00', '13:20:00', 1),
 (4, 3, 9, '2023-06-13', '13:00:00', '15:00:00', 1),
@@ -452,7 +464,7 @@ CREATE TABLE `booking` (
 ALTER TABLE `booking` ADD PRIMARY KEY (`booking_id`);
 
 create table ticket(
-    ticket_id int(11),
+	ticket_id int(11),
     booking_id int(11),
     seat_id varchar(3),
     schedule_id int(255),
@@ -460,8 +472,67 @@ create table ticket(
     price_rate decimal(11,2),
     ticket_status int(11) NOT NULL DEFAULT 1,
     primary key(ticket_id),
-    FOREIGN KEY(seat_id) REFERENCES seat(seat_id),
-    FOREIGN KEY(schedule_id) REFERENCES timetable(schedule_id)
+	FOREIGN KEY(seat_id) REFERENCES seat(seat_id),
+	FOREIGN KEY(schedule_id) REFERENCES timetable(schedule_id)
 );
 ALTER TABLE ticket
 ADD FOREIGN KEY (booking_id) REFERENCES booking(booking_id);
+
+
+CREATE TABLE PAYMENT (
+    PAYMENT_ID		INT AUTO_INCREMENT PRIMARY KEY,
+    BOOKING_ID 		INT NOT NULL,
+    PAYMENT_METHOD 	VARCHAR(50) NOT NULL CHECK (UPPER(PAYMENT_METHOD) IN ('CREDIT/DEBIT CARD', 'TNG')),
+    PAYMENT_AMOUNT 	DOUBLE(7,2) NOT NULL,
+    CURRENCY 		CHAR(3) NOT NULL,
+    PAYMENT_DATE 	DATE NOT NULL,
+    PAYMENT_TIME 	CHAR(8) NOT NULL,
+    PAYMENT_STATUS 	VARCHAR(20) NOT NULL CHECK (UPPER(payment_status) IN ('PENDING', 'PAID','REFUNDED','PROCESSING','FAILED','CANCELLED')),
+    FOREIGN KEY (BOOKING_ID) REFERENCES BOOKING (BOOKING_ID)
+);
+
+
+CREATE TABLE CARD (
+	CARD_ID		INT AUTO_INCREMENT PRIMARY KEY,
+	PAYMENT_ID	INT NOT NULL,
+	CARD_NO		CHAR(16) NOT NULL,
+	EXPIRED_DATE	VARCHAR(10) NOT NULL,
+	CVC		CHAR(3) NOT NULL,
+ 	FOREIGN KEY (PAYMENT_ID) REFERENCES PAYMENT (PAYMENT_ID)
+);
+
+
+CREATE TABLE TNG (
+	TNG_ID		INT AUTO_INCREMENT PRIMARY KEY,
+	PAYMENT_ID	INT NOT NULL,
+	PHONE_NO	VARCHAR(15) NOT NULL,
+	PIN_NO		CHAR(6) NOT NULL,
+ 	FOREIGN KEY (PAYMENT_ID) REFERENCES PAYMENT (PAYMENT_ID)
+);
+
+CREATE TABLE PROMOTION (
+	PROMOTION_ID   		INT AUTO_INCREMENT PRIMARY KEY,
+	DESCRIPTION		VARCHAR(255) NOT NULL,
+	DISCOUNT_VALUE  	DECIMAL(5,2) NOT NULL,
+	MIN_SPEND		DECIMAL(6,2) NOT NULL,
+	PER_LIMIT		INT NOT NULL,
+	START_DATE		DATE NOT NULL,
+        END_DATE		DATE NOT NULL,
+	PUBLISH_COUNT		INT NOT NULL,
+	RECEIVE_COUNT		INT NOT NULL DEFAULT 0,
+	PROMOTION_STATUS	INT(1) NOT NULL DEFAULT 1,
+	CONSTRAINT CHK_PROMOTION_STATUS CHECK (PROMOTION_STATUS IN (0, 1))
+);
+
+INSERT INTO PROMOTION VALUES (1, "MALAYSIA DAY", 10, 30, 2, "2023-09-17", "2023-09-30", 5, 0, 1);
+
+CREATE TABLE PROMOTION_HISTORY (
+	ID			INT AUTO_INCREMENT PRIMARY KEY,
+	USER_ID			INT NOT NULL,
+	PROMOTION_ID		INT NOT NULL,
+	PAYMENT_ID		INT NULL,
+	PROMOTION_STATUS	VARCHAR(20) NOT NULL CHECK (UPPER(PROMOTION_STATUS) IN ('UNUSED', 'USED','EXPIRED')),
+	FOREIGN KEY (USER_ID) REFERENCES USER (USERID),
+	FOREIGN KEY (PROMOTION_ID) REFERENCES PROMOTION (PROMOTION_ID),
+	FOREIGN KEY (PAYMENT_ID) REFERENCES PAYMENT (PAYMENT_ID)
+);

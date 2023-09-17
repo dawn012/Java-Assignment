@@ -4,8 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="change TimeTable.java to Schedule.java">
+    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="update something">
+      <change afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Promotion_Management/Promotion.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Promotion_Management/PromotionValidator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Database/DatabaseUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/Database/DatabaseUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Driver/DateTime.java" beforeDir="false" afterPath="$PROJECT_DIR$/Driver/DateTime.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Driver/SystemClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/Driver/SystemClass.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sql.txt" beforeDir="false" afterPath="$PROJECT_DIR$/sql.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -276,15 +283,7 @@
       <option name="project" value="LOCAL" />
       <updated>1694918116519</updated>
     </task>
-    <task id="LOCAL-00027" summary="change TimeTable.java to Schedule.java">
-      <option name="closed" value="true" />
-      <created>1694919496115</created>
-      <option name="number" value="00027" />
-      <option name="presentableId" value="LOCAL-00027" />
-      <option name="project" value="LOCAL" />
-      <updated>1694919496115</updated>
-    </task>
-    <option name="localTasksCounter" value="28" />
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -350,8 +349,7 @@
     <MESSAGE value="update the search movie by name" />
     <MESSAGE value="update the search movie by genre" />
     <MESSAGE value="update something" />
-    <MESSAGE value="change TimeTable.java to Schedule.java" />
-    <option name="LAST_COMMIT_MESSAGE" value="change TimeTable.java to Schedule.java" />
+    <option name="LAST_COMMIT_MESSAGE" value="update something" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

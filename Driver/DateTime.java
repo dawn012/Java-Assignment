@@ -1,6 +1,11 @@
 package Driver;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DateTime {
     private int year;
@@ -23,6 +28,16 @@ public class DateTime {
         this.year = year;
         this.month = month;
         this.day = day;
+    }
+
+    public String getCurrentDate(){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return dateFormat.format(new Date());
+    }
+
+    public String getCurrentTime(){
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+        return timeFormat.format(new Date());
     }
 
     public String checkLocalDate(){
@@ -54,6 +69,30 @@ public class DateTime {
         }
         catch (java.time.DateTimeException e) {
             return false;
+        }
+    }
+
+    public static int[] dateFormatValidator(String date, String format) {
+        // 使用正则表达式验证日期字符串格式
+        String regex = "^\\d{4}-\\d{2}-\\d{2}$"; // yyyy-MM-dd 格式
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(date);
+
+        if (!matcher.matches()) {
+            System.out.println("Invalid date format. Please enter a valid date (yyyy-MM-dd).\n");
+            return null;
+        }
+
+        try {
+            String[] strDatePart = date.split("-");
+            int year = Integer.parseInt(strDatePart[0]);  // Java's built-in method for converting strings to integers (int type)
+            int month = Integer.parseInt(strDatePart[1]);
+            int day = Integer.parseInt(strDatePart[2]);
+
+            return new int[]{year, month, day};
+        } catch (DateTimeParseException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
