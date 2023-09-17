@@ -2,9 +2,11 @@ package Report_Management;
 
 import Driver.DateTime;
 
+import java.time.LocalDate;
+
 public abstract class Report {
     private String title;
-    private DateTime reportDate;
+    private LocalDate reportDate;
     private String purpose;
     private String conclusion;
 
@@ -12,17 +14,15 @@ public abstract class Report {
     public Report() {
     }
 
-    public Report(String title, DateTime reportDate, String purpose, String conclusion) {
+    public Report(String title, LocalDate reportDate, String purpose, String conclusion) {
         this.title = title;
         this.reportDate = reportDate;
         this.purpose = purpose;
         this.conclusion = conclusion;
     }
 
-    //public abstract double calculate();
-
     public String toString() {
-        return String.format("Title: %s\t\t\t\tReport Date: %s\n\nPurpose: \n%s\nConclusion: \n%s", title, reportDate.getDate(), purpose, conclusion);
+        return String.format("\nTitle: %s\t\t\t\tReport Date: %s\n\nPurpose: \n%s\n\nConclusion: \n%s\n\n", title, reportDate, purpose, conclusion);
     }
 
     public boolean equals(Object obj){
@@ -40,7 +40,7 @@ public abstract class Report {
         this.title = title;
     }
 
-    public void setReportDate(DateTime reportDate) {
+    public void setReportDate(LocalDate reportDate) {
         this.reportDate = reportDate;
     }
 
@@ -57,7 +57,7 @@ public abstract class Report {
         return title;
     }
 
-    public DateTime getReportDate() {
+    public LocalDate getReportDate() {
         return reportDate;
     }
 
