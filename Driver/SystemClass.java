@@ -3950,7 +3950,6 @@ public class SystemClass {
             System.out.println("\nSelect the operation: ");
             System.out.println("1. New promotion");
             System.out.println("2. My promotion");
-            // System.out.println("3. Past promotion\n");
             System.out.print("\nEnter your selection (0 - Back): ");
             String operation = sc.nextLine();
 
@@ -4265,6 +4264,7 @@ public class SystemClass {
                         validPayment = validPayment(payment, booking);
 
                         back = true;
+                        successPayment = true;
 
                         break;
                     default:
