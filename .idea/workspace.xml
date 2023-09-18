@@ -4,22 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="add new file">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_16_9_2023_6_29_pm__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_16_9_2023_6_29_pm__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_17_9_2023_10_34_am__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_17_9_2023_10_34_am__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/Connect/DatabaseUtils.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/Login/Login.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/RDriver/AdminDriver.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/RDriver/CustomerDriver.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/RDriver/LoginDriver.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/RDriver/RDriver.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/User/Admin.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/User/Customer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/User/User.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/Validator/LoginValidator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/Validator/RegisterValidator.java" beforeDir="false" />
-    </list>
+    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="delete file" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -66,7 +51,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "last_opened_file_path": "E:/Java-Assignment",
+    "last_opened_file_path": "E:/IDEA/code/cinema2",
     "onboarding.tips.debug.path": "C:/Users/zheng/Downloads/Cinema Ticketing System/src/main/java/org/example/Main.java",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.0",
@@ -78,6 +63,7 @@
       <recent name="C:\Users\zheng\Downloads\Java Assignment\Cinema Ticketing System\lib" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="Security_Management" />
       <recent name="Driver" />
     </key>
   </component>
@@ -348,7 +334,14 @@
       <option name="project" value="LOCAL" />
       <updated>1695004343601</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="delete file">
+      <created>1695004843084</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1695004843084</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -417,7 +410,8 @@
     <MESSAGE value="Add Payment" />
     <MESSAGE value="Add Promotion" />
     <MESSAGE value="add new file" />
-    <option name="LAST_COMMIT_MESSAGE" value="add new file" />
+    <MESSAGE value="delete file" />
+    <option name="LAST_COMMIT_MESSAGE" value="delete file" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
