@@ -18,14 +18,15 @@ public class LoginDriver {
         LoginValidator.getUsersFromDatabase();
         ArrayList<User> userList = LoginValidator.getUserList();
         //LoginValidator.printUserList(userList);
-        System.out.println("Menu:");
-        System.out.println("1. Register");
-        System.out.println("2. Login");
-        System.out.println("3. Forgot Password");
-        System.out.println("0. Exit");
+
 
         int choice;
         while (true) {
+            System.out.println("Menu:");
+            System.out.println("1. Register");
+            System.out.println("2. Login");
+            System.out.println("3. Forgot Password");
+            System.out.println("0. Exit");
             try {
                 System.out.print("Enter your choice: ");
                 choice = input.nextInt();

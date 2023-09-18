@@ -246,7 +246,7 @@ public abstract class User{
         return newUser;
     }
 
-    public void updatePasswordToDatabase(User customer, String newPassword, Connection conn) {
+    public static void updatePasswordToDatabase(User customer, String newPassword, Connection conn) {
         try {
             String updateSql = "UPDATE User SET password = ? WHERE userID = ?";
             PreparedStatement updateStmt = conn.prepareStatement(updateSql);

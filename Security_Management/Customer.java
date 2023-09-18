@@ -106,7 +106,7 @@ public class Customer extends User{
         }
     }
 
-    public boolean resetCustPassword(ArrayList<User> customerList, String username, String email) throws SQLException {
+    public static boolean resetCustPassword(ArrayList<User> customerList, String username, String email) throws SQLException {
         Connection conn = DatabaseUtils.getConnection();
         User customer = null;
         for (User cust : customerList) {
@@ -154,7 +154,7 @@ public class Customer extends User{
         }
     }
 
-    private String generateRandomPassword() {
+    private static String generateRandomPassword() {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         StringBuilder newPassword = new StringBuilder();
         Random random = new Random();
