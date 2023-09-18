@@ -104,7 +104,10 @@ public class Ticket {
     public void setPrice_rate(double price_rate) {
         this.price_rate = price_rate;
     }
-//--------------------------------------------------------------------------------------------------------------------------------
+
+
+
+    //--------------------------------------------------------------------------------------------------------------------------------
 //    public void addTicket() throws Exception {
 //        int rowAffected = 0;
 //
@@ -129,19 +132,13 @@ public class Ticket {
         ArrayList<Ticket> tickets = new ArrayList<>();
 
         try {
-            Object[] params = { };
-            ResultSet result = DatabaseUtils.selectQueryById("*", "ticket",null,null);
-            //Ticket ticket = null;
+            Object[] params = {1};
+            ResultSet result = DatabaseUtils.selectQueryById("*", "ticket","ticket_status = ?",params);
+
             while (result.next()) {
-//                String typeC="Child";
-//                String typeA="Adult";
-//                String type= result.getString("ticket_type");
+
                 Ticket ticket = new Ticket();
-//                if(type.equals(typeC)){
-//                    ticket = new ChildTicket("Child");
-//                }else{
-//                    ticket = new AdultTicket("Adult");
-//                }
+
                 ticket.setTicketType(result.getString("ticket_type"));
                 ticket.setTicket_id(result.getInt("ticket_id"));
                 Seat seat = new Seat();
@@ -155,7 +152,7 @@ public class Ticket {
                 Schedule timetable=new Schedule();
                 timetable.setScheduleID(result.getInt("schedule_id"));
                 ticket.setBooking(booking);
-                //ticket.schedule.setTimetableID(result.getInt("schedule_id"));
+                ticket.setTicketStatus(result.getInt("ticket_status"));
                 ticket.setPrice_rate(result.getDouble("price_rate"));
                 tickets.add(ticket);
 
@@ -178,37 +175,30 @@ public class Ticket {
         ArrayList<Ticket> tickets = new ArrayList<>();
 
         try {
-            Object[] params = {schedule_id};
-            ResultSet result = DatabaseUtils.selectQueryById("*", "ticket","schedule_id = ?",params);
+            Object[] params = {schedule_id,1};
+            ResultSet result = DatabaseUtils.selectQueryById("*", "ticket","schedule_id = ? AND ticket_status = ?",params);
             //Ticket ticket = null;
             while (result.next()) {
-//                String typeC="Child";
-//                String typeA="Adult";
-//                String type= result.getString("ticket_type");
+
                 Ticket ticket = new Ticket();
-//                if(type.equals(typeC)){
-//                    ticket = new ChildTicket("Child");
-//                }else{
-//                    ticket = new AdultTicket("Adult");
-//                }
+
                 ticket.setTicketType(result.getString("ticket_type"));
                 ticket.setTicket_id(result.getInt("ticket_id"));
                 Seat seat = new Seat();
                 seat.setSeat_id(result.getString("seat_id"));
                 ticket.setSeat(seat);
-                //ticket.seat.setSeat_id(result.getString("seat_id"));
+                ticket.setTicketStatus(result.getInt("ticket_status"));
                 Booking booking =new Booking();
                 booking.setBooking_id(result.getInt("booking_id"));
                 ticket.setBooking(booking);
-                //ticket.booking.setBooking_id(result.getInt("booking_id"));
+
                 Schedule timetable=new Schedule();
                 timetable.setScheduleID(result.getInt("schedule_id"));
                 ticket.setBooking(booking);
-                //ticket.schedule.setTimetableID(result.getInt("schedule_id"));
+
                 ticket.setPrice_rate(result.getDouble("price_rate"));
                 tickets.add(ticket);
 
-                //seats.add(seat);
             }
 
             result.close();
@@ -243,6 +233,27 @@ public class Ticket {
         return this.schedule.getMovie().getBasicTicketPrice()*this.price_rate;
         //return movie.getBasicTicketPrice()*this.price_rate;
 
+    }
+    public boolean updateStatus() throws SQLException {
+        int rowAffected = 0;
+
+        try {
+            String updateSql = "UPDATE `ticket` SET `ticket_status`= ? WHERE `booking_id` = ?";
+            Object[] params = {getTicketStatus(),getBooking().getBooking_id()};
+            rowAffected = DatabaseUtils.updateQuery(updateSql, params);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if (rowAffected > 0) {
+            //System.out.println("\nThe changes have been saved.");
+            return true;
+        }
+        else {
+            System.out.println("\nSomething went wrong...");
+            return false;
+        }
     }
 
 

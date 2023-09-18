@@ -12,36 +12,25 @@ public abstract class Report {
 
     // Constructor
     public Report() {
+        reportDate = LocalDate.now();
     }
 
-    public Report(String title, LocalDate reportDate, String purpose, String conclusion) {
+    public Report(String title, String purpose, String conclusion) {
         this.title = title;
-        this.reportDate = reportDate;
         this.purpose = purpose;
         this.conclusion = conclusion;
+        reportDate = LocalDate.now();
     }
 
     public String toString() {
         return String.format("\nTitle: %s\t\t\t\tReport Date: %s\n\nPurpose: \n%s\n\nConclusion: \n%s\n\n", title, reportDate, purpose, conclusion);
     }
 
-    public boolean equals(Object obj){
-        if(obj instanceof Report) {
-            Report anotherObj = (Report) obj;
-            return title.equals(anotherObj.title);
-        }
-        else {
-            return false;
-        }
-    }
+    public abstract String getDefaultPurpose();
 
     // Setter
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public void setReportDate(LocalDate reportDate) {
-        this.reportDate = reportDate;
     }
 
     public void setPurpose(String purpose) {

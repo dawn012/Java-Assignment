@@ -26,8 +26,8 @@ public class TopMovieReport extends Report {
         averageBoxOffices = new ArrayList<>();
     }
 
-    public TopMovieReport(String title, LocalDate reportDate, String purpose, String conclusion, ArrayList<Movie> movies, ArrayList<Double> totalBoxOffices, ArrayList<Integer> numOfScreenings, ArrayList<Double> averageBoxOffices) {
-        super(title, reportDate, purpose, conclusion);
+    public TopMovieReport(String title, String purpose, String conclusion, ArrayList<Movie> movies, ArrayList<Double> totalBoxOffices, ArrayList<Integer> numOfScreenings, ArrayList<Double> averageBoxOffices) {
+        super(title, purpose, conclusion);
         this.movies = movies;
         this.totalBoxOffices = totalBoxOffices;
         this.numOfScreenings = numOfScreenings;
@@ -36,6 +36,26 @@ public class TopMovieReport extends Report {
 
     @Override
     public String toString() {
+        if (super.getPurpose() == null || super.getPurpose().trim().isEmpty()) {
+            super.setPurpose(getDefaultPurpose());
+        }
+
+        String duration;
+        if (super.getTitle().contains("Daily")) {
+            duration = "day";
+        }
+        else if (super.getTitle().contains("Weekly")) {
+            duration = "week";
+        }
+        else if (super.getTitle().contains("Monthly")) {
+            duration = "month";
+        }
+        else {
+            duration = "year";
+        }
+
+        super.setConclusion("From this report we can know that the best selling movie of the " + duration + " is " + movies.get(0).getMvName().getName() + " and the least popular movie is " + movies.get(movies.size() - 1).getMvName().getName() + ".");
+
         StringBuilder result = new StringBuilder(super.toString()); // 获取父类 toString() 的结果
         int looping;
 
@@ -142,11 +162,13 @@ public class TopMovieReport extends Report {
                 ResultSet result = DatabaseUtils.selectQueryById("total_price", "booking", "booking_id = ?", params);
 
                 while (result.next()) {
-                    Booking booking = new Booking();
+                    if (result.getString("booking_status").equals("completed")) {
+                        Booking booking = new Booking();
 
-                    booking.setTotalPrice(result.getDouble("total_price"));
+                        booking.setTotalPrice(result.getDouble("total_price"));
 
-                    bookings.add(booking);
+                        bookings.add(booking);
+                    }
                 }
 
                 result.close();
@@ -203,6 +225,10 @@ public class TopMovieReport extends Report {
         }
 
         return reportAfterRanking;
+    }
+
+    public String getDefaultPurpose() {
+        return "To list movies in descending order of their box office earnings, allowing readers to quickly identify the most financially successful films.";
     }
 
     public void setMovie(ArrayList<Movie> movies) {
