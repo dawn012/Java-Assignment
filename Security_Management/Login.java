@@ -131,7 +131,7 @@ public class Login {
                                 break;
                             case 2:
                                 System.out.println("You selected Option 2.");
-                                customer.modifyProfile(input, customer);
+                                customer.modifyUserInfo(input, customer);
                                 break;
                             case 3:
                                 System.out.println("You selected Option 3.");
@@ -180,7 +180,7 @@ public class Login {
                                 break;
                             case 2:
                                 System.out.println("You selected Option 2.");
-                                admin.modifyProfile(input, admin);
+                                admin.modifyUserInfo(input, admin);
                                 break;
                             case 3:
                                 System.out.println("You selected Option 3.");

@@ -9,8 +9,6 @@ import java.util.Scanner;
 public class Customer extends User{
     private int custId;
     private String accStatus;
-    private String email;
-    private String dob;
 
     public Customer() {
         this.setLogin(new Login());
@@ -40,8 +38,6 @@ public class Customer extends User{
         return "Customer{" +
                 "custId=" + custId +
                 ", accStatus='" + accStatus + '\'' +
-                ", email='" + email + '\'' +
-                ", dob='" + dob + '\'' +
                 "} " + super.toString();
     }
 
@@ -199,16 +195,6 @@ public class Customer extends User{
     public void setCustId(int custId) {
         this.custId = custId;
     }
-
-
-
-    public String getDob() {
-        return dob;
-    }
-
-    public void setDob(String dob) {
-        this.dob = dob;
-    }
     @Override
     public int getUserId() {
         return custId;
@@ -218,7 +204,4 @@ public class Customer extends User{
         return accStatus;
     }
 
-    public void setAccStatus(String accStatus) {
-        this.accStatus = accStatus;
-    }
 }

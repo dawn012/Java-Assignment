@@ -35,7 +35,7 @@ public class RDriver {
                 System.out.println(admin);
                 //   admin.modifyUserInfo(input,user2);
 
-                admin.modifyProfile(input,admin);
+                admin.modifyUserInfo(input,admin);
                 System.out.println(admin);
             }
         } else {

@@ -8,6 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import static Security_Management.Admin.getAllUsers;
+
 public class LoginValidator {
     public static ArrayList<User> userList = new ArrayList<>();
 
@@ -57,6 +59,7 @@ public class LoginValidator {
     }
 
     public static User findUserByUsername(String username) {
+        LoginValidator.userList = getAllUsers();
         User foundUser = null;
         for (User user : LoginValidator.userList) {
             if (user.getLogin().getUsername().equals(username)) {
