@@ -28,7 +28,7 @@ public class PromotionUtils {
                 promotion.setMinSpend(rs.getDouble("MIN_SPEND"));
                 promotion.setPerLimit(rs.getInt("PER_LIMIT"));
                 promotion.setStartDate(new DateTime(rs.getDate("START_DATE").toLocalDate()));
-                promotion.setEndDate(new DateTime(rs.getDate("START_DATE").toLocalDate()));
+                promotion.setEndDate(new DateTime(rs.getDate("END_DATE").toLocalDate()));
                 promotion.setPublishCount(rs.getInt("PUBLISH_COUNT"));
                 promotion.setReceiveCount(rs.getInt("RECEIVE_COUNT"));
                 promotion.setPromotionStatus(rs.getInt("PROMOTION_STATUS"));
@@ -54,7 +54,7 @@ public class PromotionUtils {
             }
 
             else {
-                if (eachPromotion.getStartDate().getDate().isAfter(startDate) && eachPromotion.getEndDate().getDate().isBefore(endDate)) {
+                if ((eachPromotion.getStartDate().getDate().isAfter(startDate) || eachPromotion.getStartDate().getDate().equals(startDate)) && (eachPromotion.getEndDate().getDate().isBefore(endDate) || eachPromotion.getEndDate().getDate().equals(endDate))){
                     filteredPromotions.add(eachPromotion);
                     count++;
                     System.out.printf("%d.     %s\n", count, eachPromotion.getDescription());
@@ -65,16 +65,16 @@ public class PromotionUtils {
         return filteredPromotions;
     }
 
-    public static ArrayList<Promotion> validPromotionList(int custId, Scanner input) {
+    public static ArrayList<Promotion> validPromotionList(int custId) {
         ArrayList<Promotion> promotions = new ArrayList<>();
 
         DateTime currentDate = new DateTime();
         ResultSet rs;
 
-        Object[] params = {currentDate.getCurrentDate(), custId};
+        Object[] params = {currentDate.getCurrentDate(), 1, custId};
 
         try {
-            rs = DatabaseUtils.selectQueryById("*", "PROMOTION", "? BETWEEN START_DATE AND END_DATE AND RECEIVE_COUNT < PUBLISH_COUNT AND PROMOTION_ID NOT IN (SELECT PROMOTION_ID FROM PROMOTION_HISTORY WHERE USER_ID = ?);", params);
+            rs = DatabaseUtils.selectQueryById("*", "PROMOTION", "? BETWEEN START_DATE AND END_DATE AND RECEIVE_COUNT < PUBLISH_COUNT AND PROMOTION_STATUS = ? AND PROMOTION_ID NOT IN (SELECT PROMOTION_ID FROM PROMOTION_HISTORY WHERE USER_ID = ?);", params);
 
             while(rs.next()) {
                 Promotion promotion = new Promotion();

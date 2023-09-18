@@ -263,10 +263,10 @@ public class SystemClass {
 
                                         if (booking.executeBooking(schedule)) {
                                             // Apply promotion
-                                            Promotion promotion = applyPromotion(sc, 1, booking);
+                                            Promotion promotion = applyPromotion(sc, 2, booking);
 
                                             // Make Payment
-                                            system.makePayment(sc, 1, booking, promotion);
+                                            system.makePayment(sc, 2, booking, promotion);
                                         }
 
                                     } else {
@@ -284,7 +284,7 @@ public class SystemClass {
                     } while (back == false);
                     break;
                 case 3:
-                    back = customerPromotion(sc, 1);
+                    back = customerPromotion(sc, 2);
                     break;
                 case 4:
                     do {
@@ -3719,7 +3719,6 @@ public class SystemClass {
                         // Set promotion end date
                         Promotion_Management.PromotionValidator.checkEndDate(sc, newPromotion, newPromotion.getStartDate());
 
-
                         // Set promotion publish count
                         Promotion_Management.PromotionValidator.checkPublishCount(sc, newPromotion);
 
@@ -3970,7 +3969,7 @@ public class SystemClass {
                         do {
                             error = false;
 
-                            validPromotions = PromotionUtils.validPromotionList(custId, sc);
+                            validPromotions = PromotionUtils.validPromotionList(custId);
 
                             if (validPromotions.isEmpty()) {
                                 System.out.println("\nOops! There is no other promotion you can claim now.\n");
@@ -4045,9 +4044,29 @@ public class SystemClass {
                             error = false;
                             back = false;
 
-                            validPromotions = Promotion.ownPromotionList(custId);
+                            ArrayList<Promotion> ownPromotions = Promotion.ownPromotionList(custId);
+                            validPromotions = new ArrayList<>();
 
-                            if (validPromotions.isEmpty()) {
+                            if (ownPromotions.isEmpty()) {
+                                System.out.println("\nOops! You don't have any promotion.\n");
+
+                                pressEnterToBack();
+
+                                back = true;
+                                break;
+                            }
+
+                            int found = 0;
+
+                            // To check whether the promotion is deleted by admin or not
+                            for(Promotion valid: ownPromotions) {
+                                if (valid.getPromotionStatus() == 1) {
+                                    validPromotions.add(valid);
+                                    found++;
+                                }
+                            }
+
+                            if (found == 0) {
                                 System.out.println("\nOops! You don't have any promotion.\n");
 
                                 pressEnterToBack();
@@ -4061,8 +4080,10 @@ public class SystemClass {
                             int count = 0;
 
                             for(Promotion details: validPromotions) {
-                                count++;
-                                System.out.printf("%d. %s\n", count, details.getDescription());
+                                if (details.getPromotionStatus() == 1) {
+                                    count++;
+                                    System.out.printf("%d. %s\n", count, details.getDescription());
+                                }
                             }
 
                             try {
@@ -4236,17 +4257,19 @@ public class SystemClass {
 
             if (!ownPromotions.isEmpty()) {
                 for (Promotion ownPromotion : ownPromotions) {
-                    if (ownPromotion.getMinSpend() <= booking.getTotalPrice()) {
-                        // Compare promotion min spend with booking total price to find out the valid promotion
-                        validPromotions.add(ownPromotion);
+                    if (ownPromotion.getPromotionStatus() == 1) {
+                        if (ownPromotion.getMinSpend() <= booking.getTotalPrice()) {
+                            // Compare promotion min spend with booking total price to find out the valid promotion
+                            validPromotions.add(ownPromotion);
 
-                        if (ownPromotion.getDiscountValue() > maxDiscount) {
-                            maxDiscount = ownPromotion.getDiscountValue();
-                            bestPromotion = ownPromotion; // 更新最佳促销
-                            record = i; // Record the position of best promotion in validPromotions
+                            if (ownPromotion.getDiscountValue() > maxDiscount) {
+                                maxDiscount = ownPromotion.getDiscountValue();
+                                bestPromotion = ownPromotion; // 更新最佳促销
+                                record = i; // Record the position of best promotion in validPromotions
+                            }
+
+                            i++;
                         }
-
-                        i++;
                     }
                 }
             }
@@ -4256,6 +4279,16 @@ public class SystemClass {
                 validPromotions.set(0, bestPromotion);
                 validPromotions.set(record, firstValidPromotion);
             }
+
+
+            if (validPromotions.isEmpty()) {
+                System.out.println("\nOops! You don't have any applicable promotion.\n");
+
+                pressEnterToContinue();
+
+                return null;
+            }
+
 
             System.out.println("\nValid Promotion: ");
             i = 1;
@@ -4372,8 +4405,10 @@ public class SystemClass {
                         successPayment = true;
 
                         break;
+
                     default:
                         System.out.println("Invalid selection. Please retry.");
+                        back = true;
                 }
 
             } while (!back);
@@ -4581,6 +4616,16 @@ public class SystemClass {
 
     private static void pressEnterToBack() {
         System.out.print("Press Enter to back...");
+
+        try {
+            System.in.read();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void pressEnterToContinue() {
+        System.out.print("Press Enter to continue...");
 
         try {
             System.in.read();

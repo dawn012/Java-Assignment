@@ -119,12 +119,13 @@ public class Promotion implements DatabaseOperations {
 
     static {
         String sql = "UPDATE PROMOTION_HISTORY SET PROMOTION_STATUS = ? " +
-                "WHERE PROMOTION_ID IN ( " +
+                "WHERE PROMOTION_STATUS = ? " +
+                "AND PROMOTION_ID IN ( " +
                 "SELECT PROMOTION_ID FROM PROMOTION WHERE END_DATE < ? " +
                 ");";
 
         DateTime dateTime = new DateTime();
-        Object[] params = {"EXPIRED", dateTime.getCurrentDate()};
+        Object[] params = {"EXPIRED", "UNUSED", dateTime.getCurrentDate()};
 
         try {
             DatabaseUtils.updateQuery(sql, params);
@@ -245,6 +246,7 @@ public class Promotion implements DatabaseOperations {
                 promotion.setEndDate(new DateTime(rs.getDate("END_DATE").toLocalDate()));
                 promotion.setPublishCount(rs.getInt("PUBLISH_COUNT"));
                 promotion.setReceiveCount(rs.getInt("RECEIVE_COUNT"));
+                promotion.setPromotionStatus(rs.getInt("PROMOTION_STATUS"));
 
                 promotions.add(promotion);
             }
@@ -308,8 +310,8 @@ public class Promotion implements DatabaseOperations {
         return  "\n" + description
                 + "\n1. Discount value : " + discountValue
                 + "\n2. Minimum Spend : " + minSpend
-                + "\n3. Start date : " + String.valueOf(startDate.getDate())
-                + "\n4. End date : " + String.valueOf(endDate.getDate())
+                + "\n3. Start date : " + startDate.getDate()
+                + "\n4. End date : " + endDate.getDate()
                 + "\n5. Remain : " + (publishCount-receiveCount)
                 + "\n\nYou can only use this promotion for " + perLimit + " time(s) only.\n";
     }
@@ -318,8 +320,8 @@ public class Promotion implements DatabaseOperations {
         return  "\n" + description
                 + "\n1. Discount value : " + discountValue
                 + "\n2. Minimum Spend : " + minSpend
-                + "\n3. Start date : " + String.valueOf(startDate.getDate())
-                + "\n4. End date : " + String.valueOf(endDate.getDate())
+                + "\n3. Start date : " + startDate.getDate()
+                + "\n4. End date : " + endDate.getDate()
                 + "\n5. Left : " + remainQty(custId) + " time(s)";
     }
 
@@ -330,8 +332,8 @@ public class Promotion implements DatabaseOperations {
                 + "\n2. Discount value : " + discountValue
                 + "\n3. Minimum Spend : " + minSpend
                 + "\n4. Per Limit : " + perLimit
-                + "\n5. Start date : " + String.valueOf(startDate.getDate())
-                + "\n6. End date : " + String.valueOf(endDate.getDate())
+                + "\n5. Start date : " + startDate.getDate()
+                + "\n6. End date : " + endDate.getDate()
                 + "\n7. Publish count : " + publishCount
                 + "\n8. Receive count : " + receiveCount;
     }
