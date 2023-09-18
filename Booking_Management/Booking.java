@@ -600,8 +600,8 @@ public class Booking {
         int count=1;
         for(Booking b:bookingList){
             b.loadingTicketList();
-            System.out.printf("%2d. Booking id : %d  ",count,b.getBooking_id());
-            System.out.print("Date : "+b.getBookingDateTime().getDate().toString()+"\n");
+            System.out.printf("%2d. Booking id:%d  ",count,b.getBooking_id());
+            System.out.print("Date:"+b.getBookingDateTime().getDate().toString()+"\n");
             if(count%5==0){
                 String answer=" ";
                 do{
@@ -617,7 +617,7 @@ public class Booking {
         }
         int no;
         do {
-            System.out.print("Enter No. Booking to Show Detail : ");
+            System.out.print("\nEnter No. Booking to Show Detail : ");
             no = scanner.nextInt();
         }while(no>bookingList.size());
 
@@ -642,7 +642,7 @@ public class Booking {
         }
 
 
-        System.out.println("\n\t\t-------------------------------------------");
+        System.out.println("\t\t-------------------------------------------");
         System.out.printf("\t\t\tTotal : \t\t\t\t\t   RM%6.2f\n", bookingList.get(no-1).getTotalPrice());
         System.out.println("\t\t-------------------------------------------");
     }

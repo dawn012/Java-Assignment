@@ -261,6 +261,7 @@ public class SystemClass {
 
                                         // 4. Select the seat chin yong part
                                         Booking booking = new Booking();
+                                        booking.setCustomerId(1);//暂时用
                                         String confirmStr="R";
                                         while (confirmStr.equals("R")) {
                                             if(booking.executeBooking(schedule)){
@@ -285,6 +286,8 @@ public class SystemClass {
                                         if (confirmStr.equals("Y")) {
                                             //booking.printBookingDetail();
                                             // Apply promotion
+                                            //booking.setBooking_status("completed");
+                                            //booking.updateStatus();
                                             Promotion promotion = applyPromotion(sc, 1, booking);
 
                                             // Make Payment
