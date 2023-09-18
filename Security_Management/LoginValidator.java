@@ -67,6 +67,17 @@ public class LoginValidator {
         return foundUser;
     }
 
+    public static User findUserById(int userId) {
+        User foundUser = null;
+        for (User user : LoginValidator.userList) {
+            if (user.getUserId() == userId) {
+                foundUser = user;
+                break;
+            }
+        }
+        return foundUser;
+    }
+
     public static String getUserStatusByUsername(String username) {
         for (User user : LoginValidator.userList) {
             if (user.getLogin().getUsername().equals(username)) {

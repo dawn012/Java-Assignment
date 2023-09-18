@@ -2,6 +2,9 @@ package Security_Management;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Scanner;
@@ -82,84 +85,41 @@ public class RegisterValidator {
 
     public static String validateDateOfBirth(Scanner input) {
         String dob;
-        SimpleDateFormat desiredFormat = new SimpleDateFormat("dd-MM-yyyy");
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
         do {
             dob = input.nextLine();
 
             if (!isValidDateFormat(dob)) {
                 System.out.println("Invalid date format. Please use the format dd-MM-yyyy.");
+            } else if (!isValidDateOfBirth(dob)) {
+                System.out.println("Invalid date of birth or age. Please enter a valid date of birth (dd-MM-yyyy) and ensure your age is between 12 and 100 years.");
             }
-        } while (!isValidDateFormat(dob));
+        } while (!isValidDateFormat(dob) || !isValidDateOfBirth(dob));
 
-        if (!isValidDateOfBirth(dob, desiredFormat) || !isAgeAbove12(dob, desiredFormat)) {
-            System.out.println("Invalid date of birth or age below 12 years. Please enter a valid date of birth.");
-            return validateDateOfBirth(input);
-        }
-
-        return formatToDesiredFormat(dob);
+        return dob;
     }
 
     private static boolean isValidDateFormat(String dob) {
-
-        String dateFormatRegex = "\\d{2}-\\d{2}-\\d{4}";
-        return dob.matches(dateFormatRegex);
-    }
-    private static String formatToDesiredFormat(String dob) {
         try {
-            SimpleDateFormat inputFormat = new SimpleDateFormat("d-M-yyyy");
-            SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
-            Date date = inputFormat.parse(dob);
-            return outputFormat.format(date);
-        } catch (ParseException e) {
-            return dob;
-        }
-    }
-
-    public static boolean isValidDateOfBirth(String dob, SimpleDateFormat dateFormat) {
-        try {
-            Date date = dateFormat.parse(dob);
-            Date currentDate = new Date();
-
-            if (date.after(currentDate)) {
-                return false;
-            }
-
+            LocalDate.parse(dob, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             return true;
-        } catch (ParseException e) {
+        } catch (Exception e) {
             return false;
         }
     }
 
-    private static boolean isAgeAbove12(String dob, SimpleDateFormat dateFormat) {
+    private static boolean isValidDateOfBirth(String dob) {
         try {
-            Date dateOfBirth = dateFormat.parse(dob);
-            Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.YEAR, -12);
-            Date twelveYearsAgo = cal.getTime();
+            LocalDate dateOfBirth = LocalDate.parse(dob, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            LocalDate currentDate = LocalDate.now();
 
-            if (dateOfBirth.after(twelveYearsAgo)) {
-                return false;
-            }
+            Period age = Period.between(dateOfBirth, currentDate);
+            int years = age.getYears();
 
-            return true;
-        } catch (ParseException e) {
+            return years >= 12 && years <= 100;
+        } catch (Exception e) {
             return false;
-        }
-    }
-
-    private static int calculateAge(String dob) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        dateFormat.setLenient(false);
-
-        try {
-            Date birthDate = dateFormat.parse(dob);
-            Date currentDate = new Date();
-            long ageInMillis = currentDate.getTime() - birthDate.getTime();
-            long years = ageInMillis / (365L * 24L * 60L * 60L * 1000L);
-            return (int) years;
-        } catch (ParseException e) {
-            return -1;
         }
     }
 
@@ -186,6 +146,28 @@ public class RegisterValidator {
 
         String digitsOnly = phone.replaceAll("-", "");
         return digitsOnly.length() == 10 || digitsOnly.length() == 11;
+    }
+    public static String validateStatus(Scanner scanner) {
+        String status;
+        do {
+            System.out.print("Enter status (1 for active, 2 for inactive): ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // 消耗换行符
+
+            switch (choice) {
+                case 1:
+                    status = "active";
+                    break;
+                case 2:
+                    status = "inactive";
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please select a valid status option.");
+                    status = null; // 设置为 null 以重新提示用户输入
+            }
+        } while (status == null);
+
+        return status;
     }
 
     private static boolean isValidEmail(String email) {

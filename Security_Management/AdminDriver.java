@@ -6,11 +6,9 @@ import java.util.Scanner;
 public class AdminDriver {
 
     public static void main(String[] args) {
-        ArrayList<User> userList = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
         User admin = new Admin();
         int choice;
-
 
         do {
             printMenu();
@@ -49,7 +47,7 @@ public class AdminDriver {
                                 break;
                             case 0:
                                 System.out.println("Returning to Main Menu.");
-                                submenuActive = false; // 退出子菜单
+                                submenuActive = false;
                                 break;
                             default:
                                 System.out.println("Invalid option. Please choose again.");

@@ -4,9 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="fix file">
+    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="fix bug">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Security_Management/Admin.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/Admin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Security_Management/AdminDriver.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/AdminDriver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Security_Management/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/Customer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Security_Management/CustomerDriver.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/CustomerDriver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Security_Management/Login.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/Login.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Security_Management/LoginDriver.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/LoginDriver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Security_Management/LoginValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/LoginValidator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Security_Management/RDriver.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/RDriver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Security_Management/RegisterValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/RegisterValidator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Security_Management/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/User.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,13 +79,26 @@
       <recent name="Driver" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.AdminDriver">
+  <component name="RunManager" selected="Application.Driver">
     <configuration name="AdminDriver" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Security_Management.AdminDriver" />
       <module name="Cinema_Ticketing_System" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="Security_Management.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Driver" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Driver.Driver" />
+      <module name="Cinema_Ticketing_System" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Driver.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -110,6 +132,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Driver" />
         <item itemvalue="Application.AdminDriver" />
         <item itemvalue="Application.LoginDriver" />
       </list>
@@ -390,7 +413,14 @@
       <option name="project" value="LOCAL" />
       <updated>1695007374768</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="fix bug">
+      <created>1695007847122</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1695007847122</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -462,7 +492,8 @@
     <MESSAGE value="delete file" />
     <MESSAGE value="add file" />
     <MESSAGE value="fix file" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix file" />
+    <MESSAGE value="fix bug" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix bug" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

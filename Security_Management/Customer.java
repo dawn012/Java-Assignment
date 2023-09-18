@@ -3,6 +3,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Customer extends User{
@@ -35,23 +36,6 @@ public class Customer extends User{
         return null;
     }
 
-    public void viewProfile(Customer customer) {
-        int userId = customer.getCustId();
-        String username = customer.getLogin().getUsername();
-        String email = customer.getEmail();
-        String dob = customer.getDOB();
-        String userType = getUserType();
-        String accStatus = customer.getAccStatus();
-
-        System.out.println("\nUser ID: " + userId);
-        System.out.println("Username: " + username);
-        System.out.println("Email: " + email);
-        System.out.println("Date of Birth: " + dob);
-        System.out.println("User Type: " + userType);
-        System.out.println("Account Status: " + accStatus);
-    }
-
-
     public String toString() {
         return "Customer{" +
                 "custId=" + custId +
@@ -81,49 +65,109 @@ public class Customer extends User{
         }
     }
 
-    public void modifyCustInfo(Scanner scanner, Customer customer) throws SQLException {
-        Connection conn = DatabaseUtils.getConnection();
-        boolean isEditing = true;
+    public void forgetPassword() throws SQLException {
+        ArrayList<User> userList = Admin.getAllUsers();
+        Scanner input = new Scanner(System.in);
+        int choice = -1;
+        boolean passwordChanged = false;
 
-        while (isEditing) {
-            System.out.println("\nModify Profile Information:");
-            System.out.println("1. Username: " + customer.getLogin().getUsername());
-            System.out.println("2. Email: " + customer.getEmail());
-            System.out.println("3. Date of Birth: " + customer.getDOB());
-            System.out.println("0. Editing completed");
+        while (true) {
+            System.out.println("Please Enter Your Username (0 - Back): ");
+            String username = input.nextLine();
 
-            System.out.print("Please select your operation: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+            if (username.equals("0")) {
+                break;
+            }
 
-            switch (choice) {
-                case 0:
-                    isEditing = false;
-                    customer.updateCustomerInfo(conn);
+            System.out.println("Please Enter your Email: ");
+            String email = input.nextLine();
+
+            passwordChanged = resetCustPassword(userList, username, email);
+
+            if (passwordChanged) {
+                System.out.println("Password has been changed successfully.");
+                break;
+            } else {
+                System.out.println("Invalid username or email. Password reset failed.");
+            }
+
+            try {
+                System.out.println("(0 - Back | 1 - Try Again): ");
+                choice = input.nextInt();
+                input.nextLine();
+
+                if (choice == 0) {
                     break;
-                case 1:
-                    System.out.print("Enter new username: ");
-                    String newUsername = RegisterValidator.validateUsername(scanner);
-                    customer.getLogin().setUsername(newUsername);
-                    System.out.println("Username updated to: " + newUsername);
-                    break;
-                case 2:
-                    System.out.print("Enter new email: ");
-                    String newEmail = RegisterValidator.validateEmail(scanner);
-                    customer.setEmail(newEmail);
-                    System.out.println("Email updated to: " + newEmail);
-                    break;
-                case 3:
-                    System.out.print("Enter new date of birth (dd-MM-yyyy): ");
-                    String newDOB = RegisterValidator.validateDateOfBirth(scanner);
-                    customer.setDOB(newDOB);
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please select a valid option.");
-                    break;
+                }
+            } catch (java.util.InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                input.nextLine();
             }
         }
     }
+
+    public boolean resetCustPassword(ArrayList<User> customerList, String username, String email) throws SQLException {
+        Connection conn = DatabaseUtils.getConnection();
+        User customer = null;
+        for (User cust : customerList) {
+            if (cust.getLogin().getUsername().equals(username) && cust.getEmail().equals(email)) {
+                customer = cust;
+                break;
+            }
+        }
+
+        if (customer != null) {
+            String newPassword = generateRandomPassword();
+            updatePasswordToDatabase(customer, newPassword, conn);
+
+            System.out.println("Your new password is: " + newPassword);
+            System.out.println("Please change your password after login.");
+
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean resetCustPassword(ArrayList<User> customerList, String username) throws SQLException {
+        Connection conn = DatabaseUtils.getConnection();
+        Scanner input = new Scanner(System.in);
+        User customer = null;
+        for (User cust : customerList) {
+            if (cust.getLogin().getUsername().equals(username)) {
+                customer = cust;
+                break;
+            }
+        }
+
+        if (customer != null) {
+            System.out.println("Please Enter Your New Password: ");
+            String newPassword = RegisterValidator.validatePassword(input);
+            updatePasswordToDatabase(customer, newPassword, conn);
+
+            System.out.println("Your new password is: " + newPassword);
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private String generateRandomPassword() {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder newPassword = new StringBuilder();
+        Random random = new Random();
+
+        for (int i = 0; i < 10; i++) {
+            int index = random.nextInt(characters.length());
+            newPassword.append(characters.charAt(index));
+        }
+
+        return newPassword.toString();
+    }
+
+
     public void updateCustomerInfo(Connection conn) {
         try {
             String updateSql = "UPDATE User SET username = ?, email = ?, DOB = ? WHERE userID = ?";

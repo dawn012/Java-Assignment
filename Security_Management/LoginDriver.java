@@ -6,7 +6,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import static Security_Management.Login.login;
+
+import static Security_Management.Login.loginMenu;
 
 public class LoginDriver {
 
@@ -17,7 +18,7 @@ public class LoginDriver {
         ArrayList<User> userList = LoginValidator.getUserList();
 
         LoginValidator.printUserList(userList);
-        login();
+        loginMenu();
 
 
     }
