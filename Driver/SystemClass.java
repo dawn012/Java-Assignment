@@ -137,10 +137,9 @@ public class SystemClass {
                         }
                         else {
                             System.out.println("Sorry, no movie found!");
-                            back = false;
                         }
 
-                        if (periodSelected != 0 && !moviesAfterFiltered.isEmpty()) {
+                        if (periodSelected != 0) {
                             do {
                                 try {
                                     System.out.print("\nEnter the movie no (0 - Back): ");
@@ -177,160 +176,128 @@ public class SystemClass {
                                     } while (bookNow.equals("Invalid"));
 
                                     if (bookNow.equals("Y")) {
-                                        boolean scheduleFound = false;
-                                        Schedule schedule;
+                                        Schedule schedule = new Schedule();
+                                        schedule.setMovie(movie);
 
+                                        // 1. Select the cinema
+                                        int cinemaNo = 0;
+                                        error = true;
+                                        ArrayList<Cinema> cinemas = new ArrayList<>();
                                         do {
-                                            schedule = new Schedule();
-                                            schedule.setMovie(movie);
+                                            try {
+                                                System.out.print("\nSelect the cinema you want to view the schedule: ");
+                                                cinemas = Cinema.viewCinemaList(1);
+                                                System.out.print("\nEnter the cinema no: ");
+                                                cinemaNo = sc.nextInt();
+                                                sc.nextLine();
 
-                                            // 1. Select the cinema
-                                            int cinemaNo = 0;
-                                            error = true;
-                                            ArrayList<Cinema> cinemas = new ArrayList<>();
-                                            do {
-                                                try {
-                                                    System.out.print("\nSelect the cinema you want to view the schedule: ");
-                                                    cinemas = Cinema.viewCinemaList(1);
-                                                    System.out.print("\nEnter the cinema no: ");
-                                                    cinemaNo = sc.nextInt();
-                                                    sc.nextLine();
-
-                                                    if (cinemaNo > 0 && cinemaNo <= cinemas.size()) {
-                                                        error = false;
-                                                    } else {
-                                                        System.out.println("Your choice is not among the available options! PLease try again.");
-                                                    }
-                                                } catch (InputMismatchException e) {
-                                                    System.out.println("Please enter a valid cinema no!");
-                                                    sc.nextLine();
-                                                }
-                                            } while (error);
-
-                                            // 2. Select the show date
-                                            int dateNo = 0;
-                                            error = true;
-                                            ArrayList<LocalDate> dateList;
-                                            do {
-                                                try {
-                                                    System.out.println("\nSelect the date you want to view the schedule: ");
-                                                    dateList = Schedule.generateOneWeekDateList();
-                                                    System.out.print("\nEnter the date no: ");
-                                                    dateNo = sc.nextInt();
-                                                    sc.nextLine();
-
-                                                    if (dateNo > 0 && dateNo <= dateList.size()) {
-                                                        DateTime date = new DateTime(dateList.get(dateNo - 1));
-                                                        schedule.setShowDate(date);
-                                                        error = false;
-                                                    } else {
-                                                        System.out.println("Your choice is not among the available options! PLease try again.");
-                                                    }
-                                                } catch (InputMismatchException e) {
-                                                    System.out.println("Please enter a valid date no!");
-                                                    sc.nextLine();
-                                                }
-                                            } while (error);
-
-                                            // 3. Select the time
-                                            error = true;
-                                            int scheduleSelected = 0;
-
-                                            do {
-                                                ArrayList<Hall> halls = cinemas.get(cinemaNo - 1).getHallList(1);
-                                                ArrayList<Schedule> schedules = new ArrayList<>();
-
-                                                int count = 1;
-                                                System.out.printf("\n%-30s %15s %15s\n", "Hall Name", "Start Time", "End Time");
-                                                for (int i = 0; i < halls.size(); i++) {
-                                                    schedule.setHall(halls.get(i));
-                                                    count = schedule.showHallAndTime(count, schedules);
-                                                }
-
-                                                if (count != 1) {
-                                                    scheduleFound = true;
-
-                                                    try {
-                                                        System.out.print("\nEnter the schedule no: ");
-                                                        scheduleSelected = sc.nextInt();
-                                                        sc.nextLine();
-
-                                                        if (scheduleSelected > 0 && scheduleSelected <= schedules.size()) {
-                                                            schedule.setScheduleID(schedules.get(scheduleSelected - 1).getScheduleID());
-                                                            schedule.setHall(schedules.get(scheduleSelected - 1).getHall());
-                                                            schedule.setStartTime(schedules.get(scheduleSelected - 1).getStartTime());
-                                                            schedule.setEndTime(schedules.get(scheduleSelected - 1).getEndTime());
-                                                            error = false;
-                                                            continues = false;
-                                                        } else {
-                                                            System.out.println("Your choice is not among the available options! PLease try again.");
-                                                            error = true;
-                                                        }
-                                                    } catch (InputMismatchException e) {
-                                                        System.out.println("Please enter a valid schedule no!");
-                                                        sc.nextLine();
-                                                    }
-                                                } else {
-                                                    System.out.println("Sorry, no schedule found!");
+                                                if (cinemaNo > 0 && cinemaNo <= cinemas.size()) {
                                                     error = false;
-                                                    scheduleFound = false;
-
-                                                    String confirmation;
-                                                    do {
-                                                        System.out.println("\nDo you want to search another schedule for this movie? (Y / N)");
-                                                        System.out.print("Answer: ");
-                                                        String answer = sc.nextLine();
-
-                                                        confirmation = SystemClass.askForContinue(answer);
-                                                    } while (confirmation.equals("Invalid"));
-
-                                                    if (confirmation.equals("Y")) {
-                                                        continues = true;
-                                                    } else {
-                                                        continues = false;
-                                                    }
+                                                } else {
+                                                    System.out.println("Your choice is not among the available options! PLease try again.");
                                                 }
-                                            } while (error);
-                                        } while (continues);
-
-                                        if (scheduleFound == true) {
-                                            // 4. Select the seat chin yong part
-                                            Booking booking = new Booking();
-                                            Customer c = new Customer();//暂时用
-                                            c.setCustId(1);//暂时用
-                                            booking.setCustomer(c);//暂时用
-                                            String confirmStr = "R";
-                                            while (confirmStr.equals("R")) {
-                                                if (booking.executeBooking(schedule)) {
-                                                    booking.printBookingDetail();
-                                                    do {
-                                                        try {
-                                                            System.out.println("Confirm This Booking ? (Y=Yes R=No, Select Again N=No Confirm, Exit) : ");
-                                                            confirmStr = sc.next().toUpperCase();
-                                                            if (confirmStr.equals("Y")) {
-                                                                Booking.insertBooking(booking);
-                                                                for (Ticket t : booking.getTicketList()) {
-                                                                    Ticket.insertTicket(t);
-                                                                }
-                                                            }
-                                                        } catch (Exception e) {
-                                                            System.out.println("Something wrong...");
-                                                            sc.nextLine();
-                                                        }
-                                                    } while (!confirmStr.equals("Y") && !confirmStr.equals("N") && !confirmStr.equals("R"));
-                                                }
+                                            } catch (InputMismatchException e) {
+                                                System.out.println("Please enter a valid cinema no!");
+                                                sc.nextLine();
                                             }
-                                            if (confirmStr.equals("Y")) {
-                                                //booking.printBookingDetail();
-                                                // Apply promotion
-                                                //booking.setBooking_status("completed");
-                                                //booking.updateStatus();
-                                                Promotion promotion = applyPromotion(sc, 1, booking);
+                                        } while (error);
 
-                                                // Make Payment
-                                                system.makePayment(sc, 1, booking, promotion);
+                                        // 2. Select the show date
+                                        int dateNo = 0;
+                                        error = true;
+                                        ArrayList<LocalDate> dateList;
+                                        do {
+                                            try {
+                                                System.out.println("\nSelect the date you want to view the schedule: ");
+                                                dateList = Schedule.generateOneWeekDateList();
+                                                System.out.print("\nEnter the date no: ");
+                                                dateNo = sc.nextInt();
+                                                sc.nextLine();
+
+                                                if (dateNo > 0 && dateNo <= dateList.size()) {
+                                                    DateTime date = new DateTime(dateList.get(dateNo - 1));
+                                                    schedule.setShowDate(date);
+                                                    error = false;
+                                                } else {
+                                                    System.out.println("Your choice is not among the available options! PLease try again.");
+                                                }
+                                            } catch (InputMismatchException e) {
+                                                System.out.println("Please enter a valid date no!");
+                                                sc.nextLine();
+                                            }
+                                        } while (error);
+
+                                        // 3. Select the time
+                                        error = true;
+                                        int scheduleSelected = 0;
+                                        do {
+                                            ArrayList<Hall> halls = cinemas.get(cinemaNo - 1).getHallList(1);
+                                            ArrayList<Schedule> schedules = new ArrayList<>();
+
+                                            int count = 1;
+                                            System.out.printf("\n%-30s %15s %15s\n", "Hall Name", "Start Time", "End Time");
+                                            for (int i = 0; i < halls.size(); i++) {
+                                                schedule.setHall(halls.get(i));
+                                                count = schedule.showHallAndTime(count, schedules);
+                                            }
+
+                                            try {
+                                                System.out.print("\nEnter the schedule no: ");
+                                                scheduleSelected = sc.nextInt();
+                                                sc.nextLine();
+
+                                                if (scheduleSelected > 0 && scheduleSelected <= schedules.size()) {
+                                                    schedule.setScheduleID(schedules.get(scheduleSelected - 1).getScheduleID());
+                                                    schedule.setHall(schedules.get(scheduleSelected - 1).getHall());
+                                                    schedule.setStartTime(schedules.get(scheduleSelected - 1).getStartTime());
+                                                    schedule.setEndTime(schedules.get(scheduleSelected - 1).getEndTime());
+                                                    error = false;
+                                                } else {
+                                                    System.out.println("Your choice is not among the available options! PLease try again.");
+                                                }
+                                            } catch (InputMismatchException e) {
+                                                System.out.println("Please enter a valid schedule no!");
+                                                sc.nextLine();
+                                            }
+                                        } while (error);
+
+                                        // 4. Select the seat chin yong part
+                                        Booking booking = new Booking();
+                                        Customer c =new Customer();//暂时用
+                                        c.setCustId(1);//暂时用
+                                        booking.setCustomer(c);//暂时用
+                                        String confirmStr="R";
+                                        while (confirmStr.equals("R")) {
+                                            if(booking.executeBooking(schedule)){
+                                                booking.printBookingDetail();
+                                                do {
+                                                    try {
+                                                        System.out.println("Confirm This Booking ? (Y=Yes R=No, Select Again N=No Confirm, Exit) : ");
+                                                        confirmStr = sc.next().toUpperCase();
+                                                        if (confirmStr.equals("Y")) {
+                                                            Booking.insertBooking(booking);
+                                                            for (Ticket t : booking.getTicketList()) {
+                                                                Ticket.insertTicket(t);
+                                                            }
+                                                        }
+                                                    } catch (Exception e){
+                                                        System.out.println("Something wrong...");
+                                                        sc.nextLine();
+                                                    }
+                                                }while(!confirmStr.equals("Y") && !confirmStr.equals("N") && !confirmStr.equals("R"));
                                             }
                                         }
+                                        if (confirmStr.equals("Y")) {
+                                            //booking.printBookingDetail();
+                                            // Apply promotion
+                                            //booking.setBooking_status("completed");
+                                            //booking.updateStatus();
+                                            Promotion promotion = applyPromotion(sc, 1, booking);
+
+                                            // Make Payment
+                                            system.makePayment(sc, 1, booking, promotion);
+                                        }
+
                                     } else {
                                         back = false;
                                     }
@@ -341,9 +308,7 @@ public class SystemClass {
                                 back = false;
                             }
                         } else {
-                            if (periodSelected == 0) {
-                                break;
-                            }
+                            break;
                         }
                     } while (back == false);
                     break;
