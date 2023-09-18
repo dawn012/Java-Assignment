@@ -234,6 +234,27 @@ public class Ticket {
         //return movie.getBasicTicketPrice()*this.price_rate;
 
     }
+    public boolean updateStatus() throws SQLException {
+        int rowAffected = 0;
+
+        try {
+            String updateSql = "UPDATE `ticket` SET `ticket_status`= ? WHERE `booking_id` = ?";
+            Object[] params = {getTicketStatus(),getBooking().getBooking_id()};
+            rowAffected = DatabaseUtils.updateQuery(updateSql, params);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if (rowAffected > 0) {
+            //System.out.println("\nThe changes have been saved.");
+            return true;
+        }
+        else {
+            System.out.println("\nSomething went wrong...");
+            return false;
+        }
+    }
 
 
 }

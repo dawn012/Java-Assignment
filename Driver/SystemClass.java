@@ -288,10 +288,9 @@ public class SystemClass {
                                             }
                                         }
                                         if (confirmStr.equals("Y")) {
-                                            //booking.printBookingDetail();
+                                            //用booking.printBookingDetail();
                                             // Apply promotion
-                                            //booking.setBooking_status("completed");
-                                            //booking.updateStatus();
+                                            //用booking.cancelBooking();booking.cancelBooking();
                                             Promotion promotion = applyPromotion(sc, 1, booking);
 
                                             // Make Payment

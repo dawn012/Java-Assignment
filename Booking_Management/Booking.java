@@ -777,6 +777,18 @@ public class Booking {
             return false;
         }
     }
+    public void cancelBooking() throws SQLException {
+        this.setBooking_status("cancelled");
+        for(Ticket t:this.getTicketList()){
+            t.setTicketStatus(0);
+            t.updateStatus();
+        }
+        this.updateStatus();
+    }
+    public void completeBooking() throws SQLException {
+        this.setBooking_status("completed");
+        this.updateStatus();
+    }
 }
 
 
