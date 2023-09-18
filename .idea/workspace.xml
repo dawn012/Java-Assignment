@@ -6,8 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="fix bug">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Driver/SystemClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/Driver/SystemClass.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Movie_Management/MovieUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/Movie_Management/MovieUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report_Management/Report.java" beforeDir="false" afterPath="$PROJECT_DIR$/Report_Management/Report.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report_Management/TopMovieReport.java" beforeDir="false" afterPath="$PROJECT_DIR$/Report_Management/TopMovieReport.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Security_Management/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/Customer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/LoginDriver.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/LoginDriver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Security_Management/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sql.txt" beforeDir="false" afterPath="$PROJECT_DIR$/sql.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,18 +55,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "last_opened_file_path": "E:/Java-Assignment",
-    "onboarding.tips.debug.path": "C:/Users/zheng/Downloads/Cinema Ticketing System/src/main/java/org/example/Main.java",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/Java-Assignment&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/zheng/Downloads/Cinema Ticketing System/src/main/java/org/example/Main.java&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\zheng\Downloads\Java Assignment\Cinema Ticketing System\lib" />
@@ -71,7 +76,7 @@
       <recent name="Driver" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.LoginDriver">
+  <component name="RunManager" selected="Application.Driver">
     <configuration name="AdminDriver" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Security_Management.AdminDriver" />
       <module name="Cinema_Ticketing_System" />
@@ -124,8 +129,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.LoginDriver" />
         <item itemvalue="Application.Driver" />
+        <item itemvalue="Application.LoginDriver" />
         <item itemvalue="Application.AdminDriver" />
       </list>
     </recent_temporary>
