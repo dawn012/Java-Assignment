@@ -464,8 +464,9 @@ CREATE TABLE `booking` (
 );
 ALTER TABLE `booking` ADD PRIMARY KEY (`booking_id`);
 
+
 create table ticket(
-	ticket_id int(11),
+    ticket_id int(11),
     booking_id int(11),
     seat_id varchar(3),
     schedule_id int(255),

@@ -50,7 +50,7 @@ public class Customer extends User{
 
         try {
             String insertSql = "INSERT INTO User (username, password, email, userType, DOB, accStatus) VALUES (?, ?, ?, ?, ?, ?)";
-            Object[] params = {getLogin().getUsername(), getLogin().getPassword(), getEmail(), "cust", getDOB(),"active"};
+            Object[] params = {getLogin().getUsername(), getLogin().getPassword(), getEmail(), "cust", getDOB(), "active"};
             rowAffected = DatabaseUtils.insertQuery(insertSql, params);
         }
         catch (SQLException e) {
@@ -199,8 +199,6 @@ public class Customer extends User{
     public void setCustId(int custId) {
         this.custId = custId;
     }
-
-
 
     public String getDob() {
         return dob;

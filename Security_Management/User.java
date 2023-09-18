@@ -25,9 +25,9 @@ public abstract class User{
         this.userType = userType;
     }
 
-
     public User() {
     }
+
     public void viewProfile(Customer customer) {
         int userId = customer.getCustId();
         String username = customer.getLogin().getUsername();
@@ -69,6 +69,7 @@ public abstract class User{
             ((Customer) user).updateCustomerInfo(conn);
         }
     }
+
     public static User findUserById(int userId) {
         LoginValidator.userList = getAllUsers();
         User foundUser = null;
@@ -81,6 +82,7 @@ public abstract class User{
         System.out.println(LoginValidator.userList);
         return foundUser;
     }
+
     public void modifyProfile(Scanner scanner, Admin admin) throws SQLException {
         Connection conn = DatabaseUtils.getConnection();
         boolean isEditing = true;
@@ -276,9 +278,11 @@ public abstract class User{
                 ", userType='" + userType + '\'' +
                 '}';
     }
+
     public int getUserId() {
         return 0;
     }
+
     public Login getLogin() {
         if (login == null) {
             login = new Login();
@@ -286,11 +290,9 @@ public abstract class User{
         return login;
     }
 
-
     public void setLogin(Login login) {
         this.login = login;
     }
-
 
     public String getDOB() {
         return DOB;
