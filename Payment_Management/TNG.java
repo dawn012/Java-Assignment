@@ -12,8 +12,14 @@ public class TNG extends Payment {
     public TNG() {
     }
 
-    public TNG(int bookingId, double paymentAmount, String currency, String paymentMethod, String paymentDate, String paymentTime, String paymentStatus, String phoneNo, String pinNo) {
-        super(bookingId, paymentAmount, currency, paymentMethod, paymentDate, paymentTime, paymentStatus);
+    public TNG(int bookingId, String paymentMethod, double paymentAmount, String currency, String paymentDate, String paymentTime, String paymentStatus, String phoneNo, String pinNo) {
+        super(bookingId, paymentMethod, paymentAmount, currency, paymentDate, paymentTime, paymentStatus);
+        this.phoneNo = phoneNo;
+        this.pinNo = pinNo;
+    }
+
+    public TNG(int paymentId, int bookingId, String paymentMethod, double paymentAmount, String currency, String paymentDate, String paymentTime, String paymentStatus, String phoneNo, String pinNo) {
+        super(paymentId, bookingId, paymentMethod, paymentAmount, currency, paymentDate, paymentTime, paymentStatus);
         this.phoneNo = phoneNo;
         this.pinNo = pinNo;
     }

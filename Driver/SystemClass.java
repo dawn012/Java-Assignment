@@ -3593,7 +3593,9 @@ public class SystemClass {
                                     try {
                                         System.out.print("\nEnter the start date (yyyy-MM-dd): ");
                                         String startDateStr = sc.nextLine();
+
                                         startDate = LocalDate.parse(startDateStr);
+
                                         break; // 日期有效，退出循环
                                     } catch (DateTimeParseException e) {
                                         System.out.println("Invalid date format. Please enter a valid date (yyyy-MM-dd).\n");
@@ -4470,13 +4472,13 @@ public class SystemClass {
             card.setPaymentAmount(booking.getTotalPrice());
 
             if(card.stripeValidator()) {
-                return new Card(booking.getBooking_id(), booking.getTotalPrice(), "MYR", "CREDIT/DEBIT CARD", dateTime.getCurrentDate(), dateTime.getCurrentTime(), "PAID", card.getCardNo(), card.getExpiredDate(), card.getCvc(), card.getEmail());
+                return new Card(booking.getBooking_id(), "CREDIT/DEBIT CARD", booking.getTotalPrice(), "MYR", dateTime.getCurrentDate(), dateTime.getCurrentTime(), "PAID", card.getCardNo(), card.getExpiredDate(), card.getCvc(), card.getEmail());
             }
 
         } else {
             TNG tng = (TNG) payment;
 
-            return new TNG(booking.getBooking_id(), booking.getTotalPrice(), "MYR", "TNG", dateTime.getCurrentDate(), dateTime.getCurrentTime(), "PAID", tng.getPhoneNo(), tng.getPinNo());
+            return new TNG(booking.getBooking_id(), "TNG", booking.getTotalPrice(), "MYR", dateTime.getCurrentDate(), dateTime.getCurrentTime(), "PAID", tng.getPhoneNo(), tng.getPinNo());
         }
 
         return null;

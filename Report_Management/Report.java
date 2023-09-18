@@ -20,7 +20,7 @@ public abstract class Report {
     }
 
     //public abstract double calculate();
-
+    @Override
     public String toString() {
         return String.format("Title: %s\t\t\t\tReport Date: %s\n\nPurpose: \n%s\nConclusion: \n%s", title, reportDate.getDate(), purpose, conclusion);
     }

@@ -22,20 +22,35 @@ public class Card extends Payment {
         super();
     }
 
-    public Card(String cardNo, String expiredDate, String cvc, String email) {
+//    public Card(String cardNo, String expiredDate, String cvc, String email) {
+//        this.cardNo = cardNo;
+//        this.expiredDate = expiredDate;
+//        this.cvc = cvc;
+//        this.email = email;
+//    }
+
+    public Card(int bookingId, String paymentMethod, double paymentAmount, String currency, String paymentDate, String paymentTime, String paymentStatus, String cardNo, String expiredDate, String cvc, String email) {
+        super(bookingId, paymentMethod, paymentAmount, currency, paymentDate, paymentTime, paymentStatus);
         this.cardNo = cardNo;
         this.expiredDate = expiredDate;
         this.cvc = cvc;
         this.email = email;
     }
 
-    public Card(int bookingId, double paymentAmount, String currency, String paymentMethod, String paymentDate, String paymentTime, String paymentStatus, String cardNo, String expiredDate, String cvc, String email) {
-        super(bookingId, paymentAmount, currency, paymentMethod, paymentDate, paymentTime, paymentStatus);
+    public Card(int paymentId, int bookingId, String paymentMethod, double paymentAmount, String currency, String paymentDate, String paymentTime, String paymentStatus, String cardNo, String expiredDate, String cvc) {
+        super(paymentId, bookingId, paymentMethod, paymentAmount, currency, paymentDate, paymentTime, paymentStatus);
         this.cardNo = cardNo;
         this.expiredDate = expiredDate;
         this.cvc = cvc;
-        this.email = email;
     }
+
+//    public Card(int paymentId, int bookingId, String paymentMethod, double paymentAmount, String currency, String paymentDate, String paymentTime, String paymentStatus, String cardNo, String expiredDate, String cvc, String email) {
+//        super(paymentId, bookingId, paymentMethod, paymentAmount, currency, paymentDate, paymentTime, paymentStatus);
+//        this.cardNo = cardNo;
+//        this.expiredDate = expiredDate;
+//        this.cvc = cvc;
+//        this.email = email;
+//    }
 
     public String getCardNo() {
         return cardNo;

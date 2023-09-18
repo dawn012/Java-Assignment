@@ -12,9 +12,9 @@ public abstract class Payment {
     protected int paymentId;
     protected static int nextPaymentId;
     protected int bookingId;
+    protected String paymentMethod;
     protected double paymentAmount;
     protected String currency;
-    protected String paymentMethod;
     protected String paymentDate;
     protected String paymentTime;
     protected String paymentStatus;
@@ -22,12 +22,23 @@ public abstract class Payment {
     public Payment() {
     }
 
-    public Payment(int bookingId, double paymentAmount, String currency, String paymentMethod, String paymentDate, String paymentTime, String paymentStatus) {
+    public Payment(int bookingId, String paymentMethod, double paymentAmount, String currency, String paymentDate, String paymentTime, String paymentStatus) {
         this.paymentId = ++nextPaymentId;
         this.bookingId = bookingId;
+        this.paymentMethod = paymentMethod;
         this.paymentAmount = paymentAmount;
         this.currency = currency;
+        this.paymentDate = paymentDate;
+        this.paymentTime = paymentTime;
+        this.paymentStatus = paymentStatus;
+    }
+
+    public Payment(int paymentId, int bookingId, String paymentMethod, double paymentAmount, String currency, String paymentDate, String paymentTime, String paymentStatus) {
+        this.paymentId = paymentId;
+        this.bookingId = bookingId;
         this.paymentMethod = paymentMethod;
+        this.paymentAmount = paymentAmount;
+        this.currency = currency;
         this.paymentDate = paymentDate;
         this.paymentTime = paymentTime;
         this.paymentStatus = paymentStatus;
