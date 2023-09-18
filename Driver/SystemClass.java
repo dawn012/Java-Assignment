@@ -54,7 +54,7 @@ public class SystemClass {
                     choice = sc.nextInt();
                     sc.nextLine();
 
-                    if (choice > 0 && choice <= 5) {
+                    if (choice > 0 && choice <= 6) {
                         error = false;
                     } else {
                         System.out.println("Your choice is not among the available options! PLease try again.");
