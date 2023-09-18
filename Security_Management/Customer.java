@@ -65,7 +65,7 @@ public class Customer extends User{
         }
     }
 
-    public void forgetPassword() throws SQLException {
+    public static void forgetPassword() throws SQLException {
         ArrayList<User> userList = Admin.getAllUsers();
         Scanner input = new Scanner(System.in);
         int choice = -1;

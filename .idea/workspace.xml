@@ -6,16 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="fix bug">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/Admin.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/Admin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/AdminDriver.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/AdminDriver.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Security_Management/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/Customer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/CustomerDriver.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/CustomerDriver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/Login.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/Login.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Security_Management/LoginDriver.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/LoginDriver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/LoginValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/LoginValidator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/RDriver.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/RDriver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/RegisterValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/RegisterValidator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/User.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -420,7 +412,21 @@
       <option name="project" value="LOCAL" />
       <updated>1695007847122</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="upgrade function">
+      <created>1695031796818</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1695031796819</updated>
+    </task>
+    <task id="LOCAL-00037" summary="fix bug">
+      <created>1695032022749</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1695032022749</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -492,6 +498,7 @@
     <MESSAGE value="delete file" />
     <MESSAGE value="add file" />
     <MESSAGE value="fix file" />
+    <MESSAGE value="upgrade function" />
     <MESSAGE value="fix bug" />
     <option name="LAST_COMMIT_MESSAGE" value="fix bug" />
   </component>
