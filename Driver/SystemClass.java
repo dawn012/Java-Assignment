@@ -4590,10 +4590,6 @@ public class SystemClass {
         return tng;
     }
 
-    public void registration(Scanner sc) {
-
-    }
-
     private static int displayMenu(String propertyName, Scanner sc){
         boolean error = true;
         int choice = 0;

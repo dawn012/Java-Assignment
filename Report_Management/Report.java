@@ -23,7 +23,7 @@ public abstract class Report {
     }
 
     public String toString() {
-        return String.format("\nTitle: %s\t\t\t\tReport Date: %s\n\nPurpose: \n%s\n\nConclusion: \n%s\n\n", title, reportDate, purpose, conclusion);
+        return String.format("\nTitle: %s\t\t\t\tReport Date: %s\n\nPurpose: \n%s\n\n", title, reportDate, purpose);
     }
 
     public abstract String getDefaultPurpose();
