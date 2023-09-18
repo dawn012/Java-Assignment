@@ -2,11 +2,14 @@ package Booking_Management;
 
 import Database.DatabaseUtils;
 import Driver.DateTime;
+import Driver.Name;
 import Driver.SystemClass;
 import Hall_Management.Hall;
+import Movie_Management.Movie;
 import Schedule_Management.Schedule;
 import Seat_Management.Seat;
 
+import Security_Management.Customer;
 import Ticket_Managemnet.Ticket;
 
 import java.sql.ResultSet;
@@ -23,16 +26,16 @@ import java.util.Scanner;
 
 public class Booking {
     /////////////////////////////////////////////////////////
-    private int customerId;  //暂时用，暂时代替Customer class///
+    //private int customerId;  //暂时用，暂时代替Customer class///
     /////////////////////////////////////////////////////////
-    public int getCustomerId() {
-        return customerId;
-    }
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
-    }
+    //public int getCustomerId() {
+    //    return customerId;
+    //}
+    //public void setCustomerId(int customerId) {
+    //    this.customerId = customerId;
+    //}
     ////////////////////////////////////////////////////////
-
+    private Customer customer;
 
     private int booking_id;
     private int adultTicket_qty;
@@ -41,7 +44,7 @@ public class Booking {
     private double totalPrice;
     private DateTime bookingDateTime;
     private LocalTime bookingTime;
-    private int booking_status;      //0=paid  1=unpaid
+    private String booking_status;      //processing     completed   cancelled
     private ArrayList<Ticket> ticketList;
 
 //    public Booking(int customerId) {
@@ -55,18 +58,18 @@ public class Booking {
         this.childTicket_qty=0;
         this.adultTicket_qty=0;
         this.totalPrice=0;
-        this.booking_status=0;
+        this.booking_status="processing";
         //this.customerId=customerId;
     }
 
 
-    public Booking(int booking_id, int adultTicket_qty, int childTicket_qty, double totalPrice, int booking_status,int customerId) {
+    public Booking(int booking_id, int adultTicket_qty, int childTicket_qty, double totalPrice, String booking_status,Customer customer) {
         this.booking_id = booking_id;
         this.adultTicket_qty = adultTicket_qty;
         this.childTicket_qty = childTicket_qty;
         this.totalPrice = totalPrice;
         this.booking_status = booking_status;
-        this.customerId=customerId;
+        this.customer=customer;
     }
 
     //Getter
@@ -108,8 +111,12 @@ public class Booking {
         return ticketList;
     }
 
-    public int getBooking_status() {
+    public String getBooking_status() {
         return booking_status;
+    }
+
+    public Customer getCustomer() {
+        return customer;
     }
 
     //Setter
@@ -134,12 +141,16 @@ public class Booking {
         this.bookingDateTime = bookingDateTime;
     }
 
-    public void setBooking_status(int booking_status) {
+    public void setBooking_status(String booking_status) {
         this.booking_status = booking_status;
     }
 
     public void setTicketList(ArrayList<Ticket> ticketList) {
         this.ticketList = ticketList;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -148,7 +159,7 @@ public class Booking {
 
         try {
             String insertSql = "INSERT INTO `booking` (`booking_id`,`adultTicket_qty`,`childTicket_qty`,`total_price`,`booking_date`,`booking_time`,`booking_status`,`customer_id`) value(?,?,?,?,?,?,?,?);";
-            Object[] params = {b.getBooking_id(),b.getAdultTicket_qty(),b.getChildTicket_qty(),b.getTotalPrice(),b.getBookingDateTime().getDate(),b.getBookingTime(),b.getBooking_status(),b.getCustomerId()};
+            Object[] params = {b.getBooking_id(),b.getAdultTicket_qty(),b.getChildTicket_qty(),b.getTotalPrice(),b.getBookingDateTime().getDate(),b.getBookingTime(),b.getBooking_status(),b.getCustomer().getCustId()};
             rowAffected = DatabaseUtils.insertQuery(insertSql, params);
         }
         catch (SQLException e) {
@@ -247,11 +258,11 @@ public class Booking {
 
 
         this.countBooking_id();
-        this.setBooking_status(0);
+        this.setBooking_status("processing");
         Scanner scanner = new Scanner(System.in);
-        String confirmStr="R";
-        char confirmChar=confirmStr.charAt(0);
-        while (confirmChar!='Y'&& confirmChar!='N') {
+        //String confirmStr="R";
+        //char confirmChar=confirmStr.charAt(0);
+        //while (confirmChar!='Y'&& confirmChar!='N') {
             this.childTicket_qty=0;
             this.adultTicket_qty=0;
             this.totalPrice=0;
@@ -326,12 +337,14 @@ public class Booking {
                     if (t.getSeat().getSeat_id().equals(combineSeatId)) {
                         exist = true;
                         System.out.println("This seat not available/already be booked...");
+                        count--;
                     }
                 }
                 for(Ticket t:cartTicket){
                     if (t.getSeat().getSeat_id().equals(combineSeatId)) {
                         exist = true;
                         System.out.println("This seat not available/already be booked...");
+                        count--;
                     }
                 }
                 schedule.getHall().initSeatList();
@@ -341,6 +354,7 @@ public class Booking {
                         if (seats.getSeat_status()==0){
                             exist=true;
                             System.out.println("This Seat is unavailable...");
+                            count--;
                         }
                     }
                 }
@@ -382,49 +396,50 @@ public class Booking {
                         this.childTicket_qty++;
                     }
                 }
+                System.out.println("\t\t-------------------------\n");
+                this.setTicketList(cartTicket);
 
                 LocalDate date = LocalDate.now();
                 DateTime bookingDate=new DateTime(date);
                 setBookingDateTime(bookingDate);
-
                 LocalTime currentTime = LocalTime.now();
                 setBookingTime(currentTime);
-
-                System.out.println("\t\t-------------------------\n");
-                System.out.println("Booking Details : ");
-                System.out.println("\t\t-------------------------------------------");
-                System.out.printf("\t\t Booking ID : %04d\t\tDate : %s\n", getBooking_id(), getBookingDateTime().getDate());
-                System.out.println("\t\t-------------------------------------------");
-                if(getAdultTicket_qty()>0)
-                    System.out.printf("\t\t Adult Ticket(RM%6.2f) x %d\n", schedule.getMovie().getBasicTicketPrice() * 1.2, getAdultTicket_qty());
-                if(getChildTicket_qty()>0)
-                    System.out.printf("\t\t Child Ticket(RM%6.2f) X %d\n", schedule.getMovie().getBasicTicketPrice() * 0.8, getChildTicket_qty());
-                System.out.printf("\t\t\t\tTotal : RM%.2f\n", totalPrice);
-                System.out.println("\t\t-------------------------------------------");
-                do {
-                    try {
-                        System.out.println("Confirm This Booking ? (Y=Yes R=No, Select Again N=No Confirm, Exit) : ");
-                        str = scanner.next().toUpperCase();
-                        confirmChar = str.charAt(0);
-                        if (confirmChar == 'Y') {
-                            this.setTicketList(cartTicket);
-                            Booking.insertBooking(this);
-                            for (Ticket t : cartTicket) {
-                                Ticket.insertTicket(t);
-                            }
-                            return true;
-                        }
-                    } catch (Exception e){
-                        System.out.println("Something wrong...");
-                        scanner.nextLine();
-                    }
-
-                }while(confirmChar!='Y' && confirmChar!='N' && confirmChar!='R');
+                return true;
+//                System.out.println("\t\t-------------------------\n");
+//                System.out.println("Booking Details : ");
+//                System.out.println("\t\t-------------------------------------------");
+//                System.out.printf("\t\t Booking ID : %04d\t\tDate : %s\n", getBooking_id(), getBookingDateTime().getDate());
+//                System.out.println("\t\t-------------------------------------------");
+//                if(getAdultTicket_qty()>0)
+//                    System.out.printf("\t\t Adult Ticket(RM%6.2f) x %d\n", schedule.getMovie().getBasicTicketPrice() * 1.2, getAdultTicket_qty());
+//                if(getChildTicket_qty()>0)
+//                    System.out.printf("\t\t Child Ticket(RM%6.2f) X %d\n", schedule.getMovie().getBasicTicketPrice() * 0.8, getChildTicket_qty());
+//                System.out.printf("\t\t\t\tTotal : RM%.2f\n", totalPrice);
+//                System.out.println("\t\t-------------------------------------------");
+//                do {
+//                    try {
+//                        System.out.println("Confirm This Booking ? (Y=Yes R=No, Select Again N=No Confirm, Exit) : ");
+//                        str = scanner.next().toUpperCase();
+//                        confirmChar = str.charAt(0);
+//                        if (confirmChar == 'Y') {
+//                            //this.setTicketList(cartTicket);
+//                            Booking.insertBooking(this);
+//                            for (Ticket t : cartTicket) {
+//                                Ticket.insertTicket(t);
+//                            }
+//                            return true;
+//                        }
+//                    } catch (Exception e){
+//                        System.out.println("Something wrong...");
+//                        scanner.nextLine();
+//                    }
+//
+//                }while(confirmChar!='Y' && confirmChar!='N' && confirmChar!='R');
             } else {
                 System.out.println("No Ticket be Selected.\nExit Booking Page...");
-                confirmChar='N';
+                //confirmChar='N';
             }
-        }
+        //}
         return false;
     }
 
@@ -475,10 +490,12 @@ public class Booking {
                 booking.setBookingDateTime(new DateTime(result.getDate("booking_date").toLocalDate()));
                 booking.setChildTicket_qty(result.getInt("childTicket_qty"));
                 booking.setTotalPrice(result.getDouble("total_price"));
-                booking.setBooking_status(result.getInt("booking_status"));
+                booking.setBooking_status(result.getString("booking_status"));
                 Time time =result.getTime("booking_time");
                 booking.setBookingTime(time.toLocalTime());
-                booking.setCustomerId(result.getInt("customer_id"));
+                Customer c =new Customer();
+                c.setCustId(result.getInt("customer_id"));
+                booking.setCustomer(c);
                 bookingList.add(booking);
 
             }
@@ -508,10 +525,12 @@ public class Booking {
                 booking.setBookingDateTime(new DateTime(result.getDate("booking_date").toLocalDate()));
                 booking.setChildTicket_qty(result.getInt("childTicket_qty"));
                 booking.setTotalPrice(result.getDouble("total_price"));
-                booking.setBooking_status(result.getInt("booking_status"));
+                booking.setBooking_status(result.getString("booking_status"));
                 Time time =result.getTime("booking_time");
                 booking.setBookingTime(time.toLocalTime());
-                booking.setCustomerId(result.getInt("customer_id"));
+                Customer c =new Customer();
+                c.setCustId(result.getInt("customer_id"));
+                booking.setCustomer(c);
                 bookingList.add(booking);
 
             }
@@ -550,7 +569,7 @@ public class Booking {
 
                 Schedule timetable=new Schedule();
                 timetable.setScheduleID(result.getInt("schedule_id"));
-                ticket.setBooking(booking);
+                ticket.setTimeTable(timetable);
 
                 ticket.setPrice_rate(result.getDouble("price_rate"));
                 tickets.add(ticket);
@@ -564,8 +583,60 @@ public class Booking {
         catch (SQLException e) {
             e.printStackTrace();
         }
-        this.setTicketList(tickets);
 
+
+
+
+
+        //////////////////////////////////////////////
+        for (Ticket t:tickets) {
+            try {
+                Object[] params = {t.getTimeTable().getScheduleID()};
+                ResultSet result = DatabaseUtils.selectQueryById("*", "timetable", "schedule_id = ?", params);
+
+                while (result.next()) {
+//                    Schedule schedule=new Schedule();
+                    Movie movie = new Movie();
+                    movie.setMovieID(result.getInt("movie_id"));
+                    Hall hall =new Hall();
+                    hall.setHallID(result.getInt("hall_id"));
+//                    schedule.setMovie(movie);
+                    t.getTimeTable().setMovie(movie);
+                    t.getTimeTable().setHall(hall);
+                }
+
+                result.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        ////////////////////////////////////////////////
+        //////////////////////////////////////////////
+        for (Ticket t:tickets) {
+            try {
+                Object[] params = {t.getTimeTable().getMovie().getMovieID()};
+                ResultSet result = DatabaseUtils.selectQueryById("*", "movie", "movie_id = ?", params);
+
+                while (result.next()) {
+//                    Schedule schedule=new Schedule();
+//                    Movie movie = new Movie();
+//                    movie.setMovieID(result.getInt("movie_id"));
+//                    schedule.setMovie(movie);
+//                    t.getTimeTable().setMovie(movie);
+                    Name name =new Name();
+                    name.setName(result.getString("mv_name"));
+                    t.getTimeTable().getMovie().setMvName(name);
+                    t.getTimeTable().getMovie().setBasicTicketPrice(result.getDouble("basic_TicketPrice"));
+
+                }
+
+                result.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        ////////////////////////////////////////////////
+        this.setTicketList(tickets);///////////
     }
 
 //    public boolean deleteBooking() throws SQLException {
@@ -593,15 +664,16 @@ public class Booking {
 
 
     //For Customer View Their Booking History
-    public static void viewBookingHistory(int customerId) throws SQLException {
+    public static void viewBookingHistory(Customer customer) throws SQLException {
         Scanner scanner=new Scanner(System.in);
-        ArrayList<Booking> bookingList=Booking.getBookingList(customerId);
+        ArrayList<Booking> bookingList=Booking.getBookingList(customer.getCustId());
         Collections.reverse(bookingList);
         int count=1;
+        System.out.println("Booking History : ");
         for(Booking b:bookingList){
             b.loadingTicketList();
-            System.out.printf("%2d. Booking id : %d  ",count,b.getBooking_id());
-            System.out.print("Date : "+b.getBookingDateTime().getDate().toString()+"\n");
+            System.out.printf("%2d. Booking id:%d  ",count,b.getBooking_id());
+            System.out.print("Date:"+b.getBookingDateTime().getDate().toString()+"\n");
             if(count%5==0){
                 String answer=" ";
                 do{
@@ -615,16 +687,108 @@ public class Booking {
             }
             count++;
         }
-        int no;
+        int no=0;
         do {
-            System.out.print("Enter No. Booking to Show Detail : ");
-            no = scanner.nextInt();
-        }while(no>bookingList.size());
+            try {
+                System.out.print("\nEnter No. Booking to Show Detail (0=Back) : ");
+                no = scanner.nextInt();
+                if (no == 0)
+                    break;
+                else if (no <= bookingList.size() && no >0) {
+                    bookingList.get(no - 1).printBookingDetail();
+                }
+            }catch (Exception e){
+                scanner.nextLine();
+                System.out.println("Invalid Input...");
+            }
+        }while(no!=0);
 
-        System.out.println("Booking ID : ");
+
+
+//        System.out.println("Booking Details : ");
+//        System.out.println("\t\t-------------------------------------------");
+//        System.out.printf("\t\t Booking ID : %04d\t\tDate : %s\n", bookingList.get(no-1).getBooking_id(), bookingList.get(no-1).getBookingDateTime().getDate());
+//        System.out.println("\t\t-------------------------------------------");
+//        if(bookingList.get(no-1).getAdultTicket_qty()>0) {
+//            System.out.printf("\t\t Adult Ticket x %d\n", bookingList.get(no - 1).getAdultTicket_qty());
+//                    System.out.printf("\t\t\tTicket [Seat]\n");
+//            for (Ticket t:bookingList.get(no-1).getTicketList()){
+//                if(t.getTicketType().equals("Adult"))
+//                    System.out.printf("\t\t\t %4d  [%s]\n",t.getTicket_id(),t.getSeat().getSeat_id());
+//            }
+//        }
+//        if(bookingList.get(no-1).getChildTicket_qty()>0) {
+//            System.out.printf("\t\t Child Ticket x %d\n", bookingList.get(no - 1).getChildTicket_qty());
+//            for (Ticket t:bookingList.get(no-1).getTicketList()){
+//                if(t.getTicketType().equals("Child"))
+//                    System.out.printf("\t\t\t %4d  [%s]\n",t.getTicket_id(),t.getSeat().getSeat_id());
+//            }
+//        }
+//
+//
+//        System.out.println("\t\t-------------------------------------------");
+//        System.out.printf("\t\t\tTotal : \t\t\t\t\t   RM%6.2f\n", bookingList.get(no-1).getTotalPrice());
+//        System.out.println("\t\t-------------------------------------------");
     }
 
 
+    public void printBookingDetail(){
+        //System.out.println("\t\t-------------------------\n");
+        System.out.println("Booking Details : ");
+        System.out.println("\t\t-------------------------------------------");
+        System.out.printf("\t\t Booking ID : %04d\t\tDate : %s\n", getBooking_id(), getBookingDateTime().getDate());
+        System.out.printf("\t\t Status     : %s\n",getBooking_status().toUpperCase());
+        System.out.println("\t\t-------------------------------------------");
+        System.out.printf("\t\t Hall ID    : %d\n",getTicketList().get(0).getTimeTable().getHall().getHallID());
+        System.out.printf("\t\t Movie Name : %s\n\n",getTicketList().get(0).getTimeTable().getMovie().getMvName().getName());
+        System.out.println("\t\t Ticket Type\tUnit Price\tQty\t   Subtotal");
+        if(getAdultTicket_qty()>0)
+            System.out.printf("\t\t Adult Ticket\tRM%6.2f     %2d\t   RM%6.2f\n", this.getTicketList().get(0).getTimeTable().getMovie().getBasicTicketPrice() * 1.2, getAdultTicket_qty(),this.getTicketList().get(0).getTimeTable().getMovie().getBasicTicketPrice() * 1.2*getAdultTicket_qty());
+        if(getChildTicket_qty()>0)
+            System.out.printf("\t\t Child Ticket\tRM%6.2f     %2d\t   RM%6.2f\n", this.getTicketList().get(0).getTimeTable().getMovie().getBasicTicketPrice() * 0.8, getChildTicket_qty(),this.getTicketList().get(0).getTimeTable().getMovie().getBasicTicketPrice() * 0.8*getChildTicket_qty());
+        System.out.println("\n\t\t Seat ID : ");
+        System.out.print("\t\t\t");
+        for(Ticket t:getTicketList()){
+            System.out.print(t.getSeat().getSeat_id()+"  ");
+        }
+        System.out.println("\n\t\t-------------------------------------------");
+        System.out.printf("\t\t\tTotal : \t\t\t\t\t   RM%6.2f\n", totalPrice);
+        System.out.println("\t\t-------------------------------------------");
+    }
+
+    public boolean updateStatus() throws SQLException {
+        int rowAffected = 0;
+
+        try {
+            String updateSql = "UPDATE `booking` SET `booking_status`= ? WHERE `booking_id` = ?";
+            Object[] params = {getBooking_status(),getBooking_id()};
+            rowAffected = DatabaseUtils.updateQuery(updateSql, params);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if (rowAffected > 0) {
+            System.out.println("\nThe changes have been saved.");
+            return true;
+        }
+        else {
+            System.out.println("\nSomething went wrong...");
+            return false;
+        }
+    }
+    public void cancelBooking() throws SQLException {
+        this.setBooking_status("cancelled");
+        for(Ticket t:this.getTicketList()){
+            t.setTicketStatus(0);
+            t.updateStatus();
+        }
+        this.updateStatus();
+    }
+    public void completeBooking() throws SQLException {
+        this.setBooking_status("completed");
+        this.updateStatus();
+    }
 }
 
 

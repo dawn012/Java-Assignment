@@ -2,46 +2,38 @@ package Report_Management;
 
 import Driver.DateTime;
 
+import java.time.LocalDate;
+
 public abstract class Report {
     private String title;
-    private DateTime reportDate;
+    private LocalDate reportDate;
     private String purpose;
     private String conclusion;
 
     // Constructor
     public Report() {
+        reportDate = LocalDate.now();
     }
 
-    public Report(String title, DateTime reportDate, String purpose, String conclusion) {
+    public Report(String title, String purpose, String conclusion) {
         this.title = title;
-        this.reportDate = reportDate;
         this.purpose = purpose;
         this.conclusion = conclusion;
+        reportDate = LocalDate.now();
     }
+
 
     //public abstract double calculate();
     @Override
     public String toString() {
-        return String.format("Title: %s\t\t\t\tReport Date: %s\n\nPurpose: \n%s\nConclusion: \n%s", title, reportDate.getDate(), purpose, conclusion);
+        return String.format("\nTitle: %s\t\t\t\tReport Date: %s\n\nPurpose: \n%s\n\n", title, reportDate, purpose);
     }
 
-    public boolean equals(Object obj){
-        if(obj instanceof Report) {
-            Report anotherObj = (Report) obj;
-            return title.equals(anotherObj.title);
-        }
-        else {
-            return false;
-        }
-    }
+    public abstract String getDefaultPurpose();
 
     // Setter
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public void setReportDate(DateTime reportDate) {
-        this.reportDate = reportDate;
     }
 
     public void setPurpose(String purpose) {
@@ -57,7 +49,7 @@ public abstract class Report {
         return title;
     }
 
-    public DateTime getReportDate() {
+    public LocalDate getReportDate() {
         return reportDate;
     }
 

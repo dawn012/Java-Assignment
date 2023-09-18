@@ -6,6 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="debug">
       <change afterPath="$PROJECT_DIR$/Report_Management/SalesReport.java" afterDir="false" />
+    </list>
+    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="fix bug">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Database/DatabaseUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/Database/DatabaseUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Driver/DateTime.java" beforeDir="false" afterPath="$PROJECT_DIR$/Driver/DateTime.java" afterDir="false" />
@@ -16,6 +18,11 @@
       <change beforePath="$PROJECT_DIR$/Promotion_Management/Promotion.java" beforeDir="false" afterPath="$PROJECT_DIR$/Promotion_Management/Promotion.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Promotion_Management/PromotionValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/Promotion_Management/PromotionValidator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Report_Management/Report.java" beforeDir="false" afterPath="$PROJECT_DIR$/Report_Management/Report.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Security_Management/Admin.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/Admin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Security_Management/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/Customer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Security_Management/Login.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/Login.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Security_Management/RegisterValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/RegisterValidator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Security_Management/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/User.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,9 +47,16 @@
   <component name="GithubPullRequestsUISettings">
     <option name="selectedUrlAndAccountId">
       <UrlAndAccount>
-        <option name="accountId" value="1f9b8559-597a-48c5-b449-57d87711c619" />
-        <option name="url" value="https://github.com/dawn012/Java-Assignment.git" />
+        <option name="accountId" value="f4e5a0e4-1629-4163-8fd6-c508a1ec85c5" />
+        <option name="url" value="https://github.com/dawn012/Java-Assignment" />
       </UrlAndAccount>
+    </option>
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
     </option>
   </component>
   <component name="ProjectId" id="2VScJffwsxrMXTAnbRaLkJefcbV" />
@@ -56,8 +70,11 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/zheng/Downloads/Java/Practical 6/Q3&quot;,
-    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/zheng/Downloads/Cinema Ticketing System/src/main/java/org/example/Main.java&quot;
+    &quot;last_opened_file_path&quot;: &quot;E:/Java-Assignment&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/zheng/Downloads/Cinema Ticketing System/src/main/java/org/example/Main.java&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
   }
 }</component>
   <component name="RecentsManager">
@@ -65,8 +82,68 @@
       <recent name="C:\Users\zheng\Downloads\Java Assignment\Cinema Ticketing System\lib" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="Security_Management" />
       <recent name="Driver" />
     </key>
+  </component>
+  <component name="RunManager" selected="Application.LoginDriver">
+    <configuration name="AdminDriver" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Security_Management.AdminDriver" />
+      <module name="Cinema_Ticketing_System" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Security_Management.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Driver" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Driver.Driver" />
+      <module name="Cinema_Ticketing_System" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Driver.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="LoginDriver" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Security_Management.LoginDriver" />
+      <module name="Cinema_Ticketing_System" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Security_Management.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.LoginDriver" />
+        <item itemvalue="Application.Driver" />
+        <item itemvalue="Application.AdminDriver" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -285,6 +362,107 @@
       <option name="project" value="LOCAL" />
       <updated>1694918116519</updated>
     </task>
+    <task id="LOCAL-00027" summary="Add Promotion">
+      <option name="closed" value="true" />
+      <created>1694925280492</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1694925280492</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Add Payment">
+      <option name="closed" value="true" />
+      <created>1694946347805</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1694946347805</updated>
+    </task>
+    <task id="LOCAL-00029" summary="Add Promotion">
+      <created>1694954172519</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1694954172519</updated>
+    </task>
+    <task id="LOCAL-00030" summary="add new file">
+      <created>1694954377499</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1694954377499</updated>
+    </task>
+    <task id="LOCAL-00031" summary="add new file">
+      <created>1695004343601</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1695004343601</updated>
+    </task>
+    <task id="LOCAL-00032" summary="delete file">
+      <created>1695004843084</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1695004843084</updated>
+    </task>
+    <task id="LOCAL-00033" summary="add file">
+      <created>1695007043871</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1695007043871</updated>
+    </task>
+    <task id="LOCAL-00034" summary="fix file">
+      <created>1695007374768</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1695007374768</updated>
+    </task>
+    <task id="LOCAL-00035" summary="fix bug">
+      <created>1695007847122</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1695007847122</updated>
+    </task>
+    <task id="LOCAL-00036" summary="upgrade function">
+      <created>1695031796818</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1695031796819</updated>
+    </task>
+    <task id="LOCAL-00037" summary="fix bug">
+      <created>1695032022749</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1695032022749</updated>
+    </task>
+    <task id="LOCAL-00038" summary="fix bug">
+      <created>1695032612565</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1695032612565</updated>
+    </task>
+    <task id="LOCAL-00039" summary="fix bug">
+      <created>1695032858392</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1695032858392</updated>
+    </task>
+    <task id="LOCAL-00040" summary="fix bug">
+      <created>1695047171917</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1695047171917</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <task id="LOCAL-00027" summary="debug">
       <option name="closed" value="true" />
       <created>1695020890617</created>
@@ -382,6 +560,15 @@
     <MESSAGE value="update the search movie by name" />
     <MESSAGE value="update the search movie by genre" />
     <MESSAGE value="update something" />
+    <MESSAGE value="Add Payment" />
+    <MESSAGE value="Add Promotion" />
+    <MESSAGE value="add new file" />
+    <MESSAGE value="delete file" />
+    <MESSAGE value="add file" />
+    <MESSAGE value="fix file" />
+    <MESSAGE value="upgrade function" />
+    <MESSAGE value="fix bug" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix bug" />
     <MESSAGE value="Add Payment" />
     <MESSAGE value="Add Promotion" />
     <MESSAGE value="Add Payment" />

@@ -26,8 +26,8 @@ public class TopMovieReport extends Report {
         averageBoxOffices = new ArrayList<>();
     }
 
-    public TopMovieReport(String title, DateTime reportDate, String purpose, String conclusion, ArrayList<Movie> movies, ArrayList<Double> totalBoxOffices, ArrayList<Integer> numOfScreenings, ArrayList<Double> averageBoxOffices) {
-        super(title, reportDate, purpose, conclusion);
+    public TopMovieReport(String title, String purpose, String conclusion, ArrayList<Movie> movies, ArrayList<Double> totalBoxOffices, ArrayList<Integer> numOfScreenings, ArrayList<Double> averageBoxOffices) {
+        super(title, purpose, conclusion);
         this.movies = movies;
         this.totalBoxOffices = totalBoxOffices;
         this.numOfScreenings = numOfScreenings;
@@ -36,14 +36,44 @@ public class TopMovieReport extends Report {
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder(super.toString()); // 获取父类 toString() 的结果
+        if (super.getPurpose() == null || super.getPurpose().trim().isEmpty()) {
+            super.setPurpose(getDefaultPurpose());
+        }
 
-        result.append(String.format("\n\n%-5s %-25s %-5s %-5s %s", "Ranking", "Movie Name", "Total Box Office", "Number of Screenings", "Average Box Office"));
+        String duration;
+        if (super.getTitle().contains("Daily")) {
+            duration = "day";
+        }
+        else if (super.getTitle().contains("Weekly")) {
+            duration = "week";
+        }
+        else if (super.getTitle().contains("Monthly")) {
+            duration = "month";
+        }
+        else {
+            duration = "year";
+        }
+
+        super.setConclusion("From this report we can know that the best selling movie of the " + duration + " is " + movies.get(0).getMvName().getName() + " and the least popular movie is " + movies.get(movies.size() - 1).getMvName().getName() + ".");
+
+        StringBuilder result = new StringBuilder(super.toString()); // 获取父类 toString() 的结果
+        int looping;
+
+        result.append(String.format("%-10s %-30s %-20s %-25s %s\n", "Ranking", "Movie Name", "Total Box Office", "Number of Screenings", "Average Box Office"));
 
         // 遍历电影列表，将电影信息添加到结果中
-        for (int i = 0; i < movies.size(); i++) {
-            result.append(String.format("%-5d %-25s %-5.2f %-5d %.2f", (i + 1), movies.get(i).getMvName().getName(), totalBoxOffices.get(i), numOfScreenings.get(i), averageBoxOffices.get(i)));
+        if (movies.size() > 10) {
+            looping = 10;  // 最多出现 top 10 的电影
         }
+        else {
+            looping = movies.size();
+        }
+
+        for (int i = 0; i < looping; i++) {
+            result.append(String.format("%-10d %-30s %-20.2f %-25d %.2f\n", (i + 1), movies.get(i).getMvName().getName(), totalBoxOffices.get(i), numOfScreenings.get(i), averageBoxOffices.get(i)));
+        }
+
+        result.append(String.format("\nConclusion: \n%s\n", super.getConclusion()));
 
         return result.toString(); // 返回完整的字符串
     }
@@ -134,11 +164,13 @@ public class TopMovieReport extends Report {
                 ResultSet result = DatabaseUtils.selectQueryById("total_price", "booking", "booking_id = ?", params);
 
                 while (result.next()) {
-                    Booking booking = new Booking();
+                    if (result.getString("booking_status").equals("completed")) {
+                        Booking booking = new Booking();
 
-                    booking.setTotalPrice(result.getDouble("total_price"));
+                        booking.setTotalPrice(result.getDouble("total_price"));
 
-                    bookings.add(booking);
+                        bookings.add(booking);
+                    }
                 }
 
                 result.close();
@@ -197,8 +229,8 @@ public class TopMovieReport extends Report {
         return reportAfterRanking;
     }
 
-    public void printing() {
-        toString();
+    public String getDefaultPurpose() {
+        return "To list movies in descending order of their box office earnings, allowing readers to quickly identify the most financially successful films.";
     }
 
     public void setMovie(ArrayList<Movie> movies) {
