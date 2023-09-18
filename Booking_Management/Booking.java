@@ -337,12 +337,14 @@ public class Booking {
                     if (t.getSeat().getSeat_id().equals(combineSeatId)) {
                         exist = true;
                         System.out.println("This seat not available/already be booked...");
+                        count--;
                     }
                 }
                 for(Ticket t:cartTicket){
                     if (t.getSeat().getSeat_id().equals(combineSeatId)) {
                         exist = true;
                         System.out.println("This seat not available/already be booked...");
+                        count--;
                     }
                 }
                 schedule.getHall().initSeatList();
@@ -352,6 +354,7 @@ public class Booking {
                         if (seats.getSeat_status()==0){
                             exist=true;
                             System.out.println("This Seat is unavailable...");
+                            count--;
                         }
                     }
                 }
