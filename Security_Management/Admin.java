@@ -106,7 +106,7 @@ public class Admin extends User {
         }
     }
 
-    //auto detect cust or admin object to modify info
+    /*//auto detect cust or admin object to modify info
     public void modifyUserInfo(Scanner scanner, User user) throws SQLException {
         Connection conn = DatabaseUtils.getConnection();
         boolean isEditing = true;
@@ -121,9 +121,13 @@ public class Admin extends User {
                     System.out.println("1. Username: " + user.getLogin().getUsername());
                     System.out.println("2. Email: " + user.getEmail());
                     System.out.println("3. Date of Birth: " + user.getDOB());
-                    System.out.println("4. Gender: " + getGender());
-                    System.out.println("5. Phone Number: " + getPhoneNo());
-                    System.out.println("6. Password: " + user.getLogin().getPassword());
+                    System.out.println("4. Password: " + user.getLogin().getPassword());
+
+                    if (user instanceof Admin) {
+                        System.out.println("5. Gender: " + ((Admin) user).getGender());
+                        System.out.println("6. Phone Number: " + ((Admin) user).getPhoneNo());
+                    }
+
                     System.out.println("0. Editing completed");
                     System.out.print("Please select your operation: ");
 
@@ -165,29 +169,39 @@ public class Admin extends User {
                     System.out.println("Date of birth updated to: " + newDOB);
                     break;
                 case 4:
-                    System.out.print("Enter new gender: ");
-                    String newGender = RegisterValidator.validateGender(scanner);
-                    setGender(newGender);
-                    System.out.println("Gender updated to: " + newGender);
-                    break;
-                case 5:
-                    System.out.print("Enter new phone number: ");
-                    String newPhoneNo = RegisterValidator.validatePhoneNumber(scanner);
-                    setPhoneNo(newPhoneNo);
-                    System.out.println("Phone number updated to: " + newPhoneNo);
-                    break;
-                case 6:
                     System.out.print("Enter new password: ");
                     String newPassword = RegisterValidator.validatePassword(scanner);
                     user.getLogin().setPassword(newPassword);
                     System.out.println("Password updated.");
                     break;
+                case 5:
+                    if (user instanceof Admin) {
+                        System.out.print("Enter new gender: ");
+                        String newGender = RegisterValidator.validateGender(scanner);
+                        ((Admin) user).setGender(newGender);
+                        System.out.println("Gender updated to: " + newGender);
+                    } else {
+                        System.out.println("Invalid choice. Please select a valid option.");
+                    }
+                    break;
+                case 6:
+                    if (user instanceof Admin) {
+                        System.out.print("Enter new phone number: ");
+                        String newPhoneNo = RegisterValidator.validatePhoneNumber(scanner);
+                        ((Admin) user).setPhoneNo(newPhoneNo);
+                        System.out.println("Phone number updated to: " + newPhoneNo);
+
+                } else {
+                    System.out.println("Invalid choice. Please select a valid option.");
+                }
+                break;
                 default:
                     System.out.println("Invalid choice. Please select a valid option.");
                     break;
             }
         }
-    }
+    }*/
+
 
 
     public static ArrayList<User> getAllUsers() {

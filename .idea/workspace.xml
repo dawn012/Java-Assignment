@@ -4,11 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="fix bug">
     <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="fix the bug in system class view movie">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Driver/SystemClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/Driver/SystemClass.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Report_Management/Report.java" beforeDir="false" afterPath="$PROJECT_DIR$/Report_Management/Report.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Report_Management/TopMovieReport.java" beforeDir="false" afterPath="$PROJECT_DIR$/Report_Management/TopMovieReport.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Security_Management/Admin.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/Admin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Security_Management/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/Customer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Security_Management/Login.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/Login.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Security_Management/LoginDriver.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/LoginDriver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Security_Management/LoginValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/LoginValidator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Security_Management/RDriver.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/RDriver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Security_Management/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/User.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -435,15 +443,7 @@
       <option name="project" value="LOCAL" />
       <updated>1695043452554</updated>
     </task>
-    <task id="LOCAL-00039" summary="fix the bug in system class view movie">
-      <option name="closed" value="true" />
-      <created>1695046532100</created>
-      <option name="number" value="00039" />
-      <option name="presentableId" value="LOCAL-00039" />
-      <option name="project" value="LOCAL" />
-      <updated>1695046532100</updated>
-    </task>
-    <option name="localTasksCounter" value="40" />
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -492,6 +492,7 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <MESSAGE value="add the package" />
     <MESSAGE value="add the sql" />
     <MESSAGE value="add the yong package" />
     <MESSAGE value="change the hall package" />
@@ -516,8 +517,7 @@
     <MESSAGE value="upgrade function" />
     <MESSAGE value="fix bug" />
     <MESSAGE value="update top movie report" />
-    <MESSAGE value="fix the bug in system class view movie" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix the bug in system class view movie" />
+    <option name="LAST_COMMIT_MESSAGE" value="update top movie report" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
