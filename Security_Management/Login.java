@@ -1,5 +1,7 @@
 package Security_Management;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
@@ -11,7 +13,13 @@ public class Login {
 
     private String username;
     private String password;
+    public Login() {
+    }
 
+    public Login(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
     public User getUserByUsername(ArrayList<User> userList, String username) {
         for (User user : userList) {
             if (user.getLogin().getUsername().equals(username)) {
@@ -291,13 +299,27 @@ public class Login {
         }*/
     }
 
+    public void updatePasswordToDatabase(String newPassword, int userId) throws SQLException {
+        Connection conn = DatabaseUtils.getConnection();
 
-    public Login() {
-    }
+        try {
+            String updateSql = "UPDATE User SET password = ? WHERE userID = ?";
+            PreparedStatement updateStmt = conn.prepareStatement(updateSql);
+            updateStmt.setString(1, newPassword);
+            updateStmt.setInt(2, userId);
 
-    public Login(String username, String password) {
-        this.username = username;
-        this.password = password;
+            int rowsUpdated = updateStmt.executeUpdate();
+
+            if (rowsUpdated > 0) {
+                System.out.println("Password updated successfully!");
+            } else {
+                System.out.println("Failed to update password.");
+            }
+
+            updateStmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

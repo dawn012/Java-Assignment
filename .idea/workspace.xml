@@ -9,9 +9,7 @@
       <change beforePath="$PROJECT_DIR$/Security_Management/Admin.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/Admin.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Security_Management/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/Customer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Security_Management/Login.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/Login.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/LoginDriver.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/LoginDriver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/LoginValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/LoginValidator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/RDriver.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/RDriver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Security_Management/RegisterValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/RegisterValidator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Security_Management/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/User.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -445,7 +443,14 @@
       <option name="project" value="LOCAL" />
       <updated>1695032858392</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="fix bug">
+      <created>1695047171917</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1695047171917</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
