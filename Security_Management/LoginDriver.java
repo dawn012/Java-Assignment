@@ -16,8 +16,7 @@ public class LoginDriver {
         Scanner input = new Scanner(System.in);
         LoginValidator.getUsersFromDatabase();
         ArrayList<User> userList = LoginValidator.getUserList();
-
-        LoginValidator.printUserList(userList);
+        //LoginValidator.printUserList(userList);
         loginMenu();
 
 

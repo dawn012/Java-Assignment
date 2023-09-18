@@ -79,7 +79,7 @@
       <recent name="Driver" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Driver">
+  <component name="RunManager" selected="Application.LoginDriver">
     <configuration name="AdminDriver" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Security_Management.AdminDriver" />
       <module name="Cinema_Ticketing_System" />
@@ -132,9 +132,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.LoginDriver" />
         <item itemvalue="Application.Driver" />
         <item itemvalue="Application.AdminDriver" />
-        <item itemvalue="Application.LoginDriver" />
       </list>
     </recent_temporary>
   </component>
