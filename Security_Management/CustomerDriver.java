@@ -1,15 +1,10 @@
-package RDriver;
-
-import Login.Login;
-import User.Customer;
-import User.User;
-import Validator.LoginValidator;
+package Security_Management;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import static User.User.registerUser;
+import static Security_Management.User.registerUser;
 
 public class CustomerDriver {
     public static void main(String[] args) throws SQLException {

@@ -1,11 +1,7 @@
-package Validator;
+package Security_Management;
 
 
-import Connect.DatabaseUtils;
-import User.Admin;
-import User.Customer;
-import User.*;
-import Login.*;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

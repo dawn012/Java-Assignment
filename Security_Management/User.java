@@ -1,9 +1,7 @@
-package User;
-
-import Login.Login;
-import Validator.RegisterValidator;
+package Security_Management;
 
 import java.util.Scanner;
+
 public abstract class User{
 
     private Login login;

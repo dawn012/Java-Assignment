@@ -1,8 +1,4 @@
-package User;
-
-import Connect.DatabaseUtils;
-import Validator.RegisterValidator;
-import Login.*;
+package Security_Management;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

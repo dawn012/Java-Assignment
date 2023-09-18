@@ -1,13 +1,10 @@
-package Login;
+package Security_Management;
 
-import User.*;
-import User.Customer;
-import User.User;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import static Validator.LoginValidator.*;
+import static Security_Management.LoginValidator.*;
 
 public class Login {
 

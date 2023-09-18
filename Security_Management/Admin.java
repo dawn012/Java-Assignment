@@ -1,8 +1,6 @@
-package User;
+package Security_Management;
 
-import Connect.DatabaseUtils;
-import Login.Login;
-import Validator.RegisterValidator;
+
 
 import java.sql.*;
 import java.util.ArrayList;
