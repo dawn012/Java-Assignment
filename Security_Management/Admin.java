@@ -4,6 +4,7 @@ package Security_Management;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Admin extends User {
@@ -78,60 +79,6 @@ public class Admin extends User {
         return newAdmin;
     }
 
-    public void modifyAdminInfo(Scanner scanner, Admin admin) throws SQLException {
-        Connection conn = DatabaseUtils.getConnection();
-        boolean isEditing = true;
-
-        while (isEditing) {
-            System.out.println("\nModify Admin Information:");
-            System.out.println("1. Username: " + admin.getLogin().getUsername());
-            System.out.println("2. Email: " + admin.getEmail());
-            System.out.println("3. Date of Birth: " + admin.getDOB());
-            System.out.println("4. Gender: " + admin.getGender());
-            System.out.println("5. Phone Number: " + admin.getPhoneNo());
-            System.out.println("0. Editing completed");
-            System.out.print("Please select your operation: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine();
-
-            switch (choice) {
-                case 0:
-                    isEditing = false;
-                    admin.updateAdminInfo(conn);
-                    break;
-                case 1:
-                    System.out.print("Enter new username: ");
-                    String newUsername = RegisterValidator.validateUsername(scanner);
-                    admin.getLogin().setUsername(newUsername);
-                    System.out.println("Username updated to: " + newUsername);
-                    break;
-                case 2:
-                    System.out.print("Enter new email: ");
-                    String newEmail = RegisterValidator.validateEmail(scanner);
-                    admin.setEmail(newEmail);
-                    System.out.println("Email updated to: " + newEmail);
-                    break;
-                case 3:
-                    System.out.print("Enter new date of birth (dd-MM-yyyy): ");
-                    String newDOB = RegisterValidator.validateDateOfBirth(scanner);
-                    admin.setDOB(newDOB);
-                    break;
-                case 4:
-                    System.out.print("Enter new gender: ");
-                    String newGender = RegisterValidator.validateGender(scanner);
-                    admin.setGender(newGender);
-                    break;
-                case 5:
-                    System.out.print("Enter new phone number: ");
-                    String newPhoneNo = RegisterValidator.validatePhoneNumber(scanner);
-                    admin.setPhoneNo(newPhoneNo);
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please select a valid option.");
-                    break;
-            }
-        }
-    }
 
     public void updateAdminInfo(Connection conn) throws SQLException {
         try {
@@ -159,6 +106,88 @@ public class Admin extends User {
         }
     }
 
+    //auto detect cust or admin object to modify info
+    public void modifyUserInfo(Scanner scanner, User user) throws SQLException {
+        Connection conn = DatabaseUtils.getConnection();
+        boolean isEditing = true;
+
+        while (isEditing) {
+            int choice = 0;
+            boolean error = true;
+
+            do {
+                try {
+                    System.out.println("\nModify User Information (ID: " + user.getUserId() + "):");
+                    System.out.println("1. Username: " + user.getLogin().getUsername());
+                    System.out.println("2. Email: " + user.getEmail());
+                    System.out.println("3. Date of Birth: " + user.getDOB());
+                    System.out.println("4. Gender: " + getGender());
+                    System.out.println("5. Phone Number: " + getPhoneNo());
+                    System.out.println("6. Password: " + user.getLogin().getPassword());
+                    System.out.println("0. Editing completed");
+                    System.out.print("Please select your operation: ");
+
+                    choice = scanner.nextInt();
+                    scanner.nextLine();
+
+                    if (choice >= 0 && choice <= 6) {
+                        error = false;
+                    } else {
+                        System.out.println("Invalid Choice! Please try again.");
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("Please enter a valid choice!");
+                    scanner.nextLine();
+                }
+            } while (error);
+
+            switch (choice) {
+                case 0:
+                    isEditing = false;
+                    user.updateUserById(user);
+                    break;
+                case 1:
+                    System.out.print("Enter new username: ");
+                    String newUsername = RegisterValidator.validateUsername(scanner);
+                    user.getLogin().setUsername(newUsername);
+                    System.out.println("Username updated to: " + newUsername);
+                    break;
+                case 2:
+                    System.out.print("Enter new email: ");
+                    String newEmail = RegisterValidator.validateEmail(scanner);
+                    user.setEmail(newEmail);
+                    System.out.println("Email updated to: " + newEmail);
+                    break;
+                case 3:
+                    System.out.print("Enter new date of birth (dd-MM-yyyy): ");
+                    String newDOB = RegisterValidator.validateDateOfBirth(scanner);
+                    user.setDOB(newDOB);
+                    System.out.println("Date of birth updated to: " + newDOB);
+                    break;
+                case 4:
+                    System.out.print("Enter new gender: ");
+                    String newGender = RegisterValidator.validateGender(scanner);
+                    setGender(newGender);
+                    System.out.println("Gender updated to: " + newGender);
+                    break;
+                case 5:
+                    System.out.print("Enter new phone number: ");
+                    String newPhoneNo = RegisterValidator.validatePhoneNumber(scanner);
+                    setPhoneNo(newPhoneNo);
+                    System.out.println("Phone number updated to: " + newPhoneNo);
+                    break;
+                case 6:
+                    System.out.print("Enter new password: ");
+                    String newPassword = RegisterValidator.validatePassword(scanner);
+                    user.getLogin().setPassword(newPassword);
+                    System.out.println("Password updated.");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please select a valid option.");
+                    break;
+            }
+        }
+    }
 
 
     public static ArrayList<User> getAllUsers() {
@@ -216,12 +245,46 @@ public class Admin extends User {
 
     public void manageAccountStatus() {
         Scanner scanner = new Scanner(System.in);
+        System.out.print("Please enter the User ID (0 to Cancel): ");
+        int userId;
+        while (true) {
 
-        System.out.print("Please enter the User ID: ");
-        int userId = scanner.nextInt();
+            if (scanner.hasNextInt()) {
+                userId = scanner.nextInt();
+                if (userId == 0) {
+                    System.out.println("Operation canceled.");
+                    return;
+                } else if (userId > 0) {
+                    break;
+                } else {
+                    System.out.print("Invalid input.");
+                    scanner.nextLine();
+                }
+            } else {
+                System.out.print("Invalid input. Please enter a valid User ID (0 to Cancel): ");
+                scanner.next();
+            }
+        }
 
-        System.out.print("Choose an action (1 for Unblock, 2 for Block): ");
-        int action = scanner.nextInt();
+        int action;
+        while (true) {
+            System.out.print("Choose an action (1 for Unblock, 2 for Block, 0 to Cancel): ");
+            if (scanner.hasNextInt()) {
+                action = scanner.nextInt();
+                if (action == 0) {
+                    System.out.println("Operation canceled.");
+                    return;
+                } else if (action == 1 || action == 2) {
+                    break;
+                } else {
+                    System.out.print("Invalid input. Please choose a valid action (1 for Unblock, 2 for Block, 0 to Cancel): ");
+                    scanner.nextLine();
+                }
+            } else {
+                System.out.print("Invalid input. Please choose a valid action (1 for Unblock, 2 for Block, 0 to Cancel): ");
+                scanner.next();
+            }
+        }
 
         String newStatus = (action == 1) ? "active" : "inactive";
 
@@ -247,6 +310,7 @@ public class Admin extends User {
             e.printStackTrace();
         }
     }
+
 
     public void viewAllUsers() {
 
@@ -344,30 +408,45 @@ public class Admin extends User {
         }
     }
 
+
+
     public void deleteUserById(Scanner scanner) {
         System.out.print("Please enter the ID of the user you want to delete: ");
         int userId = scanner.nextInt();
 
-        try {
-            Connection conn = DatabaseUtils.getConnection();
-            String sql = "DELETE FROM User WHERE userID = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, userId);
+        // 添加确认删除的选项
+        System.out.print("Are you sure you want to delete this user? (Y/N): ");
+        scanner.nextLine(); // 消耗换行符
 
-            int rowsAffected = stmt.executeUpdate();
+        String confirmation = scanner.nextLine().trim().toLowerCase();
 
-            if (rowsAffected > 0) {
-                System.out.println("User with ID " + userId + " has been deleted successfully.");
-            } else {
-                System.out.println("User with ID " + userId + " not found or deletion failed.");
+        if (confirmation.equals("y")) {
+            try {
+                Connection conn = DatabaseUtils.getConnection();
+                String sql = "DELETE FROM User WHERE userID = ?";
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                stmt.setInt(1, userId);
+
+                int rowsAffected = stmt.executeUpdate();
+
+                if (rowsAffected > 0) {
+                    System.out.println("User with ID " + userId + " has been deleted successfully.");
+                } else {
+                    System.out.println("User with ID " + userId + " not found or deletion failed.");
+                }
+
+                stmt.close();
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-
-            stmt.close();
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } else if (confirmation.equals("n")) {
+            System.out.println("Deletion canceled. User has not been deleted.");
+        } else {
+            System.out.println("Invalid input. Deletion canceled. User has not been deleted.");
         }
     }
+
 
 
     public String getGender() {

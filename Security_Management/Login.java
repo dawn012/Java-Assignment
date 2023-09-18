@@ -2,6 +2,7 @@ package Security_Management;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import static Security_Management.LoginValidator.*;
@@ -20,7 +21,7 @@ public class Login {
         return null;
     }
 
-    public static User login() throws SQLException {
+    public static User loginMenu() throws SQLException {
         Scanner scanner = new Scanner(System.in);
         int passwordAttempts = 0;
         boolean accountFrozen = false;
@@ -103,60 +104,179 @@ public class Login {
 
     private static void performPostLoginActions(User foundUser) throws SQLException {
         Scanner input = new Scanner(System.in);
-        System.out.println("Login Successful!\nWelcome "+foundUser.getLogin().getUsername()+" !");
+        System.out.println("Login Successful!\nWelcome " + foundUser.getLogin().getUsername() + " !");
         User user = Customer.getUserByUsername(userList, foundUser.getLogin().getUsername());
 
         if (user != null) {
             if (user instanceof Customer) {
                 Customer customer = (Customer) user;
-                int choice;
+                int choice = 0;
 
                 do {
-                    System.out.println("\nMenu:");
-                    System.out.println("1. View Profile");
-                    System.out.println("2. Edit Profile");
-                    System.out.println("3. ");
-                    System.out.println("4. Modify Profile");
-                    System.out.println("5. Exit");
-                    System.out.print("Enter your choice: ");
-                    choice = input.nextInt();
-                    input.nextLine();
+                    try {
+                        System.out.println("\nMenu:");
+                        System.out.println("1. View Profile");
+                        System.out.println("2. Edit Profile");
+                        System.out.println("3. Reset Password");
+                        System.out.println("4. Perform Option 4");
+                        System.out.println("5. Exit");
+                        System.out.print("Enter your choice: ");
+                        choice = input.nextInt();
+                        input.nextLine();
 
-                    switch (choice) {
-                        case 1:
-                            System.out.println("You selected Option 1.");
-                            customer.viewProfile(customer);
-                            break;
-                        case 2:
-                            System.out.println("You selected Option 2.");
-                            customer.modifyCustInfo(input,customer);
-                            break;
-                        case 3:
-                            System.out.println("You selected Option 3.");
+                        switch (choice) {
+                            case 1:
+                                System.out.println("You selected Option 1.");
+                                customer.viewProfile(customer);
+                                break;
+                            case 2:
+                                System.out.println("You selected Option 2.");
+                                customer.modifyProfile(input, customer);
+                                break;
+                            case 3:
+                                System.out.println("You selected Option 3.");
+                                ArrayList<User> userList = Admin.getAllUsers();
+                                customer.resetCustPassword(userList,customer.getLogin().getUsername());
+                                break;
+                            case 4:
+                                System.out.println("You selected Option 4.");
 
-                            break;
-                        case 4:
-                            System.out.println("You selected Option 4.");
-                            break;
-                        case 5:
-                            System.out.println("Exiting the program.");
-                            break;
-                        default:
-                            System.out.println("Invalid choice. Please select a valid option.");
+                                break;
+                            case 5:
+                                System.out.println("Exiting the program.");
+                                break;
+                            default:
+                                System.out.println("Invalid choice. Please select a valid option.");
+                        }
+                    } catch (InputMismatchException e) {
+                        System.out.println("Invalid input. Please enter a valid choice.");
+                        input.nextLine();
                     }
-
                 } while (choice != 5);
-
-                customer.modifyCustInfo(input,customer);
-                System.out.println(customer);
 
             } else if (user instanceof Admin) {
                 Admin admin = (Admin) user;
-                System.out.println("Found Admin: " + admin.getLogin().getUsername());
-                System.out.println(admin);
+                int choice = 0;
 
-                admin.modifyAdminInfo(input,admin);
-                System.out.println(admin);
+                do {
+                    try {
+                        System.out.println("\nMenu:");
+                        System.out.println("1. View Profile");
+                        System.out.println("2. Edit Profile");
+                        System.out.println("3. Add Administrator");
+                        System.out.println("4. Manage Account Status");
+                        System.out.println("5. View Users Information");
+                        System.out.println("6. Modify Users Information");
+                        System.out.println("7. Remove User");
+                        System.out.println("0. Exit");
+                        System.out.print("Enter your choice: ");
+                        choice = input.nextInt();
+                        input.nextLine();
+
+                        switch (choice) {
+                            case 1:
+                                System.out.println("You selected Option 1.");
+                                admin.viewProfile(admin);
+                                break;
+                            case 2:
+                                System.out.println("You selected Option 2.");
+                                admin.modifyProfile(input, admin);
+                                break;
+                            case 3:
+                                System.out.println("You selected Option 3.");
+                                admin.createAdmin(input);
+                                break;
+                            case 4:
+                                System.out.println("You selected Option 4.");
+                                admin.viewAllUsers();
+                                admin.manageAccountStatus();
+                                break;
+                            case 5:
+                                System.out.println("You selected Option 5.");
+                                boolean submenuActive = true;
+                                while (submenuActive) {
+                                    System.out.println("Submenu Options:");
+                                    System.out.println("1. View All Users");
+                                    System.out.println("2. View All Customer");
+                                    System.out.println("3. View All Admin");
+                                    System.out.println("0. Back to Main Menu");
+                                    System.out.print("Choose an option: ");
+
+                                    try {
+                                        int submenuChoice = input.nextInt();
+                                        switch (submenuChoice) {
+                                            case 1:
+                                                System.out.println("You selected Submenu Option 1.");
+                                                admin.viewAllUsers();
+                                                break;
+                                            case 2:
+                                                System.out.println("You selected Submenu Option 2.");
+                                                admin.viewAllCustomers();
+                                                break;
+                                            case 3:
+                                                System.out.println("You selected Submenu Option 3.");
+                                                admin.viewAllAdmins();
+                                                break;
+                                            case 0:
+                                                System.out.println("Returning to Main Menu.");
+                                                submenuActive = false;
+                                                break;
+                                            default:
+                                                System.out.println("Invalid option. Please choose again.");
+                                        }
+                                    } catch (java.util.InputMismatchException e) {
+                                        System.out.println("Invalid input. Please enter a valid number.");
+                                        input.nextLine();
+                                    }
+                                }
+                                break;
+                            case 6:
+                                System.out.println("You selected Option 6.");
+                                admin.viewAllUsers();
+                                User userToModify = null;
+                                int id = 0;
+
+                                while (userToModify == null) {
+                                    try {
+                                        System.out.print("Please enter the user ID you want to modify (0 - Back): ");
+                                        id = input.nextInt();
+                                        input.nextLine();
+                                        if (id == 0) {
+                                            break;
+                                        }
+
+                                        userToModify = findUserById(id);
+
+                                        if (userToModify == null) {
+                                            System.out.println("User not found, please re-enter a valid user ID.");
+                                        }
+                                    } catch (InputMismatchException e) {
+                                        System.out.println("Invalid input, please enter a valid integer.");
+                                        input.nextLine();
+                                    }
+                                }
+
+                                if (id != 0 && userToModify != null) {
+                                    admin.modifyUserInfo(input, findUserById(id));
+                                }
+                                break;
+                            case 7:
+                                System.out.println("You selected Option 7.");
+                                admin.viewAllUsers();
+                                admin.deleteUserById(input);
+                                break;
+                            case 0:
+                                System.out.println("Exiting the program.");
+                                break;
+                            default:
+                                System.out.println("Invalid choice. Please select a valid option.");
+                        }
+                    } catch (InputMismatchException e) {
+                        System.out.println("Invalid input. Please enter a valid choice.");
+                        input.nextLine();
+                    }
+                } while (choice != 0);
+
             }
         } else {
             System.out.println("User with username " + foundUser.getLogin().getUsername() + " not found.");
@@ -170,7 +290,6 @@ public class Login {
 
         }*/
     }
-
 
 
     public Login() {

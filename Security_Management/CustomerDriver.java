@@ -32,10 +32,10 @@ public class CustomerDriver {
                 case 2:
                     System.out.println("You selected Option 2.");
                     LoginValidator.getUsersFromDatabase();
-                    Login.login();
+                    Login.loginMenu();
                 case 3:
                     System.out.println("You selected Option 3.");
-                  //  ((Customer) customer).modifyCustInfo(scanner,customer);
+                    //  ((Customer) customer).modifyCustInfo(scanner,customer);
                     break;
                 case 4:
                     System.out.println("You selected Option 4.");
