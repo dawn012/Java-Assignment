@@ -3,6 +3,7 @@ package Seat_Management;
 import Booking_Management.Booking;
 import Movie_Management.Movie;
 import Movie_Management.MovieUtils;
+import Security_Management.Customer;
 import Ticket_Managemnet.Ticket;
 
 import java.util.ArrayList;
@@ -126,6 +127,9 @@ public class TestDriver {
 //            }
 //            System.out.println(" ");
 //        }
-        Booking.viewBookingHistory(1);
+        Customer customer = new Customer();
+        customer.setCustId(1);
+
+        Booking.viewBookingHistory(customer);
     }
 }

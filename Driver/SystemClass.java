@@ -16,6 +16,7 @@ import Report_Management.TopMovieReport;
 import Schedule_Management.Schedule;
 import Booking_Management.Booking;
 import Seat_Management.Seat;
+import Security_Management.Customer;
 import Ticket_Managemnet.Ticket;
 
 import java.io.IOException;
@@ -45,14 +46,15 @@ public class SystemClass {
                     System.out.println("1. View Profile");
                     System.out.println("2. View Movie");
                     System.out.println("3. View Promotion");
-                    System.out.println("4. Search Movie");
-                    System.out.println("5. Log out");
+                    System.out.println("4. View Booking History");
+                    System.out.println("5. Search Movie");
+                    System.out.println("6. Log out");
                     System.out.print("\nEnter your selection: ");
 
                     choice = sc.nextInt();
                     sc.nextLine();
 
-                    if (choice > 0 && choice <= 5) {
+                    if (choice > 0 && choice <= 6) {
                         error = false;
                     } else {
                         System.out.println("Your choice is not among the available options! PLease try again.");
@@ -261,6 +263,9 @@ public class SystemClass {
 
                                         // 4. Select the seat chin yong part
                                         Booking booking = new Booking();
+                                        Customer c =new Customer();//暂时用
+                                        c.setCustId(1);//暂时用
+                                        booking.setCustomer(c);//暂时用
                                         String confirmStr="R";
                                         while (confirmStr.equals("R")) {
                                             if(booking.executeBooking(schedule)){
@@ -285,6 +290,8 @@ public class SystemClass {
                                         if (confirmStr.equals("Y")) {
                                             //booking.printBookingDetail();
                                             // Apply promotion
+                                            //booking.setBooking_status("completed");
+                                            //booking.updateStatus();
                                             Promotion promotion = applyPromotion(sc, 1, booking);
 
                                             // Make Payment
@@ -309,6 +316,11 @@ public class SystemClass {
                     back = customerPromotion(sc, 1);
                     break;
                 case 4:
+                    Customer c =new Customer();////暂时用
+                    c.setCustId(1);//暂时用
+                    Booking.viewBookingHistory(c);
+                    break;
+                case 5:
                     do {
                         error = true;
                         int searchingMethod = 0;
@@ -502,7 +514,7 @@ public class SystemClass {
                     } while (back == false);
                     back = false;
                     break;
-                case 5:
+                case 6:
                     back = true;
                     break;
             }
@@ -1653,7 +1665,7 @@ public class SystemClass {
                                             do {
                                                 System.out.print("Continue ? (Y=Yes N=No) : ");
                                                 strCon = scanner.next().toUpperCase();
-                                                chCon = str.charAt(0);
+                                                chCon = strCon.charAt(0);
                                             } while (chCon != 'Y' && chCon != 'N');
                                         }
                                         break;
