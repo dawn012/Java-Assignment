@@ -29,7 +29,7 @@ public class Admin extends User {
 
         try {
             String insertSql = "INSERT INTO User (username, gender, password, email, userType, phoneNo, DOB, accStatus) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            Object[] params = {getLogin().getUsername(), getGender(), getLogin().getPassword(), (new Customer()).getEmail(), "admin", getPhoneNo(), getDOB(), "active"};
+            Object[] params = {getLogin().getUsername(), getGender(), getLogin().getPassword(), getEmail(), "admin", getPhoneNo(), getDOB(), "active"};
             rowAffected = DatabaseUtils.insertQuery(insertSql, params);
         } catch (SQLException e) {
             e.printStackTrace();
