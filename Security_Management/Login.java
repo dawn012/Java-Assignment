@@ -112,6 +112,7 @@ public class Login {
     }
 
     private static void performPostLoginActions(User foundUser) throws SQLException {
+        ArrayList<User> userList = Admin.getAllUsers();
         Scanner input = new Scanner(System.in);
         System.out.println("Login Successful!\nWelcome " + foundUser.getLogin().getUsername() + " !");
         User user = Customer.getUserByUsername(userList, foundUser.getLogin().getUsername());
@@ -144,7 +145,7 @@ public class Login {
                                 break;
                             case 3:
                                 System.out.println("You selected Option 3.");
-                                ArrayList<User> userList = Admin.getAllUsers();
+                                userList = Admin.getAllUsers();
                                 resetCustPassword(userList,customer.getLogin().getUsername(), customer.getEmail(), false);
                                 break;
                             case 4:
