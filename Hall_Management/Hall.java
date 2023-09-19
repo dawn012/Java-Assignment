@@ -141,11 +141,11 @@ public class Hall {
             while (result.next()) {
                 Seat seat = new Seat();
 
-                seat.setSeat_id(result.getString("seat_id"));
+                seat.setSeatId(result.getString("seat_id"));
                 //seat.hall.setHallID(hallId);
                 seat.setSeatRow(result.getInt("seatrow"));
                 seat.setSeatCol(result.getInt("seatcol"));
-                seat.setSeat_status(result.getInt("seat_status"));
+                seat.setSeatStatus(result.getInt("seat_status"));
 
                 seats.add(seat);
             }
@@ -179,25 +179,25 @@ public class Hall {
             System.out.print(letter+" ");
             do {
                 char st;
-                if(seats.get(j).getSeat_status()==1) {
+                if(seats.get(j).getSeatStatus()==1) {
                     st='O';
                 }else{
                     st='X';
                 }
 
-                System.out.printf("[%s]:%c ",seats.get(j).getSeat_id(),st);
+                System.out.printf("[%s]:%c ",seats.get(j).getSeatId(),st);
                 j++;
             } while (seats.get(j).getSeatCol()+1 <= largestCol);
 
             char st;
 
-            if(seats.get(j).getSeat_status()==1) {
+            if(seats.get(j).getSeatStatus()==1) {
                 st='O';
             }else{
                 st='X';
             }
 
-            System.out.printf("[%s]:%c ",seats.get(j).getSeat_id(),st);
+            System.out.printf("[%s]:%c ",seats.get(j).getSeatId(),st);
             System.out.printf("\n");
             j += 1;
         }

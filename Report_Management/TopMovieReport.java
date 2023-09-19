@@ -6,7 +6,6 @@ import Driver.DateTime;
 import Movie_Management.Movie;
 import Schedule_Management.Schedule;
 import Ticket_Managemnet.Ticket;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -144,7 +143,7 @@ public class TopMovieReport extends Report {
                 while (result.next()) {
                     Booking booking = new Booking();
 
-                    booking.setBooking_id(result.getInt("booking_id"));
+                    booking.setBookingId(result.getInt("booking_id"));
 
                     bookings.add(booking);
                 }
@@ -158,7 +157,7 @@ public class TopMovieReport extends Report {
 
         for (int i = 0; i < bookings.size(); i++) {
             try {
-                Object[] params = {bookings.get(i).getBooking_id()};
+                Object[] params = {bookings.get(i).getBookingId()};
                 ResultSet result = DatabaseUtils.selectQueryById("total_price", "booking", "booking_id = ?", params);
 
                 while (result.next()) {
