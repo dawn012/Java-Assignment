@@ -391,12 +391,12 @@ public class Admin extends User {
 
     @Override
     public String toString() {
-        return "Admin{" +
-                "adminId=" + adminId +
-                ", gender='" + gender + '\'' +
-                ", phoneNo='" + phoneNo + '\'' +
-                "} " + super.toString();
+        StringBuilder sb = new StringBuilder(super.toString());
+        sb.append("Gender        : ").append(getGender()).append("\n");
+        sb.append("Phone Number  : ").append(getPhoneNo()).append("\n");
+        return sb.toString();
     }
+
 
     @Override
     public int getUserId() {

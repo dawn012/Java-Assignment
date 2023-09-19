@@ -19,7 +19,6 @@ public class Seat {
     }
     public Seat(String seat_id, int seatRow, int seatCol, int seat_status) {
         this.seat_id = seat_id;
-
         this.seatRow = seatRow;
         this.seatCol = seatCol;
         this.seat_status = seat_status;

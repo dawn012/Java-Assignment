@@ -29,33 +29,56 @@ public abstract class User{
 
     public User() {
     }
-    public void viewProfile(User user) {
-        System.out.println("\nUser ID       : " + user.getUserId());
-        System.out.println("Username      : " + user.getLogin().getUsername());
-        System.out.println("Email         : " + user.getEmail());
-        System.out.println("Date of Birth : " + user.getDOB());
-        System.out.println("User Type     : " + user.getUserType());
+    /*public void viewProfile(User user) {
+        System.out.println(user.toString());
+    }*/
 
-        if (user instanceof Customer) {
-            Customer customer = (Customer) user;
-            String accStatus = customer.getAccStatus();
-            System.out.println("Account Status: " + accStatus);
-        } else if (user instanceof Admin) {
-            Admin admin = (Admin) user;
-            String gender = admin.getGender();
-            String phoneNo = admin.getPhoneNo();
-            System.out.println("Gender        : " + gender);
-            System.out.println("Phone Number  : " + phoneNo);
+
+    public void updateUserInfo() throws SQLException {
+        Connection conn = DatabaseUtils.getConnection();
+        String updateSql;
+        PreparedStatement updateStmt;
+
+        try {
+            if (this instanceof Admin) {
+                updateSql = "UPDATE User SET username = ?, email = ?, DOB = ?, gender = ?, phoneNo = ? WHERE userID = ?";
+                updateStmt = conn.prepareStatement(updateSql);
+
+                Admin admin = (Admin) this;
+                updateStmt.setString(1, admin.getLogin().getUsername());
+                updateStmt.setString(2, admin.getEmail());
+                updateStmt.setString(3, admin.getDOB());
+                updateStmt.setString(4, admin.getGender());
+                updateStmt.setString(5, admin.getPhoneNo());
+                updateStmt.setInt(6, admin.getAdminId());
+            } else if (this instanceof Customer) {
+                updateSql = "UPDATE User SET username = ?, email = ?, DOB = ? WHERE userID = ?";
+                updateStmt = conn.prepareStatement(updateSql);
+
+                Customer customer = (Customer) this;
+                updateStmt.setString(1, customer.getLogin().getUsername());
+                updateStmt.setString(2, customer.getEmail());
+                updateStmt.setString(3, customer.getDOB());
+                updateStmt.setInt(4, customer.getCustId());
+            } else {
+                System.out.println("Unsupported user type.");
+                return;
+            }
+
+            int rowsUpdated = updateStmt.executeUpdate();
+
+            if (rowsUpdated > 0) {
+                System.out.println("User information updated successfully!");
+            } else {
+                System.out.println("Failed to update user information.");
+            }
+
+            updateStmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
-    public void updateUserById(User user) throws SQLException {
-        if (user instanceof Admin) {
-            ((Admin) user).updateAdminInfo();
-        } else if (user instanceof Customer) {
-            ((Customer) user).updateCustomerInfo();
-        }
-    }
     public static User findUserById(int userId) {
         LoginValidator.userList = getAllUsers();
         User foundUser = null;
@@ -81,13 +104,13 @@ public abstract class User{
             do {
                 try {
                     System.out.println("\nModify User Information (ID: " + user.getUserId() + "):");
-                    System.out.println("1. Username: " + user.getLogin().getUsername());
-                    System.out.println("2. Email: " + user.getEmail());
-                    System.out.println("3. Date of Birth: " + user.getDOB());
+                    System.out.println("1. Username        : " + user.getLogin().getUsername());
+                    System.out.println("2. Email           : " + user.getEmail());
+                    System.out.println("3. Date of Birth   : " + user.getDOB());
 
                     if (user instanceof Admin) {
-                        System.out.println("4. Password: " + user.getLogin().getPassword());
-                        System.out.println("5. Gender: " + ((Admin) user).getGender());
+                        System.out.println("4. Password    : " + user.getLogin().getPassword());
+                        System.out.println("5. Gender      : " + ((Admin) user).getGender());
                         System.out.println("6. Phone Number: " + ((Admin) user).getPhoneNo());
                     }
 
@@ -111,7 +134,7 @@ public abstract class User{
             switch (choice) {
                 case 0:
                     isEditing = false;
-                    user.updateUserById(user);
+                    user.updateUserInfo();
                     break;
                 case 1:
                     System.out.print("Enter new username: ");
@@ -193,17 +216,6 @@ public abstract class User{
         return newUser;
     }
 
-
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "login=" + login +
-                ", email='" + email + '\'' +
-                ", DOB='" + DOB + '\'' +
-                ", userType='" + userType + '\'' +
-                '}';
-    }
     public int getUserId() {
         if (this instanceof Customer) {
             return ((Customer) this).getCustId();
@@ -244,6 +256,17 @@ public abstract class User{
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("User ID       : ").append(getUserId()).append("\n");
+        sb.append("Username      : ").append(getLogin().getUsername()).append("\n");
+        sb.append("Email         : ").append(getEmail()).append("\n");
+        sb.append("Date of Birth : ").append(getDOB()).append("\n");
+        sb.append("User Type     : ").append(getUserType()).append("\n");
+        return sb.toString();
     }
 
 
