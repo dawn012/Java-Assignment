@@ -65,7 +65,36 @@ public class Ticket {
     public int countTicket_id(int count) {
         this.ticketId=1;
         int largeId=0;
-        ArrayList<Ticket> tickets=Ticket.getBookedTicketList();
+        //ArrayList<Ticket> tickets=Ticket.getBookedTicketList();
+        boolean error = false;
+        ArrayList<Ticket> tickets = new ArrayList<>();
+        try {
+            Object[] params = {};
+            ResultSet result = DatabaseUtils.selectQueryById("*", "ticket",null,null);
+
+            while (result.next()) {
+                Ticket ticket = new Ticket();
+                ticket.setTicketType(result.getString("ticket_type"));
+                ticket.setTicket_id(result.getInt("ticket_id"));
+                Seat seat = new Seat();
+                seat.setSeatId(result.getString("seat_id"));
+                ticket.setSeat(seat);
+                Booking booking =new Booking();
+                booking.setBookingId(result.getInt("booking_id"));
+                Schedule timetable=new Schedule();
+                timetable.setScheduleID(result.getInt("schedule_id"));
+                ticket.setTicketStatus(result.getInt("ticket_status"));
+                ticket.setPriceRate(result.getDouble("price_rate"));
+                tickets.add(ticket);
+            }
+            result.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+
         for(Ticket t:tickets){
             if(t.getTicket_id()>=largeId)
                 largeId=t.getTicket_id();
