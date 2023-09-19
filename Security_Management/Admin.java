@@ -276,14 +276,14 @@ public class Admin extends User {
                 String phoneNo = resultSet.getString("phoneNo");
 
                 Admin admin = new Admin();
-                admin.setAdminId(userId); // 设置管理员的唯一ID
+                admin.setAdminId(userId);
                 admin.getLogin().setUsername(username);
                 admin.setEmail(email);
                 admin.setDOB(dob);
                 admin.setGender(gender);
                 admin.setPhoneNo(phoneNo);
 
-                adminList.add(admin); // 将admin添加到列表中
+                adminList.add(admin);
             }
 
             resultSet.close();

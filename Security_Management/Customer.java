@@ -158,13 +158,13 @@ public class Customer extends User {
                 String accStatus = resultSet.getString("accStatus");
 
                 Customer customer = new Customer();
-                customer.setCustId(userId); // 设置用户的唯一ID
+                customer.setCustId(userId);
                 customer.getLogin().setUsername(username);
                 customer.setEmail(email);
                 customer.setDOB(dob);
                 customer.setAccStatus(accStatus);
 
-                custList.add(customer); // 将customer添加到列表中
+                custList.add(customer);
             }
 
             resultSet.close();
