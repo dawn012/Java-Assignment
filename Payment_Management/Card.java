@@ -98,18 +98,18 @@ public class Card extends Payment {
         }
     }
 
-    public boolean stripeValidator() {
-        // Set Secret Key
-        StripeAPIKey.init();
-
-        PaymentIntent paymentIntent = createPaymentIntent();
-
-        if (paymentIntent != null) {
-            return true;
-        }
-
-        return false;
-    }
+//    public boolean stripeValidator() {
+//        // Set Secret Key
+//        StripeAPIKey.init();
+//
+//        PaymentIntent paymentIntent = createPaymentIntent();
+//
+//        if (paymentIntent != null) {
+//            return true;
+//        }
+//
+//        return false;
+//    }
 
     private int getExpiredMonth(){
         // Date user entered
@@ -158,7 +158,7 @@ public class Card extends Payment {
         }
     }
 
-    private PaymentIntent createPaymentIntent() {
+    public PaymentIntent createPaymentIntent() {
         if (createPaymentMethod() != null && createCustomer() != null) {
             try {
                 PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()

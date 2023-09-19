@@ -6,6 +6,7 @@ import Driver.Name;
 import Driver.SystemClass;
 import Hall_Management.Hall;
 import Movie_Management.Movie;
+import Promotion_Management.Promotion;
 import Schedule_Management.Schedule;
 import Seat_Management.Seat;
 
@@ -36,10 +37,9 @@ public class Booking {
     //}
     ////////////////////////////////////////////////////////
     private Customer customer;
-
+    private Promotion promotion;
     private int booking_id;
     private int adultTicket_qty;
-
     private int childTicket_qty;
     private double totalPrice;
     private DateTime bookingDateTime;
@@ -72,6 +72,19 @@ public class Booking {
         this.customer=customer;
     }
 
+    public Booking(Customer customer, Promotion promotion, int booking_id, int adultTicket_qty, int childTicket_qty, double totalPrice, DateTime bookingDateTime, LocalTime bookingTime, String booking_status, ArrayList<Ticket> ticketList) {
+        this.customer = customer;
+        this.promotion = promotion;
+        this.booking_id = booking_id;
+        this.adultTicket_qty = adultTicket_qty;
+        this.childTicket_qty = childTicket_qty;
+        this.totalPrice = totalPrice;
+        this.bookingDateTime = bookingDateTime;
+        this.bookingTime = bookingTime;
+        this.booking_status = booking_status;
+        this.ticketList = ticketList;
+    }
+
     //Getter
     public int getBooking_id() {
         return booking_id;
@@ -89,6 +102,15 @@ public class Booking {
 //        this.ticket_id+=count;
         //return this.booking_id;
     }
+
+    public Promotion getPromotion() {
+        return promotion;
+    }
+
+    public void setPromotion(Promotion promotion) {
+        this.promotion = promotion;
+    }
+
     public int getAdultTicket_qty() {
         return adultTicket_qty;
     }

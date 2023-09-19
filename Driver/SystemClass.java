@@ -12,6 +12,7 @@ import Movie_Management.MovieValidator;
 import Payment_Management.*;
 import Promotion_Management.*;
 import Report_Management.Report;
+import Report_Management.SalesReport;
 import Report_Management.TopMovieReport;
 import Schedule_Management.Schedule;
 import Booking_Management.Booking;
@@ -296,7 +297,7 @@ public class SystemClass {
                                             Promotion promotion = applyPromotion(sc, 2, booking);
 
                                             // Make Payment
-                                            system.makePayment(sc, 2, booking, promotion);
+                                            makePayment(sc, 2, booking, promotion);
                                         }
 
                                     } else {
@@ -3599,7 +3600,7 @@ public class SystemClass {
             do {
                 try {
                     System.out.println("\nSelect the report you want to view: ");
-                    System.out.println("1. Monthly Sales Report");
+                    System.out.println("1. Sales Report");
                     System.out.println("2. Movie Box Office Report");
                     System.out.print("\nEnter your selection (0 - Back): ");
                     choice = sc.nextInt();
@@ -3615,17 +3616,90 @@ public class SystemClass {
                 }
             } while (error);
 
+            int selection = 0;
+            error = true;
+            LocalDate currentDate = LocalDate.now();
+
             switch (choice) {
                 case 0:
                     back = true;
                     break;
                 case 1:
+                    Report report;
+                    Report generateReport = null;
+                    String title = null;
+
+                    do {
+                        ArrayList<Report> reports = new ArrayList<>();
+                        do {
+                            try {
+                                System.out.println("\nPlease select a sales report from the list below: ");
+                                System.out.println("1. Daily");
+                                System.out.println("2. Monthly");
+                                System.out.print("\nEnter your selection (0 - Back): ");
+                                selection = sc.nextInt();
+                                sc.nextLine();
+
+                                if (selection >= 0 && selection <= 4) {
+                                    error = false;
+                                } else {
+                                    System.out.println("Your choice is not among the available options! PLease try again.");
+                                }
+                            } catch (InputMismatchException e) {
+                                System.out.println("Please enter a valid choice!");
+                                sc.nextLine();
+                            }
+                        } while (error);
+
+                        switch (selection) {
+                            case 0:
+                                continues = false;
+                                back = false;
+                                break;
+                            case 1:
+                                report = viewDailySalesReport(sc);
+                                generateReport = generateReport(report, sc);
+                                break;
+                            case 2:
+
+                                title = "Monthly Sales Report";
+                                break;
+                            default:
+                                System.out.println("Your choice is not among the available options! PLease try again.");
+                        }
+
+                        if (selection != 0) {
+                            reportAfterRanking = TopMovieReport.getRanking(report);
+                            reportAfterRanking.setTitle(title);
+
+                            if (!((TopMovieReport) reportAfterRanking).getMovie().isEmpty()) {
+                                System.out.println(((TopMovieReport) reportAfterRanking).toString());
+
+                                String confirmation;
+                                do {
+                                    System.out.println("\nDo you want to view another report? (Y / N)");
+                                    System.out.print("Answer: ");
+                                    String answer = sc.nextLine();
+
+                                    confirmation = SystemClass.askForContinue(answer);
+                                } while (confirmation.equals("Invalid"));
+
+                                if (confirmation.equals("Y")) {
+                                    continues = true;
+                                } else {
+                                    back = false;
+                                    continues = false;
+                                }
+                            } else {
+                                continues = true;
+                                System.out.println("Sorry, no record found. Report can't be generated!");
+                            }
+                        }
+                    } while (continues);
+
                     break;
                 case 2:
                     do {
-                        int selection = 0;
-                        error = true;
-                        LocalDate currentDate = LocalDate.now();
                         ArrayList<Report> reports = new ArrayList<>();
 
                         do {
@@ -3713,6 +3787,94 @@ public class SystemClass {
                     break;
             }
         } while (back == false);
+    }
+
+    public static SalesReport viewDailySalesReport(Scanner sc) {
+        SalesReport salesReport = new SalesReport();
+        ArrayList<Payment> allPayments;
+
+        System.out.print("\nEnter the date (yyyy-mm-dd): ");
+        String viewDate = sc.nextLine().trim();
+        DateTime searchDate;
+
+        int[] dateParts = DateTime.dateFormatValidator(viewDate);
+
+        if (!(dateParts == null)) {
+            searchDate = new DateTime(dateParts[0], dateParts[1], dateParts[2]);
+
+            if (searchDate.isValidDate()) {
+                if (!(searchDate.getDate().equals(LocalDate.now()) || searchDate.getDate().isAfter(LocalDate.now()))) {
+                    // Check the report generated is before today
+                    allPayments = SalesReport.allPayments();
+                    double totalSales = 0;
+                    int totalOrders = 0;
+                    int countCard = 0;
+                    int countTNG = 0;
+
+                    for (Payment payment : allPayments) {
+                        if (payment.getPaymentDate().equals(viewDate)) {
+                            totalSales += payment.getPaymentAmount();
+                            totalOrders++;
+
+                            if (payment.getPaymentMethod().equals("CARD")) {
+                                countCard++;
+                            }
+
+                            else {
+                                countTNG++;
+                            }
+
+                        }
+                    }
+
+                    salesReport.setSalesDate(searchDate);
+                    salesReport.setTotalSales(totalSales);
+                    salesReport.setTotalOrders(totalOrders);
+
+                    if (countCard == countTNG) {
+                        salesReport.setMostPaymentMtd("Credit/Debit Card & Touch 'n Go");
+                    } else if (countCard > countTNG) {
+                        salesReport.setMostPaymentMtd("Credit/Debit Card");
+                    } else {
+                        salesReport.setMostPaymentMtd("Touch 'n Go");
+                    }
+
+                    return salesReport;
+                }
+
+                else {
+                    System.out.println("Your new start date must before the end date.\n");
+                }
+            }
+
+            else {
+                System.out.println("Please enter valid date range.\n");
+            }
+        }
+
+        return null;
+    }
+
+    private static Report generateReport(Report report, Scanner sc) {
+        System.out.print("\n Please write the report purpose (0 - Use default purpose): ");
+        String purpose = sc.nextLine().trim();
+
+        if (purpose.equals("0")) {
+            purpose = report.getDefaultPurpose();
+        }
+
+        if (report instanceof SalesReport) {
+            SalesReport salesReport = (SalesReport) report;
+            salesReport.setPurpose(purpose);
+
+            return new SalesReport(salesReport.getTitle(), salesReport.getDefaultPurpose(), salesReport.getConclusion(), salesReport.getSalesDate(), salesReport.getTotalSales(), salesReport.getTotalOrders(), salesReport.getMostPaymentMtd());
+        } else {
+            TopMovieReport topMovieReport = (TopMovieReport) report;
+
+            return new TopMovieReport();
+        }
+
+        return null;
     }
 
     private static boolean managePromotion(Scanner sc) {
@@ -4109,7 +4271,7 @@ public class SystemClass {
         return back;
     }
 
-    private static boolean customerPromotion(Scanner sc, int custId) {
+    private static boolean customerPromotion(Scanner sc, Customer customer) {
         boolean back = false;
         boolean error = false;
 
@@ -4133,7 +4295,7 @@ public class SystemClass {
                         do {
                             error = false;
 
-                            validPromotions = PromotionUtils.validPromotionList(custId);
+                            validPromotions = PromotionUtils.validPromotionList(customer.getCustId());
 
                             if (validPromotions.isEmpty()) {
                                 System.out.println("\nOops! There is no other promotion you can claim now.\n");
@@ -4180,7 +4342,7 @@ public class SystemClass {
 
                                     if (claim.equals("Y")) {
                                         for (int i = 0; i < promotion.getPerLimit(); i++) {
-                                            promotion.custClaimedPromotion(custId);
+                                            promotion.custClaimedPromotion(customer.getCustId());
                                         }
 
                                         promotion.updateReceiveCount();
@@ -4208,7 +4370,7 @@ public class SystemClass {
                             error = false;
                             back = false;
 
-                            ArrayList<Promotion> ownPromotions = Promotion.ownPromotionList(custId);
+                            ArrayList<Promotion> ownPromotions = Promotion.ownPromotionList(customer.getCustId());
                             validPromotions = new ArrayList<>();
 
                             if (ownPromotions.isEmpty()) {
@@ -4264,7 +4426,7 @@ public class SystemClass {
 
                                 else if (detailsChoice > 0 && detailsChoice <= validPromotions.size()) {
                                     Promotion promotion = validPromotions.get(detailsChoice - 1);
-                                    System.out.println(promotion.viewOwnPromotionDetails(custId) + "\n");
+                                    System.out.println(promotion.viewOwnPromotionDetails(customer.getCustId()) + "\n");
 
                                     pressEnterToBack();
                                 }
@@ -4297,9 +4459,8 @@ public class SystemClass {
         return true;
     }
 
-    private static Promotion applyPromotion(Scanner sc, int custId, Booking booking) {
+    private static boolean applyPromotion(Scanner sc, Booking booking) {
         String apply;
-        Promotion applyPromotion = null;
 
         do {
             System.out.println("\nDo you want to apply promotion code? (Y/N) : ");
@@ -4312,7 +4473,7 @@ public class SystemClass {
 
 
         if (apply.equals("Y")) {
-            ArrayList<Promotion> ownPromotions = Promotion.ownPromotionList(custId);
+            ArrayList<Promotion> ownPromotions = Promotion.ownPromotionList(booking.getCustomer().getCustId());
             ArrayList<Promotion> validPromotions = new ArrayList<>();
             Promotion bestPromotion = null; // 用于跟踪最佳促销
             double maxDiscount = 0;
@@ -4350,7 +4511,7 @@ public class SystemClass {
 
                 pressEnterToContinue();
 
-                return null;
+                return false;
             }
 
 
@@ -4380,7 +4541,9 @@ public class SystemClass {
                     }
 
                     else if (applyChoice > 0 && applyChoice <= validPromotions.size()) {
-                        return validPromotions.get(applyChoice - 1);
+                        booking.setPromotion(validPromotions.get(applyChoice - 1));
+
+                        return true;
                     }
 
                     else {
@@ -4395,10 +4558,10 @@ public class SystemClass {
             } while (!ctn);
         }
 
-        return null;
+        return false;
     }
 
-    private boolean makePayment(Scanner sc, int custId, Booking booking, Promotion promotion) {
+    private static boolean makePayment(Scanner sc, Promotion promotion, Booking booking) {
         // Deduct discount value
         if (promotion != null) {
             booking.setTotalPrice(booking.getTotalPrice() - promotion.getDiscountValue());
@@ -4433,7 +4596,7 @@ public class SystemClass {
                         while (true) {
                             payment = cardPaymentInfo(sc);
 
-                            validPayment = validPayment(payment, booking);
+                            validPayment = validPayment(payment, payment.getBooking());
 
                             if(validPayment != null) {
                                 back = true;
@@ -4463,7 +4626,7 @@ public class SystemClass {
                         // Process TNG Payment
                         payment = tngPaymentInfo(sc);
 
-                        validPayment = validPayment(payment, booking);
+                        validPayment = validPayment(payment, payment.getBooking());
 
                         back = true;
                         successPayment = true;
@@ -4503,7 +4666,7 @@ public class SystemClass {
 
                 if(promotion != null) {
                     // User use promotion code, update promotion code status
-                    promotion.custApplyPromotion(validPayment.getPaymentId(), custId);
+                    promotion.custApplyPromotion(validPayment.getPaymentId(), validPayment.getBooking().getCustomer().getCustId());
                 }
 
                 System.out.println("\nPayment Successfully! Thanks for your payment.");
@@ -4526,14 +4689,14 @@ public class SystemClass {
         return false;
     }
 
-    private Payment validPayment(Payment payment, Booking booking) {
+    private static Payment validPayment(Payment payment, Booking booking) {
         DateTime dateTime = new DateTime();
 
         if (payment instanceof Card) {
             Card card = (Card) payment;
             card.setPaymentAmount(booking.getTotalPrice());
 
-            if(card.stripeValidator()) {
+            if(CardValidator.stripeValidator(card.createPaymentIntent())) {
                 return new Card(booking.getBooking_id(), "CREDIT/DEBIT CARD", booking.getTotalPrice(), "MYR", dateTime.getCurrentDate(), dateTime.getCurrentTime(), "PAID", card.getCardNo(), card.getExpiredDate(), card.getCvc(), card.getEmail());
             }
 
@@ -4546,7 +4709,7 @@ public class SystemClass {
         return null;
     }
 
-    private Card cardPaymentInfo(Scanner input) {
+    private static Card cardPaymentInfo(Scanner input) {
         Card card = new Card();
 
         // Card Number
@@ -4599,7 +4762,7 @@ public class SystemClass {
         return card;
     }
 
-    private TNG tngPaymentInfo(Scanner input) {
+    private static TNG tngPaymentInfo(Scanner input) {
         TNG tng = new TNG();
 
         while (true) {

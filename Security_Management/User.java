@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 import static Security_Management.Admin.getAllUsers;
 
+
 public abstract class User{
 
     private Login login;
