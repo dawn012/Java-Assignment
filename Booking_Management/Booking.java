@@ -36,10 +36,8 @@ public class Booking {
     //}
     ////////////////////////////////////////////////////////
     private Customer customer;
-
     private int booking_id;
     private int adultTicket_qty;
-
     private int childTicket_qty;
     private double totalPrice;
     private DateTime bookingDateTime;
@@ -367,7 +365,7 @@ public class Booking {
                     ticket.setTicketType(ticketType);
                     ticket.setTicket_id(ticket.countTicket_id(count));
                     //ticket.setTicket_id(ticket.countTicket_id(count));
-                    ticket.setBooking(this);
+                    //ticket.setBooking(this);
                     ticket.setSeat(seat);
                     ticket.setTimeTable(schedule);
                     cartTicket.add(ticket);
@@ -565,7 +563,7 @@ public class Booking {
 
                 Booking booking =new Booking();
                 booking.setBooking_id(result.getInt("booking_id"));
-                ticket.setBooking(booking);
+                //ticket.setBooking(booking);
 
                 Schedule timetable=new Schedule();
                 timetable.setScheduleID(result.getInt("schedule_id"));
@@ -702,33 +700,6 @@ public class Booking {
                 System.out.println("Invalid Input...");
             }
         }while(no!=0);
-
-
-
-//        System.out.println("Booking Details : ");
-//        System.out.println("\t\t-------------------------------------------");
-//        System.out.printf("\t\t Booking ID : %04d\t\tDate : %s\n", bookingList.get(no-1).getBooking_id(), bookingList.get(no-1).getBookingDateTime().getDate());
-//        System.out.println("\t\t-------------------------------------------");
-//        if(bookingList.get(no-1).getAdultTicket_qty()>0) {
-//            System.out.printf("\t\t Adult Ticket x %d\n", bookingList.get(no - 1).getAdultTicket_qty());
-//                    System.out.printf("\t\t\tTicket [Seat]\n");
-//            for (Ticket t:bookingList.get(no-1).getTicketList()){
-//                if(t.getTicketType().equals("Adult"))
-//                    System.out.printf("\t\t\t %4d  [%s]\n",t.getTicket_id(),t.getSeat().getSeat_id());
-//            }
-//        }
-//        if(bookingList.get(no-1).getChildTicket_qty()>0) {
-//            System.out.printf("\t\t Child Ticket x %d\n", bookingList.get(no - 1).getChildTicket_qty());
-//            for (Ticket t:bookingList.get(no-1).getTicketList()){
-//                if(t.getTicketType().equals("Child"))
-//                    System.out.printf("\t\t\t %4d  [%s]\n",t.getTicket_id(),t.getSeat().getSeat_id());
-//            }
-//        }
-//
-//
-//        System.out.println("\t\t-------------------------------------------");
-//        System.out.printf("\t\t\tTotal : \t\t\t\t\t   RM%6.2f\n", bookingList.get(no-1).getTotalPrice());
-//        System.out.println("\t\t-------------------------------------------");
     }
 
 

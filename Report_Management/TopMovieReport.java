@@ -133,8 +133,8 @@ public class TopMovieReport extends Report {
     }*/
 
     private void calculateTotalRevenue(ArrayList<Schedule> schedules) {
-        ArrayList<Ticket> tickets = new ArrayList<>();
         ArrayList<Booking> bookings = new ArrayList<>();
+        double totalBoxOffice = 0;
 
         for (int i = 0; i < schedules.size(); i++) {
             try {
@@ -142,13 +142,11 @@ public class TopMovieReport extends Report {
                 ResultSet result = DatabaseUtils.selectQueryById("DISTINCT booking_id", "ticket", "schedule_id = ?", params);
 
                 while (result.next()) {
-                    Ticket ticket = new Ticket();
                     Booking booking = new Booking();
 
                     booking.setBooking_id(result.getInt("booking_id"));
-                    ticket.setBooking(booking);
 
-                    tickets.add(ticket);
+                    bookings.add(booking);
                 }
 
                 result.close();
@@ -158,18 +156,14 @@ public class TopMovieReport extends Report {
             }
         }
 
-        for (int i = 0; i < tickets.size(); i++) {
+        for (int i = 0; i < bookings.size(); i++) {
             try {
-                Object[] params = {tickets.get(i).getBooking().getBooking_id()};
+                Object[] params = {bookings.get(i).getBooking_id()};
                 ResultSet result = DatabaseUtils.selectQueryById("total_price", "booking", "booking_id = ?", params);
 
                 while (result.next()) {
                     if (result.getString("booking_status").equals("completed")) {
-                        Booking booking = new Booking();
-
-                        booking.setTotalPrice(result.getDouble("total_price"));
-
-                        bookings.add(booking);
+                        totalBoxOffice += result.getDouble("total_price");
                     }
                 }
 
@@ -178,11 +172,6 @@ public class TopMovieReport extends Report {
             catch (SQLException e) {
                 e.printStackTrace();
             }
-        }
-
-        double totalBoxOffice = 0;
-        for (int i = 0; i < bookings.size(); i++) {
-            totalBoxOffice += bookings.get(i).getTotalPrice();
         }
 
         totalBoxOffices.add(totalBoxOffice);
