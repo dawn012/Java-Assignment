@@ -11,6 +11,7 @@ import Movie_Management.MovieUtils;
 import Movie_Management.MovieValidator;
 import Payment_Management.*;
 import Promotion_Management.*;
+import Receipt_Management.Receipt;
 import Report_Management.Report;
 import Report_Management.SalesReport;
 import Report_Management.TopMovieReport;
@@ -298,7 +299,15 @@ public class SystemClass {
                                                         applyPromotion(sc, booking);
 
                                                         // Make Payment
-                                                        if (makePayment(sc, booking)) {
+                                                        Payment payment = makePayment(sc, booking);
+
+                                                        if (payment != null) {
+                                                            // Print Receipt
+                                                            Receipt receipt = new Receipt(payment);
+
+                                                            receipt.printReceipt();
+                                                            receipt.add();
+
                                                             back = true;
                                                         }
                                                     }
@@ -4578,7 +4587,7 @@ public class SystemClass {
         return false;
     }
 
-    private static boolean makePayment(Scanner sc, Booking booking) {
+    private static Payment makePayment(Scanner sc, Booking booking) {
         // Remain original amount
         double remainAmount = booking.getTotalPrice();
 
@@ -4612,7 +4621,7 @@ public class SystemClass {
 
                 switch (paymentMethod) {
                     case "0":
-                        return false;
+                        return null;
 
                     case "1":
                         // Process Credit/Debit Card Payment
@@ -4705,7 +4714,7 @@ public class SystemClass {
 
                 System.out.println("\nPayment Successfully! Thanks for your payment.");
 
-                return true;
+                return validPayment;
             }
 
             else {
@@ -4733,7 +4742,7 @@ public class SystemClass {
             }
         } while (cancelPayment.equals("N"));
 
-        return false;
+        return null;
     }
 
     private static Payment validPayment(Payment payment, Booking booking) {

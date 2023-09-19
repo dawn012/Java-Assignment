@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 
 public abstract class Payment {
     protected Booking booking;
@@ -143,7 +144,7 @@ public abstract class Payment {
 
     public void addPayment() {
         String sql = "INSERT INTO PAYMENT (BOOKING_ID, PAYMENT_METHOD, PAYMENT_AMOUNT, CURRENCY, PAYMENT_DATE, PAYMENT_TIME, PAYMENT_STATUS) VALUES (?,?,?,?,?,?,?)";
-        Object[] params = {booking.getBookingId(), paymentMethod, paymentAmount, currency, paymentDate, paymentTime, paymentStatus};
+        Object[] params = {booking.getBookingId(), paymentMethod, paymentAmount, currency, paymentDate, paymentTime.truncatedTo(ChronoUnit.SECONDS), paymentStatus};
 
         try {
             DatabaseUtils.insertQuery(sql, params);
@@ -161,7 +162,7 @@ public abstract class Payment {
         System.out.printf("\t\t Payment ID   : %04d\n", paymentId);
         System.out.printf("\t\t Booking ID   : %04d\n", booking.getBookingId());
         System.out.printf("\t\t Booking Date : %s\n", booking.getBookingDateTime().getDate());
-        System.out.printf("\t\t Booking Time : %-8s\n", booking.getBookingTime());
+        System.out.printf("\t\t Booking Time : %-8s\n", booking.getBookingTime().truncatedTo(ChronoUnit.SECONDS));
         System.out.println("\t\t-------------------------------------------");
         System.out.printf("\t\t Hall ID      : %d\n", booking.getTicketList().get(0).getTimeTable().getHall().getHallID());
         System.out.printf("\t\t Movie Name   : %s\n\n", booking.getTicketList().get(0).getTimeTable().getMovie().getMvName().getName());
