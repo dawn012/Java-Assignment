@@ -28,41 +28,26 @@ public abstract class User{
 
     public User() {
     }
-    /*public void viewProfile(User user) {
-        System.out.println(user.toString());
-    }*/
-
 
     public void updateUserInfo() throws SQLException {
-        Connection conn = DatabaseUtils.getConnection();
-        String updateSql;
-        PreparedStatement updateStmt;
+        Connection conn = null;
+        PreparedStatement updateStmt = null;
 
         try {
+            conn = DatabaseUtils.getConnection();
+            String updateSql;
+
             if (this instanceof Admin) {
                 updateSql = "UPDATE User SET username = ?, email = ?, DOB = ?, gender = ?, phoneNo = ? WHERE userID = ?";
-                updateStmt = conn.prepareStatement(updateSql);
-
-                Admin admin = (Admin) this;
-                updateStmt.setString(1, admin.getLogin().getUsername());
-                updateStmt.setString(2, admin.getEmail());
-                updateStmt.setString(3, admin.getDOB());
-                updateStmt.setString(4, admin.getGender());
-                updateStmt.setString(5, admin.getPhoneNo());
-                updateStmt.setInt(6, admin.getAdminId());
             } else if (this instanceof Customer) {
                 updateSql = "UPDATE User SET username = ?, email = ?, DOB = ? WHERE userID = ?";
-                updateStmt = conn.prepareStatement(updateSql);
-
-                Customer customer = (Customer) this;
-                updateStmt.setString(1, customer.getLogin().getUsername());
-                updateStmt.setString(2, customer.getEmail());
-                updateStmt.setString(3, customer.getDOB());
-                updateStmt.setInt(4, customer.getCustId());
             } else {
                 System.out.println("Unsupported user type.");
                 return;
             }
+
+            updateStmt = conn.prepareStatement(updateSql);
+            setUserUpdateParams(updateStmt);
 
             int rowsUpdated = updateStmt.executeUpdate();
 
@@ -71,25 +56,36 @@ public abstract class User{
             } else {
                 System.out.println("Failed to update user information.");
             }
-
-            updateStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (updateStmt != null) updateStmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    public static User findUserById(int userId) {
-        LoginValidator.userList = getAllUsers();
-        User foundUser = null;
-        for (User user : LoginValidator.userList) {
-            if (user.getUserId() == userId) {
-                foundUser = user;
-                break;
-            }
+    private void setUserUpdateParams(PreparedStatement stmt) throws SQLException {
+        if (this instanceof Admin) {
+            Admin admin = (Admin) this;
+            stmt.setString(1, admin.getLogin().getUsername());
+            stmt.setString(2, admin.getEmail());
+            stmt.setString(3, admin.getDOB());
+            stmt.setString(4, admin.getGender());
+            stmt.setString(5, admin.getPhoneNo());
+            stmt.setInt(6, admin.getAdminId());
+        } else if (this instanceof Customer) {
+            Customer customer = (Customer) this;
+            stmt.setString(1, customer.getLogin().getUsername());
+            stmt.setString(2, customer.getEmail());
+            stmt.setString(3, customer.getDOB());
+            stmt.setInt(4, customer.getCustId());
         }
-        System.out.println(LoginValidator.userList);
-        return foundUser;
     }
+
 
     //auto detect cust or admin object to modify info
     public void modifyUserInfo(Scanner scanner, User user) throws SQLException {
@@ -185,34 +181,6 @@ public abstract class User{
                     break;
             }
         }
-    }
-    public static User registerUser(Scanner input) {
-        User newUser = new Customer();
-
-        System.out.println("Please Enter Username: ");
-        String username = RegisterValidator.validateUsername(input);
-        newUser.getLogin().setUsername(username);
-
-        System.out.println("Please Enter Password: ");
-        String password = RegisterValidator.validatePassword(input);
-        newUser.getLogin().setPassword(password);
-
-        System.out.println("Please Confirm Your Password: ");
-        String confirmPassword = RegisterValidator.validatePasswordConfirmation(input, password);
-
-        System.out.println("Please Enter Your email: ");
-        String email = RegisterValidator.validateEmail(input);
-        ((Customer)newUser).setEmail(email);
-
-        input.nextLine();
-
-        System.out.println("Please Enter Date of Birth(01-01-1990): ");
-        String dob = RegisterValidator.validateDateOfBirth(input);
-        newUser.setDOB(dob);
-
-        newUser.add();
-
-        return newUser;
     }
 
     public int getUserId() {
