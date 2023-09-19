@@ -17,9 +17,8 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
-
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 
@@ -36,13 +35,13 @@ public class Booking {
     //}
     ////////////////////////////////////////////////////////
     private Customer customer;
-    private int booking_id;
-    private int adultTicket_qty;
-    private int childTicket_qty;
+    private int bookingId;
+    private int adultTicketQty;
+    private int childTicketQty;
     private double totalPrice;
     private DateTime bookingDateTime;
     private LocalTime bookingTime;
-    private String booking_status;      //processing     completed   cancelled
+    private String bookingStatus;      //processing     completed   cancelled
     private ArrayList<Ticket> ticketList;
 
 //    public Booking(int customerId) {
@@ -53,45 +52,45 @@ public class Booking {
 //        this.customerId=customerId;
 //    }
     public Booking() {
-        this.childTicket_qty=0;
-        this.adultTicket_qty=0;
+        this.childTicketQty =0;
+        this.adultTicketQty =0;
         this.totalPrice=0;
-        this.booking_status="processing";
+        this.bookingStatus ="processing";
         //this.customerId=customerId;
     }
 
 
-    public Booking(int booking_id, int adultTicket_qty, int childTicket_qty, double totalPrice, String booking_status,Customer customer) {
-        this.booking_id = booking_id;
-        this.adultTicket_qty = adultTicket_qty;
-        this.childTicket_qty = childTicket_qty;
+    public Booking(int bookingId, int adultTicketQty, int childTicketQty, double totalPrice, String bookingStatus, Customer customer) {
+        this.bookingId = bookingId;
+        this.adultTicketQty = adultTicketQty;
+        this.childTicketQty = childTicketQty;
         this.totalPrice = totalPrice;
-        this.booking_status = booking_status;
+        this.bookingStatus = bookingStatus;
         this.customer=customer;
     }
 
     //Getter
-    public int getBooking_id() {
-        return booking_id;
+    public int getBookingId() {
+        return bookingId;
     }
 
     public void countBooking_id() {
-        this.booking_id=1;
+        this.bookingId =1;
         int largeId=0;
         ArrayList<Booking> bookings=Booking.getBookingList();
         for(Booking b:bookings){
-            if(b.getBooking_id()>=largeId)
-                largeId=b.getBooking_id();
+            if(b.getBookingId()>=largeId)
+                largeId=b.getBookingId();
         }
-        this.booking_id=largeId+1;
+        this.bookingId =largeId+1;
 //        this.ticket_id+=count;
         //return this.booking_id;
     }
-    public int getAdultTicket_qty() {
-        return adultTicket_qty;
+    public int getAdultTicketQty() {
+        return adultTicketQty;
     }
-    public int getChildTicket_qty() {
-        return childTicket_qty;
+    public int getChildTicketQty() {
+        return childTicketQty;
     }
     public double getTotalPrice() {
         return totalPrice;
@@ -109,8 +108,8 @@ public class Booking {
         return ticketList;
     }
 
-    public String getBooking_status() {
-        return booking_status;
+    public String getBookingStatus() {
+        return bookingStatus;
     }
 
     public Customer getCustomer() {
@@ -118,14 +117,14 @@ public class Booking {
     }
 
     //Setter
-    public void setBooking_id(int booking_id) {
-        this.booking_id = booking_id;
+    public void setBookingId(int bookingId) {
+        this.bookingId = bookingId;
     }
-    public void setAdultTicket_qty(int adultTicket_qty) {
-        this.adultTicket_qty = adultTicket_qty;
+    public void setAdultTicketQty(int adultTicketQty) {
+        this.adultTicketQty = adultTicketQty;
     }
-    public void setChildTicket_qty(int childTicket_qty) {
-        this.childTicket_qty = childTicket_qty;
+    public void setChildTicketQty(int childTicketQty) {
+        this.childTicketQty = childTicketQty;
     }
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
@@ -139,8 +138,8 @@ public class Booking {
         this.bookingDateTime = bookingDateTime;
     }
 
-    public void setBooking_status(String booking_status) {
-        this.booking_status = booking_status;
+    public void setBookingStatus(String bookingStatus) {
+        this.bookingStatus = bookingStatus;
     }
 
     public void setTicketList(ArrayList<Ticket> ticketList) {
@@ -157,7 +156,7 @@ public class Booking {
 
         try {
             String insertSql = "INSERT INTO `booking` (`booking_id`,`adultTicket_qty`,`childTicket_qty`,`total_price`,`booking_date`,`booking_time`,`booking_status`,`customer_id`) value(?,?,?,?,?,?,?,?);";
-            Object[] params = {b.getBooking_id(),b.getAdultTicket_qty(),b.getChildTicket_qty(),b.getTotalPrice(),b.getBookingDateTime().getDate(),b.getBookingTime(),b.getBooking_status(),b.getCustomer().getCustId()};
+            Object[] params = {b.getBookingId(),b.getAdultTicketQty(),b.getChildTicketQty(),b.getTotalPrice(),b.getBookingDateTime().getDate(),b.getBookingTime(),b.getBookingStatus(),b.getCustomer().getCustId()};
             rowAffected = DatabaseUtils.insertQuery(insertSql, params);
         }
         catch (SQLException e) {
@@ -187,14 +186,14 @@ public class Booking {
                 Seat seat = new Seat();
                 //Hall hl=new Hall();
                 //seat.setHall(hl);
-                seat.setSeat_id(result.getString("seat_id"));
+                seat.setSeatId(result.getString("seat_id"));
                 //seat.getHall().setHallID(hallId);
                 Hall hall =new Hall();
                 hall.setHallID(result.getInt("hall_id"));
                 //seat.setHall(hall);
                 seat.setSeatRow(result.getInt("seatrow"));
                 seat.setSeatCol(result.getInt("seatcol"));
-                seat.setSeat_status(result.getInt("seat_status"));
+                seat.setSeatStatus(result.getInt("seat_status"));
                 //System.out.printf("%d",seat.hall.getHallID());
                 largestRow=result.getInt("seatrow");
                 largestCol=result.getInt("seatcol");
@@ -218,13 +217,13 @@ public class Booking {
             System.out.print("\t"+letter+" ");
             do {
                 char st;
-                if(seats.get(j).getSeat_status()==1) {
+                if(seats.get(j).getSeatStatus()==1) {
                     st='O';
                 }else{
                     st='X';
                 }
                 for (Ticket t:tickets) {
-                    if(t.getSeat().getSeat_id().equals(seats.get(j).getSeat_id())){
+                    if(t.getSeat().getSeatId().equals(seats.get(j).getSeatId())){
                         st='1';
                     }
                 }
@@ -232,13 +231,13 @@ public class Booking {
                 j++;
             } while (seats.get(j).getSeatCol() +1 <= largestCol);
             char st;
-            if(seats.get(j).getSeat_status()==1) {
+            if(seats.get(j).getSeatStatus()==1) {
                 st='O';
             }else{
                 st='X';
             }
             for (Ticket t:tickets) {
-                if(t.getSeat().getSeat_id().equals(seats.get(j).getSeat_id())){
+                if(t.getSeat().getSeatId().equals(seats.get(j).getSeatId())){
                     st='1';
                 }
             }
@@ -254,19 +253,19 @@ public class Booking {
 
     public boolean executeBooking(Schedule schedule) throws Exception {
         this.countBooking_id();
-        this.setBooking_status("processing");
+        this.setBookingStatus("processing");
         Scanner scanner = new Scanner(System.in);
         //String confirmStr="R";
         //char confirmChar=confirmStr.charAt(0);
         //while (confirmChar!='Y'&& confirmChar!='N') {
-            this.childTicket_qty=0;
-            this.adultTicket_qty=0;
+            this.childTicketQty =0;
+            this.adultTicketQty =0;
             this.totalPrice=0;
             System.out.println("Time table id : "+schedule.getScheduleID());
             Booking.viewSeatBooking_status(schedule);
             ArrayList<Ticket> tickets = Ticket.getBookedTicketList(schedule.getScheduleID());
             ArrayList<Ticket> cartTicket = new ArrayList<>();
-            System.out.println("Booking ID : " + this.booking_id);
+            System.out.println("Booking ID : " + this.bookingId);
             String strRow=" ";
             int col = 0;
             //char row =strRow.charAt(0);
@@ -330,14 +329,14 @@ public class Booking {
 
                 boolean exist = false;
                 for (Ticket t : tickets) {
-                    if (t.getSeat().getSeat_id().equals(combineSeatId)) {
+                    if (t.getSeat().getSeatId().equals(combineSeatId)) {
                         exist = true;
                         System.out.println("This seat not available/already be booked...");
                         count--;
                     }
                 }
                 for(Ticket t:cartTicket){
-                    if (t.getSeat().getSeat_id().equals(combineSeatId)) {
+                    if (t.getSeat().getSeatId().equals(combineSeatId)) {
                         exist = true;
                         System.out.println("This seat not available/already be booked...");
                         count--;
@@ -346,8 +345,8 @@ public class Booking {
                 schedule.getHall().initSeatList();
 
                 for (Seat seats:schedule.getHall().getSeats()){
-                    if(seats.getSeat_id().equals(combineSeatId)){
-                        if (seats.getSeat_status()==0){
+                    if(seats.getSeatId().equals(combineSeatId)){
+                        if (seats.getSeatStatus()==0){
                             exist=true;
                             System.out.println("This Seat is unavailable...");
                             count--;
@@ -359,7 +358,7 @@ public class Booking {
                     //seat
                     Seat seat = new Seat(combineSeatId, row.charAt(0), col, 1);
                     Ticket ticket = new Ticket();
-                    ticket.setPrice_rate(priceRate);
+                    ticket.setPriceRate(priceRate);
                     ticket.setTicketType(ticketType);
                     ticket.setTicket_id(ticket.countTicket_id(count));
                     //ticket.setTicket_id(ticket.countTicket_id(count));
@@ -383,13 +382,13 @@ public class Booking {
                 for (Ticket t : cartTicket) {
                     System.out.println("\t\t-------------------------");
                     System.out.printf("\t\t| Ticket id :| %6d   |\n", t.getTicket_id());
-                    System.out.printf("\t\t| Seat id   :| %6s   |\n", t.getSeat().getSeat_id());
+                    System.out.printf("\t\t| Seat id   :| %6s   |\n", t.getSeat().getSeatId());
                     System.out.printf("\t\t| Price     :| RM%6.2f |\n", t.calculateTicketPrice());
                     this.totalPrice += t.calculateTicketPrice();
                     if(t.getTicketType().equals("Adult")){
-                        this.adultTicket_qty++;
+                        this.adultTicketQty++;
                     }else if(t.getTicketType().equals("Child")){
-                        this.childTicket_qty++;
+                        this.childTicketQty++;
                     }
                 }
                 System.out.println("\t\t-------------------------\n");
@@ -481,12 +480,12 @@ public class Booking {
             while (result.next()) {
 
                 Booking booking = new Booking();
-                booking.setBooking_id(result.getInt("booking_id"));
-                booking.setAdultTicket_qty(result.getInt("adultTicket_qty"));
+                booking.setBookingId(result.getInt("booking_id"));
+                booking.setAdultTicketQty(result.getInt("adultTicket_qty"));
                 booking.setBookingDateTime(new DateTime(result.getDate("booking_date").toLocalDate()));
-                booking.setChildTicket_qty(result.getInt("childTicket_qty"));
+                booking.setChildTicketQty(result.getInt("childTicket_qty"));
                 booking.setTotalPrice(result.getDouble("total_price"));
-                booking.setBooking_status(result.getString("booking_status"));
+                booking.setBookingStatus(result.getString("booking_status"));
                 Time time =result.getTime("booking_time");
                 booking.setBookingTime(time.toLocalTime());
                 Customer c =new Customer();
@@ -516,12 +515,12 @@ public class Booking {
             while (result.next()) {
 
                 Booking booking = new Booking();
-                booking.setBooking_id(result.getInt("booking_id"));
-                booking.setAdultTicket_qty(result.getInt("adultTicket_qty"));
+                booking.setBookingId(result.getInt("booking_id"));
+                booking.setAdultTicketQty(result.getInt("adultTicket_qty"));
                 booking.setBookingDateTime(new DateTime(result.getDate("booking_date").toLocalDate()));
-                booking.setChildTicket_qty(result.getInt("childTicket_qty"));
+                booking.setChildTicketQty(result.getInt("childTicket_qty"));
                 booking.setTotalPrice(result.getDouble("total_price"));
-                booking.setBooking_status(result.getString("booking_status"));
+                booking.setBookingStatus(result.getString("booking_status"));
                 Time time =result.getTime("booking_time");
                 booking.setBookingTime(time.toLocalTime());
                 Customer c =new Customer();
@@ -546,7 +545,7 @@ public class Booking {
         ArrayList<Ticket> tickets = new ArrayList<>();
 
         try {
-            Object[] params = {booking_id};
+            Object[] params = {bookingId};
             ResultSet result = DatabaseUtils.selectQueryById("*", "ticket","booking_id = ?",params);
 
             while (result.next()) {
@@ -556,18 +555,18 @@ public class Booking {
                 ticket.setTicketType(result.getString("ticket_type"));
                 ticket.setTicket_id(result.getInt("ticket_id"));
                 Seat seat = new Seat();
-                seat.setSeat_id(result.getString("seat_id"));
+                seat.setSeatId(result.getString("seat_id"));
                 ticket.setSeat(seat);
 
                 Booking booking =new Booking();
-                booking.setBooking_id(result.getInt("booking_id"));
+                booking.setBookingId(result.getInt("booking_id"));
                 //ticket.setBooking(booking);
 
                 Schedule timetable=new Schedule();
                 timetable.setScheduleID(result.getInt("schedule_id"));
                 ticket.setTimeTable(timetable);
 
-                ticket.setPrice_rate(result.getDouble("price_rate"));
+                ticket.setPriceRate(result.getDouble("price_rate"));
                 tickets.add(ticket);
 
 
@@ -668,7 +667,7 @@ public class Booking {
         System.out.println("Booking History : ");
         for(Booking b:bookingList){
             b.loadingTicketList();
-            System.out.printf("%2d. Booking id:%d  ",count,b.getBooking_id());
+            System.out.printf("%2d. Booking id:%d  ",count,b.getBookingId());
             System.out.print("Date:"+b.getBookingDateTime().getDate().toString()+"\n");
             if(count%5==0){
                 String answer=" ";
@@ -705,20 +704,20 @@ public class Booking {
         //System.out.println("\t\t-------------------------\n");
         System.out.println("Booking Details : ");
         System.out.println("\t\t-------------------------------------------");
-        System.out.printf("\t\t Booking ID : %04d\t\tDate : %s\n", getBooking_id(), getBookingDateTime().getDate());
-        System.out.printf("\t\t Status     : %s\n",getBooking_status().toUpperCase());
+        System.out.printf("\t\t Booking ID : %04d\t\tDate : %s\n", getBookingId(), getBookingDateTime().getDate());
+        System.out.printf("\t\t Status     : %s\n", getBookingStatus().toUpperCase());
         System.out.println("\t\t-------------------------------------------");
         System.out.printf("\t\t Hall ID    : %d\n",getTicketList().get(0).getTimeTable().getHall().getHallID());
         System.out.printf("\t\t Movie Name : %s\n\n",getTicketList().get(0).getTimeTable().getMovie().getMvName().getName());
         System.out.println("\t\t Ticket Type\tUnit Price\tQty\t   Subtotal");
-        if(getAdultTicket_qty()>0)
-            System.out.printf("\t\t Adult Ticket\tRM%6.2f     %2d\t   RM%6.2f\n", this.getTicketList().get(0).getTimeTable().getMovie().getBasicTicketPrice() * 1.2, getAdultTicket_qty(),this.getTicketList().get(0).getTimeTable().getMovie().getBasicTicketPrice() * 1.2*getAdultTicket_qty());
-        if(getChildTicket_qty()>0)
-            System.out.printf("\t\t Child Ticket\tRM%6.2f     %2d\t   RM%6.2f\n", this.getTicketList().get(0).getTimeTable().getMovie().getBasicTicketPrice() * 0.8, getChildTicket_qty(),this.getTicketList().get(0).getTimeTable().getMovie().getBasicTicketPrice() * 0.8*getChildTicket_qty());
+        if(getAdultTicketQty()>0)
+            System.out.printf("\t\t Adult Ticket\tRM%6.2f     %2d\t   RM%6.2f\n", this.getTicketList().get(0).getTimeTable().getMovie().getBasicTicketPrice() * 1.2, getAdultTicketQty(),this.getTicketList().get(0).getTimeTable().getMovie().getBasicTicketPrice() * 1.2* getAdultTicketQty());
+        if(getChildTicketQty()>0)
+            System.out.printf("\t\t Child Ticket\tRM%6.2f     %2d\t   RM%6.2f\n", this.getTicketList().get(0).getTimeTable().getMovie().getBasicTicketPrice() * 0.8, getChildTicketQty(),this.getTicketList().get(0).getTimeTable().getMovie().getBasicTicketPrice() * 0.8* getChildTicketQty());
         System.out.println("\n\t\t Seat ID : ");
         System.out.print("\t\t\t");
         for(Ticket t:getTicketList()){
-            System.out.print(t.getSeat().getSeat_id()+"  ");
+            System.out.print(t.getSeat().getSeatId()+"  ");
         }
         System.out.println("\n\t\t-------------------------------------------");
         System.out.printf("\t\t\tTotal : \t\t\t\t\t   RM%6.2f\n", totalPrice);
@@ -730,7 +729,7 @@ public class Booking {
 
         try {
             String updateSql = "UPDATE `booking` SET `booking_status`= ? , `total_price`= ? WHERE `booking_id` = ?";
-            Object[] params = {getBooking_status(),getTotalPrice(),getBooking_id()};
+            Object[] params = {getBookingStatus(),getTotalPrice(), getBookingId()};
             rowAffected = DatabaseUtils.updateQuery(updateSql, params);
         }
         catch (SQLException e) {
@@ -747,7 +746,7 @@ public class Booking {
         }
     }
     public void cancelBooking() throws SQLException {
-        this.setBooking_status("cancelled");
+        this.setBookingStatus("cancelled");
         for(Ticket t:this.getTicketList()){
             t.setTicketStatus(0);
             t.updateStatus();
@@ -755,7 +754,7 @@ public class Booking {
         this.updateStatus();
     }
     public void completeBooking() throws SQLException {
-        this.setBooking_status("completed");
+        this.setBookingStatus("completed");
         this.updateStatus();
     }
 }

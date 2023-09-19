@@ -9,19 +9,19 @@ import java.util.ArrayList;
 
 public class Seat {
     //Data Field
-    private String seat_id;
+    private String seatId;
     private int seatRow;
     private int seatCol;
-    private int seat_status;
+    private int seatStatus;
 
     //Constructor
     public Seat() {
     }
-    public Seat(String seat_id, int seatRow, int seatCol, int seat_status) {
-        this.seat_id = seat_id;
+    public Seat(String seatId, int seatRow, int seatCol, int seatStatus) {
+        this.seatId = seatId;
         this.seatRow = seatRow;
         this.seatCol = seatCol;
-        this.seat_status = seat_status;
+        this.seatStatus = seatStatus;
     }
 
 
@@ -30,8 +30,8 @@ public class Seat {
 //    public Hall getHall() {
 //            return hall;
 //        }
-    public String getSeat_id() {
-        return seat_id;
+    public String getSeatId() {
+        return seatId;
     }
     public int getSeatRow() {
         return seatRow;
@@ -39,16 +39,16 @@ public class Seat {
     public int getSeatCol() {
         return seatCol;
     }
-    public int getSeat_status() {
-        return seat_status;
+    public int getSeatStatus() {
+        return seatStatus;
     }
     //Setter
 //    public void setHall(Hall hall) {
 //        this.hall = hall;
 //    }
 
-    public void setSeat_id(String seat_id) {
-        this.seat_id = seat_id;
+    public void setSeatId(String seatId) {
+        this.seatId = seatId;
     }
     public void setSeatRow(int seatRow) {
         this.seatRow = seatRow;
@@ -56,8 +56,8 @@ public class Seat {
     public void setSeatCol(int seatCol) {
         this.seatCol = seatCol;
     }
-    public void setSeat_status(int seat_status) {
-        this.seat_status = seat_status;
+    public void setSeatStatus(int seatStatus) {
+        this.seatStatus = seatStatus;
     }
 //---------------------------------------------------------------------------------------------------------------------------------
 
@@ -66,7 +66,7 @@ public class Seat {
 
         try {
             String insertSql = "INSERT INTO `seat` (`seat_id`,`hall_id`,`seatrow`,`seatcol`,`seat_status`) value(?,?,?,?,?);";
-            Object[] params = {getSeat_id(),hall_id,getSeatRow(),getSeatCol(),getSeat_status()};
+            Object[] params = {getSeatId(),hall_id,getSeatRow(),getSeatCol(), getSeatStatus()};
             rowAffected = DatabaseUtils.insertQuery(insertSql, params);
         }
         catch (SQLException e) {
@@ -96,11 +96,11 @@ public class Seat {
                 Seat seat = new Seat();
                 Hall hl=new Hall();
                 //seat.setHall(hl);
-                seat.setSeat_id(result.getString("seat_id"));
+                seat.setSeatId(result.getString("seat_id"));
                 //seat.hall.setHallID(hallId);
                 seat.setSeatRow(result.getInt("seatrow"));
                 seat.setSeatCol(result.getInt("seatcol"));
-                seat.setSeat_status(result.getInt("seat_status"));
+                seat.setSeatStatus(result.getInt("seat_status"));
 
                 largestRow=result.getInt("seatrow");
                 largestCol=result.getInt("seatcol");
@@ -119,10 +119,10 @@ public class Seat {
         int j=0;
         for(int i=1;i<=largestRow;i++) {
             do {
-                System.out.printf("[%s] ", seats.get(j).getSeat_id());
+                System.out.printf("[%s] ", seats.get(j).getSeatId());
                 j++;
             } while (seats.get(j).seatCol+1 <= largestCol);
-            System.out.printf("[%s] ", seats.get(j).getSeat_id());
+            System.out.printf("[%s] ", seats.get(j).getSeatId());
             System.out.printf("\n");
             j += 1;
         }
@@ -145,11 +145,11 @@ public class Seat {
                 Seat seat = new Seat();
                 //Hall hl=new Hall();
                 //seat.setHall(hl);
-                seat.setSeat_id(result.getString("seat_id"));
+                seat.setSeatId(result.getString("seat_id"));
                 //seat.hall.setHallID(hallId);
                 seat.setSeatRow(result.getInt("seatrow"));
                 seat.setSeatCol(result.getInt("seatcol"));
-                seat.setSeat_status(result.getInt("seat_status"));
+                seat.setSeatStatus(result.getInt("seat_status"));
                 //System.out.printf("%d",seat.hall.getHallID());
                 largestRow=result.getInt("seatrow");
                 largestCol=result.getInt("seatcol");
@@ -171,7 +171,7 @@ public class Seat {
             System.out.print(letter+" ");
             do {
                 char st;
-                if(seats.get(j).getSeat_status()==1) {
+                if(seats.get(j).getSeatStatus()==1) {
                     st='O';
                 }else{
                     st='X';
@@ -181,7 +181,7 @@ public class Seat {
                 j++;
             } while (seats.get(j).seatCol+1 <= largestCol);
             char st;
-            if(seats.get(j).getSeat_status()==1) {
+            if(seats.get(j).getSeatStatus()==1) {
                 st='O';
             }else{
                 st='X';
@@ -207,10 +207,10 @@ public class Seat {
     public void updateSeatStatus() throws SQLException {
         try {
             String updateSql = "UPDATE `seat` SET `seat_status`= ? WHERE seat_id = ?";
-            Object[] params = {getSeat_status(),getSeat_id()};
+            Object[] params = {getSeatStatus(), getSeatId()};
             int rowAffected = DatabaseUtils.updateQuery(updateSql, params);
             if (rowAffected > 0) {
-                System.out.printf("[%s] Updated...",getSeat_id());
+                System.out.printf("[%s] Updated...", getSeatId());
             } else {
                 System.out.println("\nSomething went wrong...");
             }

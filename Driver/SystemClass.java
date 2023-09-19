@@ -1640,8 +1640,8 @@ public class SystemClass {
                                             } while (ch != 'Y' && ch != 'N');
                                             if (ch == 'Y') {
                                                 for (Seat seats : hallsModified.get(hallModified - 1).getSeats()) {
-                                                    if (seats.getSeat_id().equals(combineSeatId)) {
-                                                        seats.setSeat_status(seatStatus);
+                                                    if (seats.getSeatId().equals(combineSeatId)) {
+                                                        seats.setSeatStatus(seatStatus);
                                                         seats.updateSeatStatus();
                                                     }
                                                 }
@@ -4482,13 +4482,13 @@ public class SystemClass {
             card.setPaymentAmount(booking.getTotalPrice());
 
             if(card.stripeValidator()) {
-                return new Card(booking.getBooking_id(), booking.getTotalPrice(), "MYR", "CREDIT/DEBIT CARD", dateTime.getCurrentDate(), dateTime.getCurrentTime(), "PAID", card.getCardNo(), card.getExpiredDate(), card.getCvc(), card.getEmail());
+                return new Card(booking.getBookingId(), booking.getTotalPrice(), "MYR", "CREDIT/DEBIT CARD", dateTime.getCurrentDate(), dateTime.getCurrentTime(), "PAID", card.getCardNo(), card.getExpiredDate(), card.getCvc(), card.getEmail());
             }
 
         } else {
             TNG tng = (TNG) payment;
 
-            return new TNG(booking.getBooking_id(), booking.getTotalPrice(), "MYR", "TNG", dateTime.getCurrentDate(), dateTime.getCurrentTime(), "PAID", tng.getPhoneNo(), tng.getPinNo());
+            return new TNG(booking.getBookingId(), booking.getTotalPrice(), "MYR", "TNG", dateTime.getCurrentDate(), dateTime.getCurrentTime(), "PAID", tng.getPhoneNo(), tng.getPinNo());
         }
 
         return null;
