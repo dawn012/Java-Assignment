@@ -33,13 +33,51 @@ public abstract class User{
     }*/
 
 
-    public void updateUserById(User user) throws SQLException {
-        if (user instanceof Admin) {
-            ((Admin) user).updateAdminInfo();
-        } else if (user instanceof Customer) {
-            ((Customer) user).updateCustomerInfo();
+    public void updateUserInfo() throws SQLException {
+        Connection conn = DatabaseUtils.getConnection();
+        String updateSql;
+        PreparedStatement updateStmt;
+
+        try {
+            if (this instanceof Admin) {
+                updateSql = "UPDATE User SET username = ?, email = ?, DOB = ?, gender = ?, phoneNo = ? WHERE userID = ?";
+                updateStmt = conn.prepareStatement(updateSql);
+
+                Admin admin = (Admin) this;
+                updateStmt.setString(1, admin.getLogin().getUsername());
+                updateStmt.setString(2, admin.getEmail());
+                updateStmt.setString(3, admin.getDOB());
+                updateStmt.setString(4, admin.getGender());
+                updateStmt.setString(5, admin.getPhoneNo());
+                updateStmt.setInt(6, admin.getAdminId());
+            } else if (this instanceof Customer) {
+                updateSql = "UPDATE User SET username = ?, email = ?, DOB = ? WHERE userID = ?";
+                updateStmt = conn.prepareStatement(updateSql);
+
+                Customer customer = (Customer) this;
+                updateStmt.setString(1, customer.getLogin().getUsername());
+                updateStmt.setString(2, customer.getEmail());
+                updateStmt.setString(3, customer.getDOB());
+                updateStmt.setInt(4, customer.getCustId());
+            } else {
+                System.out.println("Unsupported user type.");
+                return;
+            }
+
+            int rowsUpdated = updateStmt.executeUpdate();
+
+            if (rowsUpdated > 0) {
+                System.out.println("User information updated successfully!");
+            } else {
+                System.out.println("Failed to update user information.");
+            }
+
+            updateStmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
+
     public static User findUserById(int userId) {
         LoginValidator.userList = getAllUsers();
         User foundUser = null;
@@ -95,7 +133,7 @@ public abstract class User{
             switch (choice) {
                 case 0:
                     isEditing = false;
-                    user.updateUserById(user);
+                    user.updateUserInfo();
                     break;
                 case 1:
                     System.out.print("Enter new username: ");
