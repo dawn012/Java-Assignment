@@ -302,7 +302,8 @@ public class SystemClass {
                                                                     booking.cancelBooking();
                                                                     insert=false;
                                                                 }
-                                                                back = true;
+                                                                //back = true;
+                                                                break;
                                                             }else if(confirmStr.equals("R")){
                                                                 if(insert) {
                                                                     booking.cancelBooking();
@@ -331,7 +332,7 @@ public class SystemClass {
                                                             back = true;
                                                         }
                                                     }
-                                                } while (!back);
+                                                } while (!confirmStr.equals("N"));
                                             }
                                         }
 
