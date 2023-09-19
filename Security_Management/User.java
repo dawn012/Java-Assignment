@@ -80,13 +80,13 @@ public abstract class User{
             do {
                 try {
                     System.out.println("\nModify User Information (ID: " + user.getUserId() + "):");
-                    System.out.println("1. Username: " + user.getLogin().getUsername());
-                    System.out.println("2. Email: " + user.getEmail());
-                    System.out.println("3. Date of Birth: " + user.getDOB());
+                    System.out.println("1. Username        : " + user.getLogin().getUsername());
+                    System.out.println("2. Email           : " + user.getEmail());
+                    System.out.println("3. Date of Birth   : " + user.getDOB());
 
                     if (user instanceof Admin) {
-                        System.out.println("4. Password: " + user.getLogin().getPassword());
-                        System.out.println("5. Gender: " + ((Admin) user).getGender());
+                        System.out.println("4. Password    : " + user.getLogin().getPassword());
+                        System.out.println("5. Gender      : " + ((Admin) user).getGender());
                         System.out.println("6. Phone Number: " + ((Admin) user).getPhoneNo());
                     }
 
