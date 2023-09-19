@@ -119,15 +119,19 @@ public class Schedule implements DatabaseOperations {
                 System.out.println("\nSelect the hall: ");
                 halls = cinemaSelected.getHallList(1);
 
+                System.out.print("------------------------------------------------------");
+                System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Hall Name", '|');
+                System.out.println("------------------------------------------------------");
                 for (int i = 0; i < halls.size(); i++) {
-                    System.out.println((i + 1) + ". " + halls.get(i).getHallName().getName());
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', (i + 1), '|', halls.get(i).getHallName().getName(), '|');
+                    System.out.println("------------------------------------------------------");
                 }
 
                 System.out.print("\nEnter the hall no: ");
                 hallNo = sc.nextInt();
                 sc.nextLine();
 
-                if (hallNo > 0 && hallNo <= halls.size() && halls.get(hallNo - 1).getStatus() == 1) {
+                if (hallNo > 0 && hallNo <= halls.size()) {
                     error = false;
                 }
                 else {

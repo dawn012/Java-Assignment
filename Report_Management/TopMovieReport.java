@@ -6,7 +6,6 @@ import Driver.DateTime;
 import Movie_Management.Movie;
 import Schedule_Management.Schedule;
 import Ticket_Managemnet.Ticket;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -133,62 +132,51 @@ public class TopMovieReport extends Report {
     }*/
 
     private void calculateTotalRevenue(ArrayList<Schedule> schedules) {
-        ArrayList<Ticket> tickets = new ArrayList<>();
         ArrayList<Booking> bookings = new ArrayList<>();
+        double totalBoxOffice = 0;
 
-//        for (int i = 0; i < schedules.size(); i++) {
-//            try {
-//                Object[] params = {schedules.get(i).getScheduleID()};
-//                ResultSet result = DatabaseUtils.selectQueryById("DISTINCT booking_id", "ticket", "schedule_id = ?", params);
-//
-//                while (result.next()) {
-//                    Ticket ticket = new Ticket();
-//                    Booking booking = new Booking();
-//
-//                    booking.setBooking_id(result.getInt("booking_id"));
-//                    ticket.setBooking(booking);
-//
-//                    tickets.add(ticket);
-//                }
-//
-//                result.close();
-//            }
-//            catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        for (int i = 0; i < tickets.size(); i++) {
-//            try {
-//                Object[] params = {tickets.get(i).getBooking().getBooking_id()};
-//                ResultSet result = DatabaseUtils.selectQueryById("total_price", "booking", "booking_id = ?", params);
-//
-//                while (result.next()) {
-//                    if (result.getString("booking_status").equals("completed")) {
-//                        Booking booking = new Booking();
-//
-//                        booking.setTotalPrice(result.getDouble("total_price"));
-//
-//                        bookings.add(booking);
-//                    }
-//                }
-//
-//                result.close();
-//            }
-//            catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        double totalBoxOffice = 0;
-//        for (int i = 0; i < bookings.size(); i++) {
-//            totalBoxOffice += bookings.get(i).getTotalPrice();
-//        }
-//
-//        totalBoxOffices.add(totalBoxOffice);
-//
-//        double averageBoxOffice = totalBoxOffice / schedules.size();
-//        averageBoxOffices.add(averageBoxOffice);
+        for (int i = 0; i < schedules.size(); i++) {
+            try {
+                Object[] params = {schedules.get(i).getScheduleID()};
+                ResultSet result = DatabaseUtils.selectQueryById("DISTINCT booking_id", "ticket", "schedule_id = ?", params);
+
+                while (result.next()) {
+                    Booking booking = new Booking();
+
+                    booking.setBookingId(result.getInt("booking_id"));
+
+                    bookings.add(booking);
+                }
+
+                result.close();
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        for (int i = 0; i < bookings.size(); i++) {
+            try {
+                Object[] params = {bookings.get(i).getBookingId()};
+                ResultSet result = DatabaseUtils.selectQueryById("total_price", "booking", "booking_id = ?", params);
+
+                while (result.next()) {
+                    if (result.getString("booking_status").equals("completed")) {
+                        totalBoxOffice += result.getDouble("total_price");
+                    }
+                }
+
+                result.close();
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        totalBoxOffices.add(totalBoxOffice);
+
+        double averageBoxOffice = totalBoxOffice / schedules.size();
+        averageBoxOffices.add(averageBoxOffice);
     }
 
     public static Report getRanking(Report report) {

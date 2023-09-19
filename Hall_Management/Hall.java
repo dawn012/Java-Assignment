@@ -15,7 +15,6 @@ public class Hall {
     private Name hallName;
     private String hallType;
     private int hallCapacity;
-    private int status;
     private ArrayList<Seat> seats;
 
     // Constructor
@@ -46,10 +45,15 @@ public class Hall {
 
     // Method
     public void viewHallDetails(){
-        System.out.printf("\nHall Detail:\n");
-        System.out.println("Hall Name: " + getHallName().getName());
-        System.out.println("Hall Type: " + getHallType() + " HALL");
-        System.out.println("Hall Capacity: " + getHallCapacity());
+        System.out.println("\n---------------");
+        System.out.printf("| Hall Detail | \n");
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.printf("%c %-20s %c %-55s %c\n", '|', "Hall Name", '|', hallName.getName(), '|');
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.printf("%c %-20s %c %-55s %c\n", '|', "Hall Type", '|', hallType + " HALL", '|');
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.printf("%c %-20s %c %-55s %c\n", '|', "Hall Capacity", '|', hallCapacity, '|');
+        System.out.println("----------------------------------------------------------------------------------");
     }
 
     public int modifyHallDetails(Scanner sc) {
@@ -93,7 +97,7 @@ public class Hall {
 
         try {
             String updateSql = "UPDATE `hall` SET `hall_name`= ?, `hall_type`= ?, `hall_capacity`= ? WHERE hall_id = ?";
-            Object[] params = {getHallName().getName(), getHallType(), getHallCapacity(), getHallID()};
+            Object[] params = {hallName.getName(), hallType, hallCapacity, hallID};
             rowAffected = DatabaseUtils.updateQuery(updateSql, params);
         }
         catch (SQLException e) {
@@ -141,11 +145,11 @@ public class Hall {
             while (result.next()) {
                 Seat seat = new Seat();
 
-                seat.setSeat_id(result.getString("seat_id"));
+                seat.setSeatId(result.getString("seat_id"));
                 //seat.hall.setHallID(hallId);
                 seat.setSeatRow(result.getInt("seatrow"));
                 seat.setSeatCol(result.getInt("seatcol"));
-                seat.setSeat_status(result.getInt("seat_status"));
+                seat.setSeatStatus(result.getInt("seat_status"));
 
                 seats.add(seat);
             }
@@ -179,31 +183,77 @@ public class Hall {
             System.out.print(letter+" ");
             do {
                 char st;
-                if(seats.get(j).getSeat_status()==1) {
+                if(seats.get(j).getSeatStatus()==1) {
                     st='O';
                 }else{
                     st='X';
                 }
 
-                System.out.printf("[%s]:%c ",seats.get(j).getSeat_id(),st);
+                System.out.printf("[%s]:%c ",seats.get(j).getSeatId(),st);
                 j++;
             } while (seats.get(j).getSeatCol()+1 <= largestCol);
 
             char st;
 
-            if(seats.get(j).getSeat_status()==1) {
+            if(seats.get(j).getSeatStatus()==1) {
                 st='O';
             }else{
                 st='X';
             }
 
-            System.out.printf("[%s]:%c ",seats.get(j).getSeat_id(),st);
+            System.out.printf("[%s]:%c ",seats.get(j).getSeatId(),st);
             System.out.printf("\n");
             j += 1;
         }
 
         System.out.printf("\nO = Available/intact and undamaged\tX = Unavailable/damaged");
         //return 0;
+    }
+    public void addNewSeatList() throws Exception {
+
+        try {
+            Object[] params = {hallName.getName()};
+            ResultSet result = DatabaseUtils.selectQueryById("*", "hall", "hall_name = ?", params);
+
+            while (result.next()) {
+
+                setHallID(result.getInt("hall_id"));
+
+            }
+
+            result.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Seat> seatList = new ArrayList<>();
+        int i=1;
+        int j=1;
+        int seatsPerRow = 8;
+        int row = hallCapacity / seatsPerRow;
+        int count=hallCapacity;
+        if (hallCapacity % seatsPerRow != 0) {
+            row++;
+        }
+
+        for(i=1;i<=row;i++){
+                char letter = (char) ('A' + i - 1); // 将整数 i 转换为字母
+                for (j=1;j<=seatsPerRow;j++){
+                    if(count>0) {
+                        Seat seat =new Seat();
+                        String seatId = String.valueOf(hallID) + letter + String.valueOf(j);
+                        seat.setSeatId(seatId);
+                        seat.setSeatRow(i);
+                        seat.setSeatCol(j);
+                        seat.setSeatStatus(1);
+                        seat.addSeat();
+                        seatList.add(seat);
+                    }
+                    count--;
+                }
+            }
+        setSeats(seatList);
     }
 
     // Setter
@@ -218,10 +268,6 @@ public class Hall {
     public void setHallType(String hallType) {
         this.hallType = hallType;
         calHallCapacity();
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
     }
 
     public void setSeats(ArrayList<Seat> seats) {
@@ -243,10 +289,6 @@ public class Hall {
 
     public int getHallCapacity() {
         return hallCapacity;
-    }
-
-    public int getStatus() {
-        return status;
     }
 
     public ArrayList<Seat> getSeats() {

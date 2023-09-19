@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.Random;
 import java.util.Scanner;
 
 import static Security_Management.LoginValidator.*;
@@ -111,6 +112,7 @@ public class Login {
     }
 
     private static void performPostLoginActions(User foundUser) throws SQLException {
+        ArrayList<User> userList = Admin.getAllUsers();
         Scanner input = new Scanner(System.in);
         System.out.println("Login Successful!\nWelcome " + foundUser.getLogin().getUsername() + " !");
         User user = Customer.getUserByUsername(userList, foundUser.getLogin().getUsername());
@@ -143,8 +145,8 @@ public class Login {
                                 break;
                             case 3:
                                 System.out.println("You selected Option 3.");
-                                ArrayList<User> userList = Admin.getAllUsers();
-                                customer.resetCustPassword(userList,customer.getLogin().getUsername());
+                                userList = Admin.getAllUsers();
+                                resetCustPassword(userList,customer.getLogin().getUsername(), customer.getEmail(), false);
                                 break;
                             case 4:
                                 System.out.println("You selected Option 4.");
@@ -165,6 +167,7 @@ public class Login {
             } else if (user instanceof Admin) {
                 Admin admin = (Admin) user;
                 int choice = 0;
+                Customer customer = new Customer();
 
                 do {
                     try {
@@ -197,7 +200,8 @@ public class Login {
                                 break;
                             case 4:
                                 System.out.println("You selected Option 4.");
-                                admin.viewAllUsers();
+                                customer.viewAllCustomers();
+                                admin.viewAllAdmins();
                                 admin.manageAccountStatus();
                                 break;
                             case 5:
@@ -205,9 +209,9 @@ public class Login {
                                 boolean submenuActive = true;
                                 while (submenuActive) {
                                     System.out.println("Submenu Options:");
-                                    System.out.println("1. View All Users");
-                                    System.out.println("2. View All Customer");
-                                    System.out.println("3. View All Admin");
+                                    System.out.println("1. View All Customer");
+                                    System.out.println("2. View All Admin");
+                                    System.out.println("3. ");
                                     System.out.println("0. Back to Main Menu");
                                     System.out.print("Choose an option: ");
 
@@ -216,11 +220,11 @@ public class Login {
                                         switch (submenuChoice) {
                                             case 1:
                                                 System.out.println("You selected Submenu Option 1.");
-                                                admin.viewAllUsers();
+                                                customer.viewAllCustomers();
                                                 break;
                                             case 2:
                                                 System.out.println("You selected Submenu Option 2.");
-                                                admin.viewAllCustomers();
+                                                admin.viewAllAdmins();
                                                 break;
                                             case 3:
                                                 System.out.println("You selected Submenu Option 3.");
@@ -241,7 +245,8 @@ public class Login {
                                 break;
                             case 6:
                                 System.out.println("You selected Option 6.");
-                                admin.viewAllUsers();
+                                customer.viewAllCustomers();
+                                admin.viewAllAdmins();
                                 User userToModify = null;
                                 int id = 0;
 
@@ -271,7 +276,8 @@ public class Login {
                                 break;
                             case 7:
                                 System.out.println("You selected Option 7.");
-                                admin.viewAllUsers();
+                                customer.viewAllCustomers();
+                                admin.viewAllAdmins();
                                 admin.deleteUserById(input);
                                 break;
                             case 0:
@@ -299,29 +305,66 @@ public class Login {
 
         }*/
     }
+    public static boolean resetCustPassword(ArrayList<User> customerList, String username, String email, boolean generateRandom) throws SQLException {
+        User customer = null;
+        for (User cust : customerList) {
+            if (cust.getLogin().getUsername().equals(username) && (email == null || cust.getEmail().equals(email))) {
+                customer = cust;
+                break;
+            }
+        }
+
+        if (customer != null) {
+            String newPassword;
+            if (generateRandom) {
+                newPassword = generateRandomPassword();
+            } else {
+                Scanner input = new Scanner(System.in);
+                System.out.print("Enter new password: ");
+                newPassword = RegisterValidator.validatePassword(input);
+            }
+
+            customer.getLogin().updatePasswordToDatabase(newPassword, customer.getUserId());
+
+            System.out.println("Your new password is: " + newPassword);
+            System.out.println("Password updated successfully.");
+
+            return true;
+        } else {
+            System.out.println("User not found. Password reset failed.");
+            return false;
+        }
+    }
+
+    private static String generateRandomPassword() {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder newPassword = new StringBuilder();
+        Random random = new Random();
+
+        for (int i = 0; i < 10; i++) {
+            int index = random.nextInt(characters.length());
+            newPassword.append(characters.charAt(index));
+        }
+
+        return newPassword.toString();
+    }
 
     public void updatePasswordToDatabase(String newPassword, int userId) throws SQLException {
-        Connection conn = DatabaseUtils.getConnection();
+        String updateSql = "UPDATE User SET password = ? WHERE userID = ?";
 
         try {
-            String updateSql = "UPDATE User SET password = ? WHERE userID = ?";
-            PreparedStatement updateStmt = conn.prepareStatement(updateSql);
-            updateStmt.setString(1, newPassword);
-            updateStmt.setInt(2, userId);
-
-            int rowsUpdated = updateStmt.executeUpdate();
+            int rowsUpdated = DatabaseUtils.updateQuery(updateSql, newPassword, userId);
 
             if (rowsUpdated > 0) {
                 System.out.println("Password updated successfully!");
             } else {
                 System.out.println("Failed to update password.");
             }
-
-            updateStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
 
     @Override
     public String toString() {

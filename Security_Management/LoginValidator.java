@@ -11,20 +11,14 @@ import java.util.ArrayList;
 import static Security_Management.Admin.getAllUsers;
 
 public class LoginValidator {
-    public static ArrayList<User> userList = new ArrayList<>();
+    //public static ArrayList<User> userList = new ArrayList<>();
 
-    public static void getUsersFromDatabase() {
-
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet resultSet = null;
+    public static ArrayList<User> getUsersFromDatabase() {
+        ArrayList<User> userList = new ArrayList<>();
 
         try {
-            conn = DatabaseUtils.getConnection();
-
             String sql = "SELECT * FROM User";
-            stmt = conn.prepareStatement(sql);
-            resultSet = stmt.executeQuery();
+            ResultSet resultSet = DatabaseUtils.selectQueryById("*", "User", null, null);
 
             while (resultSet.next()) {
                 int userId = resultSet.getInt("userID");
@@ -41,27 +35,22 @@ public class LoginValidator {
                 if ("cust".equals(userType)) {
                     user = new Customer(userId, new Login(username, password), email, DOB, userType, accStatus);
                 } else {
-                    user = new Admin(new Login(username, password), email, DOB, userType, userId, gender, phoneNo);
+                    user = new Admin(new Login(username, password), email, DOB, userType, gender, phoneNo, userId);
                 }
                 userList.add(user);
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (resultSet != null) resultSet.close();
-                if (stmt != null) stmt.close();
-                if (conn != null) conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
+
+        return userList;
     }
 
+
     public static User findUserByUsername(String username) {
-        LoginValidator.userList = getAllUsers();
+        ArrayList<User> userList = getAllUsers();
         User foundUser = null;
-        for (User user : LoginValidator.userList) {
+        for (User user : userList) {
             if (user.getLogin().getUsername().equals(username)) {
                 foundUser = user;
                 break;
@@ -72,7 +61,8 @@ public class LoginValidator {
 
     public static User findUserById(int userId) {
         User foundUser = null;
-        for (User user : LoginValidator.userList) {
+        ArrayList<User> userList = getAllUsers();
+        for (User user : userList) {
             if (user.getUserId() == userId) {
                 foundUser = user;
                 break;
@@ -82,7 +72,9 @@ public class LoginValidator {
     }
 
     public static String getUserStatusByUsername(String username) {
-        for (User user : LoginValidator.userList) {
+        ArrayList<User> userList = getAllUsers();
+
+        for (User user : userList) {
             if (user.getLogin().getUsername().equals(username)) {
                 if (user instanceof Customer) {
                     Customer customer = (Customer) user;
@@ -102,30 +94,17 @@ public class LoginValidator {
     }
 
     public static void freezeAccount(User user) {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-
         try {
-            conn = DatabaseUtils.getConnection();
             String sql = "UPDATE User SET accStatus = 'inactive' WHERE userID = ?";
-            stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, user.getUserId());
-            stmt.executeUpdate();
+            DatabaseUtils.updateQuery(sql, user.getUserId());
+
+            System.out.println("Account frozen successfully!");
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (stmt != null) stmt.close();
-                if (conn != null) conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            System.out.println("Failed to freeze account.");
         }
     }
 
-    public static ArrayList<User> getUserList() {
-        return userList;
-    }
     public static void printUserList(ArrayList<User> userList) {
         for (User user : userList) {
             System.out.println(user);

@@ -99,7 +99,26 @@ public class TestDriver {
 //---------Start here----------------------------------------------------------------------------------------------------------------------
 //        Booking.viewSeat_status(schedule);
 //        booking.executeBooking(schedule);
+        int hallCapacity=62;
+        int hallID=9;
+        int i=1;
+        int j=1;
+        int seatsPerRow = 8;
+        int row = hallCapacity / seatsPerRow;
 
+        if (hallCapacity % seatsPerRow != 0) {
+            row++;
+        }
+        for(i=1;i<=row;i++){
+            char letter = (char) ('A' + i - 1); // 将整数 i 转换为字母
+            for (j=1;j<=seatsPerRow;j++){
+                if(hallCapacity>0) {
+                    String seatId = String.valueOf(hallID) + letter + String.valueOf(j);
+                    System.out.println(seatId);
+                }
+                hallCapacity--;
+            }
+        }
         Scanner scanner = new Scanner(System.in);
 
 //        SystemClass systemClass = new SystemClass();

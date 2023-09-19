@@ -9,15 +9,10 @@ import java.util.Scanner;
 public class Admin extends User {
 
     private int adminId;
-    private String gender;
-    private String phoneNo;
 
-
-    public Admin(Login login, String email, String DOB, String userType, int adminId, String gender, String phoneNo) {
-        super(login, email, DOB, userType);
+    public Admin(Login login, String email, String DOB, String userType, String gender, String phoneNo, int adminId) {
+        super(login, email, DOB, userType, gender, phoneNo);
         this.adminId = adminId;
-        this.gender = gender;
-        this.phoneNo = phoneNo;
     }
 
     public Admin() {
@@ -77,37 +72,7 @@ public class Admin extends User {
         newAdmin.add();
         return newAdmin;
     }
-
-
-    public void updateAdminInfo() throws SQLException {
-        Connection conn = DatabaseUtils.getConnection();
-        try {
-            String updateSql = "UPDATE User SET username = ?, email = ?, DOB = ?, gender = ?, phoneNo = ? WHERE userID = ?";
-            PreparedStatement updateStmt = conn.prepareStatement(updateSql);
-
-            updateStmt.setString(1, getLogin().getUsername());
-            updateStmt.setString(2, getEmail());
-            updateStmt.setString(3, getDOB());
-            updateStmt.setString(4, getGender());
-            updateStmt.setString(5, getPhoneNo());
-            updateStmt.setInt(6, getAdminId());
-
-            int rowsUpdated = updateStmt.executeUpdate();
-
-            if (rowsUpdated > 0) {
-                System.out.println("Admin information updated successfully.");
-            } else {
-                System.out.println("Failed to update admin information.");
-            }
-
-            updateStmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public static ArrayList<User> getAllUsers() {
+   /* public static ArrayList<User> getAllUsers() {
         ArrayList<User> userList = new ArrayList<>();
 
         Connection conn = null;
@@ -152,6 +117,38 @@ public class Admin extends User {
         }
 
         return userList;
+    }*/
+
+    public static ArrayList<User> getAllUsers() {
+        ArrayList<User> userList = new ArrayList<>();
+
+        try {
+            ResultSet resultSet = DatabaseUtils.selectQueryById("*", "User", null,null);
+
+            while (resultSet.next()) {
+                int userId = resultSet.getInt("userID");
+                String username = resultSet.getString("username");
+                String gender = resultSet.getString("gender");
+                String password = resultSet.getString("password");
+                String email = resultSet.getString("email");
+                String userType = resultSet.getString("userType");
+                String DOB = resultSet.getString("DOB");
+                String phoneNo = resultSet.getString("phoneNo");
+                String accStatus = resultSet.getString("accStatus");
+
+                User user;
+                if ("cust".equals(userType)) {
+                    user = new Customer(userId, new Login(username, password), email, DOB, userType, accStatus);
+                } else {
+                    user = new Admin(new Login(username, password), email, DOB, userType, gender, phoneNo, userId);
+                }
+                userList.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return userList;
     }
 
     public static void printArrayList(ArrayList<?> list) {
@@ -164,8 +161,8 @@ public class Admin extends User {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Please enter the User ID (0 to Cancel): ");
         int userId;
-        while (true) {
 
+        while (true) {
             if (scanner.hasNextInt()) {
                 userId = scanner.nextInt();
                 if (userId == 0) {
@@ -206,105 +203,46 @@ public class Admin extends User {
         String newStatus = (action == 1) ? "active" : "inactive";
 
         try {
-            Connection conn = DatabaseUtils.getConnection();
-
             String updateSql = "UPDATE User SET accStatus = ? WHERE userID = ?";
-            PreparedStatement updateStmt = conn.prepareStatement(updateSql);
-            updateStmt.setString(1, newStatus);
-            updateStmt.setInt(2, userId);
-
-            int rowsUpdated = updateStmt.executeUpdate();
+            int rowsUpdated = DatabaseUtils.updateQuery(updateSql, newStatus, userId);
 
             if (rowsUpdated > 0) {
                 System.out.println("User account with ID " + userId + " has been " + (newStatus.equals("active") ? "unblocked." : "blocked."));
             } else {
                 System.out.println("Failed to update user account status.");
             }
-
-            updateStmt.close();
-            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-
-
-    public void viewAllUsers() {
-
-        try {
-            Connection conn = DatabaseUtils.getConnection();
-            Statement stmt = conn.createStatement();
-            String sql = "SELECT * FROM User";
-            ResultSet resultSet = stmt.executeQuery(sql);
-
-            System.out.println(String.format("%-5s %-15s %-10s %-25s %-15s %-12s %-20s %-15s", "ID", "Username", "Gender", "Email", "User Type", "Date of Birth", "Phone Number", "Account Status"));
-            System.out.println("-----------------------------------------------------------------------------------------------------------------------");
-
-            while (resultSet.next()) {
-                int userId = resultSet.getInt("userID");
-                String username = resultSet.getString("username");
-                String gender = resultSet.getString("gender");
-                String email = resultSet.getString("email");
-                String userType = resultSet.getString("userType");
-                String DOB = resultSet.getString("DOB");
-                String phoneNo = resultSet.getString("phoneNo");
-                String accStatus = resultSet.getString("accStatus");
-
-
-                System.out.println(String.format("%-5d %-15s %-10s %-25s %-15s %-12s %-20s %-15s", userId, username, gender, email, userType, DOB, phoneNo, accStatus));
-            }
-
-            resultSet.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void viewAllCustomers() {
-        try {
-            Connection conn = DatabaseUtils.getConnection();
-            String sql = "SELECT * FROM User WHERE userType = 'cust'";
-            Statement stmt = conn.createStatement();
-            ResultSet resultSet = stmt.executeQuery(sql);
-
-            System.out.println("All Customers:\n");
-
-            System.out.println(String.format("%-10s %-15s %-30s %-15s %-15s", "User ID", "Username", "Email", "Date of Birth", "Account Status"));
-            System.out.println("----------------------------------------------------------------------------------------------");
-
-            while (resultSet.next()) {
-                int userId = resultSet.getInt("userID");
-                String username = resultSet.getString("username");
-                String email = resultSet.getString("email");
-                String dob = resultSet.getString("DOB");
-                String accStatus = resultSet.getString("accStatus");
-
-                System.out.println(String.format("%-10d %-15s %-30s %-15s %-15s", userId, username, email, dob, accStatus));
-            }
-
-            resultSet.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     public void viewAllAdmins() {
+        ArrayList<User> adminList = getAdminDataFromDatabase();
+        System.out.println(adminList);
+
+        System.out.println("\nAll Admins:\n");
+
+        System.out.println(String.format("%-10s %-15s %-30s %-15s %-10s %-15s", "User ID", "Username", "Email", "Date of Birth", "Gender", "Phone Number"));
+        System.out.println("------------------------------------------------------------------------------------------------------------------");
+
+        for (User admin : adminList) {
+            int userId = admin.getUserId();
+            String username = admin.getLogin().getUsername();
+            String email = admin.getEmail();
+            String dob = admin.getDOB();
+            String gender = ((Admin) admin).getGender();
+            String phoneNo = ((Admin) admin).getPhoneNo();
+
+            System.out.println(String.format("%-10d %-15s %-30s %-15s %-10s %-15s", userId, username, email, dob, gender, phoneNo));
+        }
+    }
+
+    private ArrayList<User> getAdminDataFromDatabase() {
+        ArrayList<User> adminList = new ArrayList<>();
+
         try {
-            Connection conn = DatabaseUtils.getConnection();
             String sql = "SELECT * FROM User WHERE userType = 'admin'";
-            Statement stmt = conn.createStatement();
-            ResultSet resultSet = stmt.executeQuery(sql);
-
-            System.out.println("All Admins:\n");
-
-
-            System.out.println(String.format("%-10s %-15s %-30s %-15s %-10s %-15s", "User ID", "Username", "Email", "Date of Birth", "Gender", "Phone Number"));
-            System.out.println("------------------------------------------------------------------------------------------------------------------");
+            ResultSet resultSet = DatabaseUtils.selectQueryById("*", "User", "userType = 'admin'");
 
             while (resultSet.next()) {
                 int userId = resultSet.getInt("userID");
@@ -314,23 +252,28 @@ public class Admin extends User {
                 String gender = resultSet.getString("gender");
                 String phoneNo = resultSet.getString("phoneNo");
 
+                Admin admin = new Admin();
+                admin.setAdminId(userId);
+                admin.getLogin().setUsername(username);
+                admin.setEmail(email);
+                admin.setDOB(dob);
+                admin.setGender(gender);
+                admin.setPhoneNo(phoneNo);
 
-                System.out.println(String.format("%-10d %-15s %-30s %-15s %-10s %-15s", userId, username, email, dob, gender, phoneNo));
+                adminList.add(admin);
             }
 
             resultSet.close();
-            stmt.close();
-            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
 
+        return adminList;
+    }
 
     public void deleteUserById(Scanner scanner) {
         System.out.print("Please enter the ID of the user you want to delete: ");
         int userId = scanner.nextInt();
-
 
         System.out.print("Are you sure you want to delete this user? (Y/N): ");
         scanner.nextLine();
@@ -339,21 +282,14 @@ public class Admin extends User {
 
         if (confirmation.equals("y")) {
             try {
-                Connection conn = DatabaseUtils.getConnection();
                 String sql = "DELETE FROM User WHERE userID = ?";
-                PreparedStatement stmt = conn.prepareStatement(sql);
-                stmt.setInt(1, userId);
-
-                int rowsAffected = stmt.executeUpdate();
+                int rowsAffected = DatabaseUtils.deleteQueryById("User", "accStatus", "userID", userId);
 
                 if (rowsAffected > 0) {
                     System.out.println("User with ID " + userId + " has been deleted successfully.");
                 } else {
                     System.out.println("User with ID " + userId + " not found or deletion failed.");
                 }
-
-                stmt.close();
-                conn.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -362,23 +298,6 @@ public class Admin extends User {
         } else {
             System.out.println("Invalid input. Deletion canceled. User has not been deleted.");
         }
-    }
-
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getPhoneNo() {
-        return phoneNo;
-    }
-
-    public void setPhoneNo(String phoneNo) {
-        this.phoneNo = phoneNo;
     }
 
     public int getAdminId() {
@@ -396,7 +315,6 @@ public class Admin extends User {
         sb.append("Phone Number  : ").append(getPhoneNo()).append("\n");
         return sb.toString();
     }
-
 
     @Override
     public int getUserId() {

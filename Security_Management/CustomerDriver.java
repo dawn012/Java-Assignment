@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import static Security_Management.User.registerUser;
+import static Security_Management.Customer.registerUser;
 
 public class CustomerDriver {
     public static void main(String[] args) throws SQLException {
