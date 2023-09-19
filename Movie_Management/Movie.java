@@ -28,7 +28,6 @@ public class Movie implements DatabaseOperations {
     private String country;
     private String metaDescription;
     private double basicTicketPrice;
-    private int status;
 
     public Movie(){
     }
@@ -257,10 +256,6 @@ public class Movie implements DatabaseOperations {
         this.basicTicketPrice = basicTicketPrice;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
     public int getMovieID() {
         return movieID;
     }
@@ -311,9 +306,5 @@ public class Movie implements DatabaseOperations {
 
     public double getBasicTicketPrice() {
         return basicTicketPrice;
-    }
-
-    public int getStatus() {
-        return status;
     }
 }

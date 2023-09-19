@@ -124,7 +124,7 @@ public class Customer extends User {
 
     public void viewAllCustomers() {
         ArrayList<User> custList = getCustomerDataFromDatabase();
-        System.out.println(custList);
+
 
         System.out.println("\nAll Customers:\n");
         System.out.println(String.format("%-10s %-15s %-30s %-15s %-15s", "User ID", "Username", "Email", "Date of Birth", "Account Status"));

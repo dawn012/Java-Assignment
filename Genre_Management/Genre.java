@@ -12,7 +12,6 @@ public class Genre implements DatabaseOperations {
     private int genreID;
     private Name genreName;
     private int post;
-    private int status;
 
     public Genre(){
         post = 0;
@@ -23,11 +22,10 @@ public class Genre implements DatabaseOperations {
         this.genreID = genreID;
     }
 
-    public Genre(int genreID, Name genreName, int post, int status){
+    public Genre(int genreID, Name genreName, int post){
         this.genreID = genreID;
         this.genreName = genreName;
         this.post = post;
-        this.status = status;
     }
 
     // Method
@@ -44,7 +42,7 @@ public class Genre implements DatabaseOperations {
         }
 
         while (result.next()) {
-            Genre genre = new Genre(result.getInt("genre_id"), new Name(result.getString("genre_name")), result.getInt("post"), result.getInt("genre_status"));
+            Genre genre = new Genre(result.getInt("genre_id"), new Name(result.getString("genre_name")), result.getInt("post"));
             genres.add(genre);
         }
 
@@ -149,9 +147,5 @@ public class Genre implements DatabaseOperations {
             post = result.getInt("post");
         }
         return post;
-    }
-
-    public int getStatus() {
-        return status;
     }
 }

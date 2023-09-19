@@ -252,8 +252,6 @@ public class Booking {
     }
 
     public boolean executeBooking(Schedule schedule) throws Exception {
-
-
         this.countBooking_id();
         this.setBookingStatus("processing");
         Scanner scanner = new Scanner(System.in);

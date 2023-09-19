@@ -9,15 +9,10 @@ import java.util.Scanner;
 public class Admin extends User {
 
     private int adminId;
-    private String gender;
-    private String phoneNo;
 
-
-    public Admin(Login login, String email, String DOB, String userType, int adminId, String gender, String phoneNo) {
-        super(login, email, DOB, userType);
+    public Admin(Login login, String email, String DOB, String userType, String gender, String phoneNo, int adminId) {
+        super(login, email, DOB, userType, gender, phoneNo);
         this.adminId = adminId;
-        this.gender = gender;
-        this.phoneNo = phoneNo;
     }
 
     public Admin() {
@@ -145,7 +140,7 @@ public class Admin extends User {
                 if ("cust".equals(userType)) {
                     user = new Customer(userId, new Login(username, password), email, DOB, userType, accStatus);
                 } else {
-                    user = new Admin(new Login(username, password), email, DOB, userType, userId, gender, phoneNo);
+                    user = new Admin(new Login(username, password), email, DOB, userType, gender, phoneNo, userId);
                 }
                 userList.add(user);
             }
@@ -276,9 +271,6 @@ public class Admin extends User {
         return adminList;
     }
 
-
-
-
     public void deleteUserById(Scanner scanner) {
         System.out.print("Please enter the ID of the user you want to delete: ");
         int userId = scanner.nextInt();
@@ -306,24 +298,6 @@ public class Admin extends User {
         } else {
             System.out.println("Invalid input. Deletion canceled. User has not been deleted.");
         }
-    }
-
-
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getPhoneNo() {
-        return phoneNo;
-    }
-
-    public void setPhoneNo(String phoneNo) {
-        this.phoneNo = phoneNo;
     }
 
     public int getAdminId() {

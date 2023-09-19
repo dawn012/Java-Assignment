@@ -19,7 +19,6 @@ public class Cinema implements DatabaseOperations {
     private Name cinemaName;
     private Address cinemaAddress;
     private String cinemaPhone;
-    private int status;
     private static final String OFFICE_PHONE_REGEX = "^(01[023456789]-[0-9]{7}|011-[0-9]{8}|03-[0-9]{8}|08[0-9]-[0-9]{6}|0[12456789]-[0-9]{7})$";
 
     public Cinema(){
@@ -55,7 +54,6 @@ public class Cinema implements DatabaseOperations {
                 cinema.setCinemaName(new Name(result.getString("cinema_name")));
                 cinema.setCinemaAddress(new Address(result.getString("cinema_address")));
                 cinema.setCinemaPhone(result.getString("cinema_phone"));
-                cinema.setStatus(result.getInt("cinema_status"));
 
                 cinemas.add(cinema);
             }
@@ -66,19 +64,27 @@ public class Cinema implements DatabaseOperations {
             e.printStackTrace();
         }
 
-        System.out.printf("\n%-5s %s\n", "No", "Cinema Name");
+        System.out.print("------------------------------------------------------");
+        System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Cinema Name", '|');
+        System.out.println("------------------------------------------------------");
         for (int i = 0; i < cinemas.size(); i++) {
-            System.out.printf("%-5d %s\n", (i + 1), cinemas.get(i).getCinemaName().getName());
+            System.out.printf("%-3c %-4d %c %-41s %c\n", '|', (i + 1), '|', cinemas.get(i).getCinemaName().getName(), '|');
+            System.out.println("------------------------------------------------------");
         }
 
         return cinemas;
     }
 
     public void viewCinemaDetails() throws SQLException {
-        System.out.printf("\nCinema Detail:\n");
-        System.out.println("Cinema Name: " + cinemaName.getName());
-        System.out.println("Cinema Address: " + cinemaAddress.getAddress());
-        System.out.println("Cinema Phone: " + cinemaPhone);
+        System.out.println("\n-----------------");
+        System.out.printf("| Cinema Detail | \n");
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.printf("%c %-20s %c %-55s %c\n", '|', "Cinema Name", '|', cinemaName.getName(), '|');
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.printf("%c %-20s %c %-55s %c\n", '|', "Cinema Address", '|', cinemaAddress.getAddress(), '|');
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.printf("%c %-20s %c %-55s %c\n", '|', "Cinema Phone", '|', cinemaPhone, '|');
+        System.out.println("----------------------------------------------------------------------------------");
     }
 
     public boolean isValidOfficePhoneNumber() {
@@ -116,12 +122,17 @@ public class Cinema implements DatabaseOperations {
         do {
             try {
                 int count = 1;
-                System.out.printf("\nCinema Detail:\n");
-                System.out.println(count + ". Cinema Name: " + cinemaName.getName());
+                System.out.println("\n-----------------");
+                System.out.printf("| Cinema Detail | \n");
+                System.out.println("----------------------------------------------------------------------------------");
+                System.out.printf("%c %d %c %-20s %c %-51s %c\n", '|', count, '|', "Cinema Name", '|', cinemaName.getName(), '|');
+                System.out.println("----------------------------------------------------------------------------------");
                 count++;
-                System.out.println(count + ". Cinema Address: " + cinemaAddress.getAddress());
+                System.out.printf("%c %d %c %-20s %c %-51s %c\n", '|', count, '|', "Cinema Address", '|', cinemaAddress.getAddress(), '|');
+                System.out.println("----------------------------------------------------------------------------------");
                 count++;
-                System.out.println(count + ". Cinema Phone: " + cinemaPhone);
+                System.out.printf("%c %d %c %-20s %c %-51s %c\n", '|', count, '|', "Cinema Phone", '|', cinemaPhone, '|');
+                System.out.println("----------------------------------------------------------------------------------");
 
                 System.out.print("\nEnter the serial number of the cinema information you want to change (0 - Stop): ");
                 int serialNum = sc.nextInt();
@@ -198,7 +209,6 @@ public class Cinema implements DatabaseOperations {
                 hall.setHallName(new Name(result.getString("hall_name")));
                 hall.setHallType(result.getString("hall_type"));
                 hall.calHallCapacity();
-                hall.setStatus(result.getInt("hall_status"));
 
                 halls.add(hall);
             }
@@ -254,10 +264,6 @@ public class Cinema implements DatabaseOperations {
         this.cinemaPhone = cinemaPhone;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
     public Hall getHall() {
         return hall;
     }
@@ -276,9 +282,5 @@ public class Cinema implements DatabaseOperations {
 
     public String getCinemaPhone() {
         return cinemaPhone;
-    }
-
-    public int getStatus() {
-        return status;
     }
 }

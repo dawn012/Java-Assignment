@@ -378,7 +378,7 @@ public class SystemClass {
                                     } while (error);
 
                                     if (!searchedMvName.equals("0")) {
-                                        searchResults = MovieUtils.queryMovieByName(searchedMvName);
+                                        searchResults = MovieUtils.queryMovies(searchedMvName, null);
 
                                         error = true;
                                         System.out.println("\nSearch Results: ");
@@ -463,7 +463,7 @@ public class SystemClass {
 
                                     if (genreSelected != 0) {
                                         Genre viewGenre = genres.get(genreSelected - 1);
-                                        searchResults = MovieUtils.queryMovieByGenre(viewGenre);
+                                        searchResults = MovieUtils.queryMovies(null, viewGenre);
 
                                         if (!searchResults.isEmpty()) {
                                             System.out.println("\nSearch Results: ");
@@ -606,7 +606,7 @@ public class SystemClass {
                         ArrayList<Cinema> cinemas = new ArrayList<>();
                         do {
                             try {
-                                System.out.println("\nSelect the cinema: ");
+                                System.out.println("\nSelect the cinema you want to view: ");
                                 cinemas = Cinema.viewCinemaList(1);
                                 System.out.print("\nEnter the cinema no (0 - Back): ");
                                 cinemaNo = sc.nextInt();
@@ -1221,16 +1221,13 @@ public class SystemClass {
         boolean back = false;
         boolean error = true;
         boolean continues = true;
-
-        ArrayList<Cinema> cinemas = Cinema.viewCinemaList(1);
+        ArrayList<Cinema> cinemas = new ArrayList<>();
         int cinemaSelected = 0;
 
         do {
             try {
                 System.out.println("\nSelect the cinema you want to manage it's hall: ");
-                for (int i = 0; i < cinemas.size(); i++) {
-                    System.out.println((i + 1) + ". " + cinemas.get(i).getCinemaName().getName());
-                }
+                cinemas = Cinema.viewCinemaList(1);
                 System.out.print("\nEnter your selection: ");
                 cinemaSelected = sc.nextInt();
                 sc.nextLine();
@@ -1268,8 +1265,12 @@ public class SystemClass {
                                 System.out.println("\nSelect the hall: ");
                                 halls = cinema.getHallList(1);
 
+                                System.out.print("------------------------------------------------------");
+                                System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Hall Name", '|');
+                                System.out.println("------------------------------------------------------");
                                 for (int i = 0; i < halls.size(); i++) {
-                                    System.out.println((i + 1) + ". " + halls.get(i).getHallName().getName());
+                                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', (i + 1), '|', halls.get(i).getHallName().getName(), '|');
+                                    System.out.println("------------------------------------------------------");
                                 }
 
                                 System.out.print("\nEnter the hall no (0 - Back): ");
@@ -1292,7 +1293,7 @@ public class SystemClass {
 
                             String continueViewHall;
                             do {
-                                System.out.println("\nDo you want view another cinema? (Y / N)");
+                                System.out.println("\nDo you want view another hall? (Y / N)");
                                 System.out.print("Answer: ");
                                 String answer = sc.next();
                                 sc.nextLine();
@@ -1457,8 +1458,12 @@ public class SystemClass {
                                 System.out.println("\nSelect the hall you want to modify: ");
                                 hallsModified = cinema.getHallList(1);
 
+                                System.out.print("------------------------------------------------------");
+                                System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Hall Name", '|');
+                                System.out.println("------------------------------------------------------");
                                 for (int i = 0; i < hallsModified.size(); i++) {
-                                    System.out.println((i + 1) + ". " + hallsModified.get(i).getHallName().getName());
+                                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', (i + 1), '|', hallsModified.get(i).getHallName().getName(), '|');
+                                    System.out.println("------------------------------------------------------");
                                 }
 
                                 System.out.print("\nEnter the hall no (0 - Back): ");
@@ -1573,39 +1578,11 @@ public class SystemClass {
                                         break;
                                     case 2:
                                         System.out.println("Hall type cannot be modified! Please retry.");
-                            /*do {
-                                try {
-                                    System.out.println("\nSelect the hall type: ");
-                                    System.out.println("1. Standard Hall");
-                                    System.out.println("2. 3D Hall");
-                                    System.out.print("\nEnter your selection: ");
-                                    int hallTypeSelection = sc.nextInt();
-
-                                    if (hallTypeSelection == 1) {
-                                        hallsModified.get(hallModified - 1).setHallType("STANDARD");
-                                        //cinema.setHall(new Hall(hallsModified.get(hallModified - 1).getHallName(), "STANDARD"));
-                                        error = false;
-                                    } else if (hallTypeSelection == 2) {
-                                        hallsModified.get(hallModified - 1).setHallType("3D");
-                                        //cinema.setHall(new Hall(hallsModified.get(hallModified - 1).getHallName(), "3D"));
-                                        error = false;
-                                    } else {
-                                        System.out.println("Your choice is not among the available options! PLease try again.");
-                                        error = true;
-                                    }
-                                }
-                                catch (InputMismatchException e) {
-                                    System.out.println("Please enter a valid hall type no!");
-                                    sc.nextLine();
-                                    error = true;
-                                }
-                            } while (error);*/
                                         break;
                                     case 3:
                                         System.out.println("Hall capacity cannot be modified! Please retry.");
                                         break;
                                     case 4: //ChinYong Part
-
                                         hallsModified.get(hallModified-1).initSeatList();
                                         String strRow=" ";
                                         int col = 0;
@@ -1697,8 +1674,12 @@ public class SystemClass {
                                 System.out.println("\nSelect the hall you want to delete: ");
                                 hallsDeleted = cinema.getHallList(1);
 
+                                System.out.print("------------------------------------------------------");
+                                System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Hall Name", '|');
+                                System.out.println("------------------------------------------------------");
                                 for (int i = 0; i < hallsDeleted.size(); i++) {
-                                    System.out.println((i + 1) + ". " + hallsDeleted.get(i).getHallName().getName());
+                                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', (i + 1), '|', hallsDeleted.get(i).getHallName().getName(), '|');
+                                    System.out.println("------------------------------------------------------");
                                 }
 
                                 System.out.print("\nEnter the hall no (0 - Back): ");
@@ -1727,12 +1708,6 @@ public class SystemClass {
 
                                 confirmation = SystemClass.askForContinue(answer);
                             } while (confirmation.equals("Invalid"));
-
-                            if (confirmation.equals("Y")) {
-                                cinema.getHall().deleteHall();
-                            } else {
-                                System.out.println("\nThe hall is saved.");
-                            }
 
                             // Confirm that the cinema is successfully deleted
                             boolean success;
@@ -2685,7 +2660,7 @@ public class SystemClass {
 
                         if (genreModified != 0) {
                             Genre orgGenre = genres.get(genreModified - 1);
-                            Genre genre = new Genre(orgGenre.getGenreID(), orgGenre.getGenreName(), orgGenre.getPost(), orgGenre.getStatus());
+                            Genre genre = new Genre(orgGenre.getGenreID(), orgGenre.getGenreName(), orgGenre.getPost());
                             Name name = null;
 
                             do {
@@ -3021,8 +2996,12 @@ public class SystemClass {
                                     System.out.println("\nSelect the hall: ");
                                     halls = cinemas.get(cinemaNo - 1).getHallList(1);
 
+                                    System.out.print("------------------------------------------------------");
+                                    System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Hall Name", '|');
+                                    System.out.println("------------------------------------------------------");
                                     for (int i = 0; i < halls.size(); i++) {
-                                        System.out.println((i + 1) + ". " + halls.get(i).getHallName().getName());
+                                        System.out.printf("%-3c %-4d %c %-41s %c\n", '|', (i + 1), '|', halls.get(i).getHallName().getName(), '|');
+                                        System.out.println("------------------------------------------------------");
                                     }
 
                                     System.out.print("\nEnter the hall no: ");
@@ -4604,10 +4583,15 @@ public class SystemClass {
         do {
             try {
                 System.out.println("\nSelect the operation:");
-                System.out.println("1. View " + propertyName);
-                System.out.println("2. Add " + propertyName);
-                System.out.println("3. Modify " + propertyName);
-                System.out.println("4. Delete " + propertyName);
+                System.out.println("---------------------------------");
+                System.out.printf("%c %d %c %-25s %c\n", '|', 1, '|', "View " + propertyName, '|');
+                System.out.println("---------------------------------");
+                System.out.printf("%c %d %c %-25s %c\n", '|', 2, '|', "Add " + propertyName, '|');
+                System.out.println("---------------------------------");
+                System.out.printf("%c %d %c %-25s %c\n", '|', 3, '|', "Modify " + propertyName, '|');
+                System.out.println("---------------------------------");
+                System.out.printf("%c %d %c %-25s %c\n", '|', 4, '|', "Delete " + propertyName, '|');
+                System.out.println("---------------------------------");
                 System.out.print("\nEnter your selection (0 - Back): ");
                 choice = sc.nextInt();
                 sc.nextLine();
