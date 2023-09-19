@@ -15,7 +15,6 @@ public class Hall {
     private Name hallName;
     private String hallType;
     private int hallCapacity;
-    private int status;
     private ArrayList<Seat> seats;
 
     // Constructor
@@ -46,10 +45,15 @@ public class Hall {
 
     // Method
     public void viewHallDetails(){
-        System.out.printf("\nHall Detail:\n");
-        System.out.println("Hall Name: " + getHallName().getName());
-        System.out.println("Hall Type: " + getHallType() + " HALL");
-        System.out.println("Hall Capacity: " + getHallCapacity());
+        System.out.println("\n---------------");
+        System.out.printf("| Hall Detail | \n");
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.printf("%c %-20s %c %-55s %c\n", '|', "Hall Name", '|', hallName.getName(), '|');
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.printf("%c %-20s %c %-55s %c\n", '|', "Hall Type", '|', hallType + " HALL", '|');
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.printf("%c %-20s %c %-55s %c\n", '|', "Hall Capacity", '|', hallCapacity, '|');
+        System.out.println("----------------------------------------------------------------------------------");
     }
 
     public int modifyHallDetails(Scanner sc) {
@@ -93,7 +97,7 @@ public class Hall {
 
         try {
             String updateSql = "UPDATE `hall` SET `hall_name`= ?, `hall_type`= ?, `hall_capacity`= ? WHERE hall_id = ?";
-            Object[] params = {getHallName().getName(), getHallType(), getHallCapacity(), getHallID()};
+            Object[] params = {hallName.getName(), hallType, hallCapacity, hallID};
             rowAffected = DatabaseUtils.updateQuery(updateSql, params);
         }
         catch (SQLException e) {
@@ -220,10 +224,6 @@ public class Hall {
         calHallCapacity();
     }
 
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
     public void setSeats(ArrayList<Seat> seats) {
         this.seats = seats;
     }
@@ -243,10 +243,6 @@ public class Hall {
 
     public int getHallCapacity() {
         return hallCapacity;
-    }
-
-    public int getStatus() {
-        return status;
     }
 
     public ArrayList<Seat> getSeats() {
