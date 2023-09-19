@@ -932,7 +932,13 @@ public class SystemClass {
                                 newCinema.setCinemaPhone(phoneNumber.trim());
 
                                 if (newCinema.isValidOfficePhoneNumber()) {
-                                    error = false;
+                                    if (newCinema.isPhoneNumberUnique()) {
+                                        error = false;
+                                    }
+                                    else {
+                                        System.out.println("The phone number is same as other cinema phone number.");
+                                        error = true;
+                                    }
                                 } else {
                                     System.out.println("The phone number is invalid.");
                                     error = true;
@@ -1251,7 +1257,13 @@ public class SystemClass {
                                                 cinema.setCinemaPhone(phoneNumber.trim());
 
                                                 if (cinema.isValidOfficePhoneNumber()) {
-                                                    error = false;
+                                                    if (cinema.isPhoneNumberUnique()) {
+                                                        error = false;
+                                                    }
+                                                    else {
+                                                        System.out.println("The phone number is same as other cinema phone number.");
+                                                        error = true;
+                                                    }
                                                 } else {
                                                     System.out.println("The phone number is invalid.");
                                                     error = true;
