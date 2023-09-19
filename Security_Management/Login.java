@@ -349,27 +349,21 @@ public class Login {
     }
 
     public void updatePasswordToDatabase(String newPassword, int userId) throws SQLException {
-        Connection conn = DatabaseUtils.getConnection();
+        String updateSql = "UPDATE User SET password = ? WHERE userID = ?";
 
         try {
-            String updateSql = "UPDATE User SET password = ? WHERE userID = ?";
-            PreparedStatement updateStmt = conn.prepareStatement(updateSql);
-            updateStmt.setString(1, newPassword);
-            updateStmt.setInt(2, userId);
-
-            int rowsUpdated = updateStmt.executeUpdate();
+            int rowsUpdated = DatabaseUtils.updateQuery(updateSql, newPassword, userId);
 
             if (rowsUpdated > 0) {
                 System.out.println("Password updated successfully!");
             } else {
                 System.out.println("Failed to update password.");
             }
-
-            updateStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
 
     @Override
     public String toString() {

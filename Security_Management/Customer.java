@@ -145,10 +145,7 @@ public class Customer extends User {
         ArrayList<User> custList = new ArrayList<>();
 
         try {
-            Connection conn = DatabaseUtils.getConnection();
-            String sql = "SELECT * FROM User WHERE userType = 'cust'";
-            Statement stmt = conn.createStatement();
-            ResultSet resultSet = stmt.executeQuery(sql);
+            ResultSet resultSet = DatabaseUtils.selectQueryById("*", "User", "userType = ?", "cust");
 
             while (resultSet.next()) {
                 int userId = resultSet.getInt("userID");
@@ -168,14 +165,13 @@ public class Customer extends User {
             }
 
             resultSet.close();
-            stmt.close();
-            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return custList;
     }
+
 
 
 

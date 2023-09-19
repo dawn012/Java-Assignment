@@ -82,15 +82,8 @@ public class Admin extends User {
     public static ArrayList<User> getAllUsers() {
         ArrayList<User> userList = new ArrayList<>();
 
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet resultSet = null;
-
         try {
-            conn = DatabaseUtils.getConnection();
-            String sql = "SELECT * FROM User";
-            stmt = conn.prepareStatement(sql);
-            resultSet = stmt.executeQuery();
+            ResultSet resultSet = DatabaseUtils.selectQueryById("*", "User", null);
 
             while (resultSet.next()) {
                 int userId = resultSet.getInt("userID");
@@ -113,18 +106,11 @@ public class Admin extends User {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (resultSet != null) resultSet.close();
-                if (stmt != null) stmt.close();
-                if (conn != null) conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
 
         return userList;
     }
+
 
     public static void printArrayList(ArrayList<?> list) {
         for (Object item : list) {
@@ -136,8 +122,8 @@ public class Admin extends User {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Please enter the User ID (0 to Cancel): ");
         int userId;
-        while (true) {
 
+        while (true) {
             if (scanner.hasNextInt()) {
                 userId = scanner.nextInt();
                 if (userId == 0) {
@@ -178,64 +164,18 @@ public class Admin extends User {
         String newStatus = (action == 1) ? "active" : "inactive";
 
         try {
-            Connection conn = DatabaseUtils.getConnection();
-
             String updateSql = "UPDATE User SET accStatus = ? WHERE userID = ?";
-            PreparedStatement updateStmt = conn.prepareStatement(updateSql);
-            updateStmt.setString(1, newStatus);
-            updateStmt.setInt(2, userId);
-
-            int rowsUpdated = updateStmt.executeUpdate();
+            int rowsUpdated = DatabaseUtils.updateQuery(updateSql, newStatus, userId);
 
             if (rowsUpdated > 0) {
                 System.out.println("User account with ID " + userId + " has been " + (newStatus.equals("active") ? "unblocked." : "blocked."));
             } else {
                 System.out.println("Failed to update user account status.");
             }
-
-            updateStmt.close();
-            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-
-
-   /* public void viewAllUsers() {
-
-        try {
-            Connection conn = DatabaseUtils.getConnection();
-            Statement stmt = conn.createStatement();
-            String sql = "SELECT * FROM User";
-            ResultSet resultSet = stmt.executeQuery(sql);
-
-            System.out.println(String.format("%-5s %-15s %-10s %-25s %-15s %-12s %-20s %-15s", "ID", "Username", "Gender", "Email", "User Type", "Date of Birth", "Phone Number", "Account Status"));
-            System.out.println("-----------------------------------------------------------------------------------------------------------------------");
-
-            while (resultSet.next()) {
-                int userId = resultSet.getInt("userID");
-                String username = resultSet.getString("username");
-                String gender = resultSet.getString("gender");
-                String email = resultSet.getString("email");
-                String userType = resultSet.getString("userType");
-                String DOB = resultSet.getString("DOB");
-                String phoneNo = resultSet.getString("phoneNo");
-                String accStatus = resultSet.getString("accStatus");
-
-
-                System.out.println(String.format("%-5d %-15s %-10s %-25s %-15s %-12s %-20s %-15s", userId, username, gender, email, userType, DOB, phoneNo, accStatus));
-            }
-
-            resultSet.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }*/
-
-
-
 
     public void viewAllAdmins() {
         ArrayList<User> adminList = getAdminDataFromDatabase();
@@ -262,10 +202,8 @@ public class Admin extends User {
         ArrayList<User> adminList = new ArrayList<>();
 
         try {
-            Connection conn = DatabaseUtils.getConnection();
             String sql = "SELECT * FROM User WHERE userType = 'admin'";
-            Statement stmt = conn.createStatement();
-            ResultSet resultSet = stmt.executeQuery(sql);
+            ResultSet resultSet = DatabaseUtils.selectQueryById("*", "User", "userType = 'admin'");
 
             while (resultSet.next()) {
                 int userId = resultSet.getInt("userID");
@@ -287,8 +225,6 @@ public class Admin extends User {
             }
 
             resultSet.close();
-            stmt.close();
-            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -298,10 +234,10 @@ public class Admin extends User {
 
 
 
+
     public void deleteUserById(Scanner scanner) {
         System.out.print("Please enter the ID of the user you want to delete: ");
         int userId = scanner.nextInt();
-
 
         System.out.print("Are you sure you want to delete this user? (Y/N): ");
         scanner.nextLine();
@@ -310,21 +246,14 @@ public class Admin extends User {
 
         if (confirmation.equals("y")) {
             try {
-                Connection conn = DatabaseUtils.getConnection();
                 String sql = "DELETE FROM User WHERE userID = ?";
-                PreparedStatement stmt = conn.prepareStatement(sql);
-                stmt.setInt(1, userId);
-
-                int rowsAffected = stmt.executeUpdate();
+                int rowsAffected = DatabaseUtils.deleteQueryById("User", "accStatus", "userID", userId);
 
                 if (rowsAffected > 0) {
                     System.out.println("User with ID " + userId + " has been deleted successfully.");
                 } else {
                     System.out.println("User with ID " + userId + " not found or deletion failed.");
                 }
-
-                stmt.close();
-                conn.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -334,6 +263,7 @@ public class Admin extends User {
             System.out.println("Invalid input. Deletion canceled. User has not been deleted.");
         }
     }
+
 
 
     public String getGender() {
@@ -367,7 +297,6 @@ public class Admin extends User {
         sb.append("Phone Number  : ").append(getPhoneNo()).append("\n");
         return sb.toString();
     }
-
 
     @Override
     public int getUserId() {

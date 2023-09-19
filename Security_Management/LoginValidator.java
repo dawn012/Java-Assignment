@@ -13,18 +13,12 @@ import static Security_Management.Admin.getAllUsers;
 public class LoginValidator {
     public static ArrayList<User> userList = new ArrayList<>();
 
-    public static void getUsersFromDatabase() {
-
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet resultSet = null;
+    public static ArrayList<User> getUsersFromDatabase() {
+        ArrayList<User> userList = new ArrayList<>();
 
         try {
-            conn = DatabaseUtils.getConnection();
-
             String sql = "SELECT * FROM User";
-            stmt = conn.prepareStatement(sql);
-            resultSet = stmt.executeQuery();
+            ResultSet resultSet = DatabaseUtils.selectQueryById("*", "User", null);
 
             while (resultSet.next()) {
                 int userId = resultSet.getInt("userID");
@@ -47,16 +41,11 @@ public class LoginValidator {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (resultSet != null) resultSet.close();
-                if (stmt != null) stmt.close();
-                if (conn != null) conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
+
+        return userList;
     }
+
 
     public static User findUserByUsername(String username) {
         LoginValidator.userList = getAllUsers();
@@ -102,26 +91,17 @@ public class LoginValidator {
     }
 
     public static void freezeAccount(User user) {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-
         try {
-            conn = DatabaseUtils.getConnection();
             String sql = "UPDATE User SET accStatus = 'inactive' WHERE userID = ?";
-            stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, user.getUserId());
-            stmt.executeUpdate();
+            DatabaseUtils.updateQuery(sql, user.getUserId());
+
+            System.out.println("Account frozen successfully!");
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (stmt != null) stmt.close();
-                if (conn != null) conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            System.out.println("Failed to freeze account.");
         }
     }
+
 
     public static ArrayList<User> getUserList() {
         return userList;
