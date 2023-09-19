@@ -277,7 +277,7 @@ public class SystemClass {
                                                         if (confirmStr.equals("Y")) {
                                                             Booking.insertBooking(booking);
                                                             for (Ticket t : booking.getTicketList()) {
-                                                                Ticket.insertTicket(t);
+                                                                Ticket.insertTicket(t,booking);
                                                             }
                                                         }
                                                     } catch (Exception e){

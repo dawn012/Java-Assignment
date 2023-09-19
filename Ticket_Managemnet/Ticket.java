@@ -26,7 +26,7 @@ public class Ticket {
 //        this.seat = seat;
 //        this.booking = booking;
 //    }
-    public Ticket(int ticket_id, Seat seat, Booking booking, Schedule schedule) {
+    public Ticket(int ticket_id, Seat seat, Schedule schedule) {
         this.ticket_id = ticket_id;
         this.seat = seat;
         this.schedule = schedule;
@@ -129,24 +129,25 @@ public class Ticket {
             while (result.next()) {
 
                 Ticket ticket = new Ticket();
+
                 ticket.setTicketType(result.getString("ticket_type"));
                 ticket.setTicket_id(result.getInt("ticket_id"));
-
                 Seat seat = new Seat();
                 seat.setSeat_id(result.getString("seat_id"));
                 ticket.setSeat(seat);
 
-                Booking booking = new Booking();
+                Booking booking =new Booking();
                 booking.setBooking_id(result.getInt("booking_id"));
-                ticket.setBooking(booking);
+                //ticket.setBooking(booking);
                 //ticket.booking.setBooking_id(result.getInt("booking_id"));
-
-                Schedule timetable = new Schedule();
+                Schedule timetable=new Schedule();
                 timetable.setScheduleID(result.getInt("schedule_id"));
-                ticket.setBooking(booking);
+                //ticket.setBooking(booking);
                 ticket.setTicketStatus(result.getInt("ticket_status"));
                 ticket.setPrice_rate(result.getDouble("price_rate"));
                 tickets.add(ticket);
+
+
             }
 
             result.close();
@@ -159,32 +160,33 @@ public class Ticket {
         return tickets;
     }
 
+
     public static ArrayList<Ticket> getBookedTicketList(int schedule_id){
         boolean error = false;
         ArrayList<Ticket> tickets = new ArrayList<>();
 
         try {
-            Object[] params = {schedule_id, 1};
+            Object[] params = {schedule_id,1};
             ResultSet result = DatabaseUtils.selectQueryById("*", "ticket","schedule_id = ? AND ticket_status = ?",params);
             //Ticket ticket = null;
             while (result.next()) {
 
                 Ticket ticket = new Ticket();
+
                 ticket.setTicketType(result.getString("ticket_type"));
                 ticket.setTicket_id(result.getInt("ticket_id"));
-
                 Seat seat = new Seat();
                 seat.setSeat_id(result.getString("seat_id"));
                 ticket.setSeat(seat);
                 ticket.setTicketStatus(result.getInt("ticket_status"));
-
                 Booking booking =new Booking();
                 booking.setBooking_id(result.getInt("booking_id"));
-                ticket.setBooking(booking);
+                //ticket.setBooking(booking);
 
-                Schedule timetable = new Schedule();
+                Schedule timetable=new Schedule();
                 timetable.setScheduleID(result.getInt("schedule_id"));
-                ticket.setBooking(booking);
+                //ticket.setBooking(booking);
+
                 ticket.setPrice_rate(result.getDouble("price_rate"));
                 tickets.add(ticket);
 
@@ -199,12 +201,12 @@ public class Ticket {
 
         return tickets;
     }
-    public static void insertTicket(Ticket ticket) throws Exception {
+    public static void insertTicket(Ticket ticket,Booking booking) throws Exception {
         int rowAffected = 0;
 
         try {
             String insertSql = "INSERT INTO `ticket` (`ticket_id`,`booking_id`,`seat_id`,`schedule_id`,`ticket_type`,`price_rate`,`ticket_status`) value(?,?,?,?,?,?,?);";
-            Object[] params = {ticket.getTicket_id(),ticket.getBooking().getBooking_id(),ticket.getSeat().getSeat_id(),ticket.schedule.getScheduleID(),ticket.getTicketType(),ticket.getPrice_rate(),ticket.getTicketStatus()};
+            Object[] params = {ticket.getTicket_id(),booking.getBooking_id(),ticket.getSeat().getSeat_id(),ticket.schedule.getScheduleID(),ticket.getTicketType(),ticket.getPrice_rate(),ticket.getTicketStatus()};
             rowAffected = DatabaseUtils.insertQuery(insertSql, params);
         }
         catch (SQLException e) {
@@ -227,8 +229,8 @@ public class Ticket {
         int rowAffected = 0;
 
         try {
-            String updateSql = "UPDATE `ticket` SET `ticket_status`= ? WHERE `booking_id` = ?";
-            Object[] params = {getTicketStatus(),getBooking().getBooking_id()};
+            String updateSql = "UPDATE `ticket` SET `ticket_status`= ? WHERE `ticket_id` = ?";
+            Object[] params = {getTicketStatus(),getTicket_id()};
             rowAffected = DatabaseUtils.updateQuery(updateSql, params);
         }
         catch (SQLException e) {

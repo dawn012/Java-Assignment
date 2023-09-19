@@ -28,47 +28,56 @@ public abstract class User{
 
     public User() {
     }
-    public void viewProfile(Customer customer) {
-        int userId = customer.getCustId();
-        String username = customer.getLogin().getUsername();
-        String email = customer.getEmail();
-        String dob = customer.getDOB();
-        String userType = getUserType();
-        String accStatus = customer.getAccStatus();
+    /*public void viewProfile(User user) {
+        System.out.println(user.toString());
+    }*/
 
-        System.out.println("\nUser ID: " + userId);
-        System.out.println("Username: " + username);
-        System.out.println("Email: " + email);
-        System.out.println("Date of Birth: " + dob);
-        System.out.println("User Type: " + userType);
-        System.out.println("Account Status: " + accStatus);
-    }
-    public void viewProfile(Admin admin) {
-        int adminId = admin.getAdminId();
-        String username = admin.getLogin().getUsername();
-        String email = admin.getEmail();
-        String dob = admin.getDOB();
-        String userType = admin.getUserType();
-        String gender = admin.getGender();
-        String phoneNo = admin.getPhoneNo();
 
-        System.out.println("\nAdmin ID: " + adminId);
-        System.out.println("Username: " + username);
-        System.out.println("Email: " + email);
-        System.out.println("Date of Birth: " + dob);
-        System.out.println("User Type: " + userType);
-        System.out.println("Gender: " + gender);
-        System.out.println("Phone Number: " + phoneNo);
-    }
-
-    public void updateUserById(User user) throws SQLException {
+    public void updateUserInfo() throws SQLException {
         Connection conn = DatabaseUtils.getConnection();
-        if (user instanceof Admin) {
-            ((Admin) user).updateAdminInfo(conn);
-        } else if (user instanceof Customer) {
-            ((Customer) user).updateCustomerInfo(conn);
+        String updateSql;
+        PreparedStatement updateStmt;
+
+        try {
+            if (this instanceof Admin) {
+                updateSql = "UPDATE User SET username = ?, email = ?, DOB = ?, gender = ?, phoneNo = ? WHERE userID = ?";
+                updateStmt = conn.prepareStatement(updateSql);
+
+                Admin admin = (Admin) this;
+                updateStmt.setString(1, admin.getLogin().getUsername());
+                updateStmt.setString(2, admin.getEmail());
+                updateStmt.setString(3, admin.getDOB());
+                updateStmt.setString(4, admin.getGender());
+                updateStmt.setString(5, admin.getPhoneNo());
+                updateStmt.setInt(6, admin.getAdminId());
+            } else if (this instanceof Customer) {
+                updateSql = "UPDATE User SET username = ?, email = ?, DOB = ? WHERE userID = ?";
+                updateStmt = conn.prepareStatement(updateSql);
+
+                Customer customer = (Customer) this;
+                updateStmt.setString(1, customer.getLogin().getUsername());
+                updateStmt.setString(2, customer.getEmail());
+                updateStmt.setString(3, customer.getDOB());
+                updateStmt.setInt(4, customer.getCustId());
+            } else {
+                System.out.println("Unsupported user type.");
+                return;
+            }
+
+            int rowsUpdated = updateStmt.executeUpdate();
+
+            if (rowsUpdated > 0) {
+                System.out.println("User information updated successfully!");
+            } else {
+                System.out.println("Failed to update user information.");
+            }
+
+            updateStmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
+
     public static User findUserById(int userId) {
         LoginValidator.userList = getAllUsers();
         User foundUser = null;
@@ -94,13 +103,13 @@ public abstract class User{
             do {
                 try {
                     System.out.println("\nModify User Information (ID: " + user.getUserId() + "):");
-                    System.out.println("1. Username: " + user.getLogin().getUsername());
-                    System.out.println("2. Email: " + user.getEmail());
-                    System.out.println("3. Date of Birth: " + user.getDOB());
+                    System.out.println("1. Username        : " + user.getLogin().getUsername());
+                    System.out.println("2. Email           : " + user.getEmail());
+                    System.out.println("3. Date of Birth   : " + user.getDOB());
 
                     if (user instanceof Admin) {
-                        System.out.println("4. Password: " + user.getLogin().getPassword());
-                        System.out.println("5. Gender: " + ((Admin) user).getGender());
+                        System.out.println("4. Password    : " + user.getLogin().getPassword());
+                        System.out.println("5. Gender      : " + ((Admin) user).getGender());
                         System.out.println("6. Phone Number: " + ((Admin) user).getPhoneNo());
                     }
 
@@ -124,7 +133,7 @@ public abstract class User{
             switch (choice) {
                 case 0:
                     isEditing = false;
-                    user.updateUserById(user);
+                    user.updateUserInfo();
                     break;
                 case 1:
                     System.out.print("Enter new username: ");
@@ -177,142 +186,6 @@ public abstract class User{
             }
         }
     }
-   /* public void modifyProfile(Scanner scanner, Admin admin) throws SQLException {
-        Connection conn = DatabaseUtils.getConnection();
-        boolean isEditing = true;
-
-        while (isEditing) {
-            int choice = 0;
-            boolean error = true;
-
-            do {
-                try {
-                    System.out.println("\nModify Admin Information:");
-                    System.out.println("1. Username     : " + admin.getLogin().getUsername());
-                    System.out.println("2. Email        : " + admin.getEmail());
-                    System.out.println("3. Date of Birth: " + admin.getDOB());
-                    System.out.println("4. Gender       : " + admin.getGender());
-                    System.out.println("5. Phone Number : " + admin.getPhoneNo());
-                    System.out.println("0. Editing completed");
-                    System.out.print("Please select your operation: ");
-
-                    choice = scanner.nextInt();
-                    scanner.nextLine();
-
-                    if (choice >= 0 && choice <= 5) {
-                        error = false;
-                    } else {
-                        System.out.println("Invalid Choice! Please try again.");
-                    }
-                } catch (InputMismatchException e) {
-                    System.out.println("Please enter a valid choice!");
-                    scanner.nextLine();
-                }
-            } while (error);
-
-            switch (choice) {
-                case 0:
-                    isEditing = false;
-                    admin.updateAdminInfo(conn);
-                    break;
-                case 1:
-                    System.out.print("Enter new username: ");
-                    String newUsername = RegisterValidator.validateUsername(scanner);
-                    admin.getLogin().setUsername(newUsername);
-                    System.out.println("Username updated to: " + newUsername);
-                    break;
-                case 2:
-                    System.out.print("Enter new email: ");
-                    String newEmail = RegisterValidator.validateEmail(scanner);
-                    admin.setEmail(newEmail);
-                    System.out.println("Email updated to: " + newEmail);
-                    break;
-                case 3:
-                    System.out.print("Enter new date of birth (dd-MM-yyyy): ");
-                    String newDOB = RegisterValidator.validateDateOfBirth(scanner);
-                    admin.setDOB(newDOB);
-                    System.out.println("Date of birth updated to: " + newDOB);
-                    break;
-                case 4:
-                    System.out.print("Enter new gender: ");
-                    String newGender = RegisterValidator.validateGender(scanner);
-                    admin.setGender(newGender);
-                    System.out.println("Gender updated to: " + newGender);
-                    break;
-                case 5:
-                    System.out.print("Enter new phone number: ");
-                    String newPhoneNo = RegisterValidator.validatePhoneNumber(scanner);
-                    admin.setPhoneNo(newPhoneNo);
-                    System.out.println("Phone number updated to: " + newPhoneNo);
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please select a valid option.");
-                    break;
-            }
-        }
-    }
-
-    public void modifyProfile(Scanner scanner, Customer customer) throws SQLException {
-        Connection conn = DatabaseUtils.getConnection();
-        boolean isEditing = true;
-
-        while (isEditing) {
-            int choice = 0;
-            boolean error = true;
-
-            do {
-                try {
-                    System.out.println("\nModify Profile Information:");
-                    System.out.println("1. Username     : " + customer.getLogin().getUsername());
-                    System.out.println("2. Email        : " + customer.getEmail());
-                    System.out.println("3. Date of Birth: " + customer.getDOB());
-                    System.out.println("0. Editing completed");
-                    System.out.print("Please select your operation: ");
-
-                    choice = scanner.nextInt();
-                    scanner.nextLine();
-
-                    if (choice >= 0 && choice <= 3) {
-                        error = false;
-                    } else {
-                        System.out.println("Invalid Choice! Please try again.");
-                    }
-                } catch (InputMismatchException e) {
-                    System.out.println("Please enter a valid choice!");
-                    scanner.nextLine();
-                }
-            } while (error);
-
-            switch (choice) {
-                case 0:
-                    isEditing = false;
-                    customer.updateCustomerInfo(conn);
-                    break;
-                case 1:
-                    System.out.print("Enter new username: ");
-                    String newUsername = RegisterValidator.validateUsername(scanner);
-                    customer.getLogin().setUsername(newUsername);
-                    System.out.println("Username updated to: " + newUsername);
-                    break;
-                case 2:
-                    System.out.print("Enter new email: ");
-                    String newEmail = RegisterValidator.validateEmail(scanner);
-                    customer.setEmail(newEmail);
-                    System.out.println("Email updated to: " + newEmail);
-                    break;
-                case 3:
-                    System.out.print("Enter new date of birth (dd-MM-yyyy): ");
-                    String newDOB = RegisterValidator.validateDateOfBirth(scanner);
-                    customer.setDOB(newDOB);
-                    System.out.println("Date of birth updated to: " + newDOB);
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please select a valid option.");
-                    break;
-            }
-        }
-    }*/
-
     public static User registerUser(Scanner input) {
         User newUser = new Customer();
 
@@ -342,46 +215,22 @@ public abstract class User{
         return newUser;
     }
 
-    public static void updatePasswordToDatabase(User customer, String newPassword, Connection conn) {
-        try {
-            String updateSql = "UPDATE User SET password = ? WHERE userID = ?";
-            PreparedStatement updateStmt = conn.prepareStatement(updateSql);
-            updateStmt.setString(1, newPassword);
-            updateStmt.setInt(2, customer.getUserId());
-
-            int rowsUpdated = updateStmt.executeUpdate();
-
-            if (rowsUpdated > 0) {
-                System.out.println("Password updated successfully!");
-            } else {
-                System.out.println("Failed to update password.");
-            }
-
-            updateStmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public int getUserId() {
+        if (this instanceof Customer) {
+            return ((Customer) this).getCustId();
+        } else if (this instanceof Admin) {
+            return ((Admin) this).getAdminId();
+        } else {
+            return -1;
         }
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "login=" + login +
-                ", email='" + email + '\'' +
-                ", DOB='" + DOB + '\'' +
-                ", userType='" + userType + '\'' +
-                '}';
-    }
-    public int getUserId() {
-        return 0;
-    }
     public Login getLogin() {
         if (login == null) {
             login = new Login();
         }
         return login;
     }
-
 
     public void setLogin(Login login) {
         this.login = login;
@@ -408,8 +257,16 @@ public abstract class User{
         this.email = email;
     }
 
-    public void setUserType(String usertype) {
-        this.userType = usertype;
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("User ID       : ").append(getUserId()).append("\n");
+        sb.append("Username      : ").append(getLogin().getUsername()).append("\n");
+        sb.append("Email         : ").append(getEmail()).append("\n");
+        sb.append("Date of Birth : ").append(getDOB()).append("\n");
+        sb.append("User Type     : ").append(getUserType()).append("\n");
+        return sb.toString();
     }
+
 
 }
