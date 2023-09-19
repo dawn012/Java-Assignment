@@ -201,12 +201,11 @@ public class Customer extends User {
         return accStatus;
     }
 
+    @Override
     public String toString() {
-        return "Customer{" +
-                "custId=" + custId +
-                ", accStatus='" + accStatus + '\'' +
-                "} " + super.toString();
+        StringBuilder sb = new StringBuilder(super.toString());
+        sb.append("Account Status: ").append(getAccStatus()).append("\n");
+        return sb.toString();
     }
-
 
 }

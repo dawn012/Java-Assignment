@@ -135,7 +135,7 @@ public class Login {
                         switch (choice) {
                             case 1:
                                 System.out.println("You selected Option 1.");
-                                customer.viewProfile(customer);
+                                System.out.println(customer.toString());
                                 break;
                             case 2:
                                 System.out.println("You selected Option 2.");
@@ -184,7 +184,8 @@ public class Login {
                         switch (choice) {
                             case 1:
                                 System.out.println("You selected Option 1.");
-                                admin.viewProfile(admin);
+                                System.out.println(admin.toString());
+
                                 break;
                             case 2:
                                 System.out.println("You selected Option 2.");

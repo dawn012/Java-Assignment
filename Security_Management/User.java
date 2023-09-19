@@ -28,25 +28,10 @@ public abstract class User{
 
     public User() {
     }
-    public void viewProfile(User user) {
-        System.out.println("\nUser ID       : " + user.getUserId());
-        System.out.println("Username      : " + user.getLogin().getUsername());
-        System.out.println("Email         : " + user.getEmail());
-        System.out.println("Date of Birth : " + user.getDOB());
-        System.out.println("User Type     : " + user.getUserType());
+    /*public void viewProfile(User user) {
+        System.out.println(user.toString());
+    }*/
 
-        if (user instanceof Customer) {
-            Customer customer = (Customer) user;
-            String accStatus = customer.getAccStatus();
-            System.out.println("Account Status: " + accStatus);
-        } else if (user instanceof Admin) {
-            Admin admin = (Admin) user;
-            String gender = admin.getGender();
-            String phoneNo = admin.getPhoneNo();
-            System.out.println("Gender        : " + gender);
-            System.out.println("Phone Number  : " + phoneNo);
-        }
-    }
 
     public void updateUserById(User user) throws SQLException {
         if (user instanceof Admin) {
@@ -192,17 +177,6 @@ public abstract class User{
         return newUser;
     }
 
-
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "login=" + login +
-                ", email='" + email + '\'' +
-                ", DOB='" + DOB + '\'' +
-                ", userType='" + userType + '\'' +
-                '}';
-    }
     public int getUserId() {
         if (this instanceof Customer) {
             return ((Customer) this).getCustId();
@@ -243,6 +217,17 @@ public abstract class User{
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("User ID       : ").append(getUserId()).append("\n");
+        sb.append("Username      : ").append(getLogin().getUsername()).append("\n");
+        sb.append("Email         : ").append(getEmail()).append("\n");
+        sb.append("Date of Birth : ").append(getDOB()).append("\n");
+        sb.append("User Type     : ").append(getUserType()).append("\n");
+        return sb.toString();
     }
 
 
