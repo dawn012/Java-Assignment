@@ -35,7 +35,7 @@ public class LoginValidator {
                 if ("cust".equals(userType)) {
                     user = new Customer(userId, new Login(username, password), email, DOB, userType, accStatus);
                 } else {
-                    user = new Admin(new Login(username, password), email, DOB, userType, userId, gender, phoneNo);
+                    user = new Admin(new Login(username, password), email, DOB, userType, gender, phoneNo, userId);
                 }
                 userList.add(user);
             }

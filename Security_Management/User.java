@@ -14,20 +14,29 @@ public abstract class User{
     private String email;
     private String DOB;
     private String userType;
+    private String gender;
+    private String phoneNo;
 
+    public User() {
+    }
 
-    public abstract void add();
+    public User(Login login, String email, String DOB, String userType, String gender, String phoneNo) {
+        this.login = login != null ? login : new Login();
+        this.email = email;
+        this.DOB = DOB;
+        this.userType = userType;
+        this.gender = gender;
+        this.phoneNo = phoneNo;
+    }
 
     public User(Login login, String email, String DOB, String userType) {
-        this.login = login != null ? login : new Login();
+        this.login = login;
         this.email = email;
         this.DOB = DOB;
         this.userType = userType;
     }
 
-
-    public User() {
-    }
+    public abstract void add();
 
     public void updateUserInfo() throws SQLException {
         Connection conn = null;
@@ -204,7 +213,6 @@ public abstract class User{
         this.login = login;
     }
 
-
     public String getDOB() {
         return DOB;
     }
@@ -225,6 +233,22 @@ public abstract class User{
         this.email = email;
     }
 
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getPhoneNo() {
+        return phoneNo;
+    }
+
+    public void setPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -235,6 +259,4 @@ public abstract class User{
         sb.append("User Type     : ").append(getUserType()).append("\n");
         return sb.toString();
     }
-
-
 }
