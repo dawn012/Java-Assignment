@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 
 import static Security_Management.Login.loginMenu;
-import static Security_Management.User.registerUser;
+import static Security_Management.Customer.registerUser;
 
 public class LoginDriver {
 
@@ -36,7 +36,8 @@ public class LoginDriver {
 
                     case 1:
                         System.out.println("You selected Option 1.");
-                        registerUser(input);
+
+                        Customer.registerUser(input);
                         break;
                     case 2:
                         System.out.println("You selected Option 2.");

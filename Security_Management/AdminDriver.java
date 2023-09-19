@@ -26,24 +26,23 @@ public class AdminDriver {
                     boolean submenuActive = true;
                     while (submenuActive) {
                         System.out.println("Submenu Options:");
-                        System.out.println("1. View All Users");
-                        System.out.println("2. View All Customer");
-                        System.out.println("3. View All Admin");
+                        System.out.println("1. View All Customer");
+                        System.out.println("2. View All Admin");
+                        System.out.println("3. ");
                         System.out.println("0. Back to Main Menu");
                         System.out.print("Choose an option: ");
                         int submenuChoice = scanner.nextInt();
                         switch (submenuChoice) {
                             case 1:
                                 System.out.println("You selected Submenu Option 1.");
-                                ((Admin) admin).viewAllUsers();
+                                ((Customer) admin).viewAllCustomers();
                                 break;
                             case 2:
                                 System.out.println("You selected Submenu Option 2.");
-                                ((Admin) admin).viewAllCustomers();
+                                ((Admin) admin).viewAllAdmins();
                                 break;
                             case 3:
                                 System.out.println("You selected Submenu Option 3.");
-                                ((Admin) admin).viewAllAdmins();
                                 break;
                             case 0:
                                 System.out.println("Returning to Main Menu.");
@@ -61,7 +60,7 @@ public class AdminDriver {
                     break;
                 case 4:
                     System.out.println("You selected Option 4.");
-                    ((Admin) admin).viewAllUsers();
+                   // ((Admin) admin).viewAllUsers();
                     ((Admin) admin).deleteUserById(scanner);
                     break;
                 case 5:

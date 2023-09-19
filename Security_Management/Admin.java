@@ -79,34 +79,6 @@ public class Admin extends User {
     }
 
 
-    public void updateAdminInfo() throws SQLException {
-        Connection conn = DatabaseUtils.getConnection();
-        try {
-            String updateSql = "UPDATE User SET username = ?, email = ?, DOB = ?, gender = ?, phoneNo = ? WHERE userID = ?";
-            PreparedStatement updateStmt = conn.prepareStatement(updateSql);
-
-            updateStmt.setString(1, getLogin().getUsername());
-            updateStmt.setString(2, getEmail());
-            updateStmt.setString(3, getDOB());
-            updateStmt.setString(4, getGender());
-            updateStmt.setString(5, getPhoneNo());
-            updateStmt.setInt(6, getAdminId());
-
-            int rowsUpdated = updateStmt.executeUpdate();
-
-            if (rowsUpdated > 0) {
-                System.out.println("Admin information updated successfully.");
-            } else {
-                System.out.println("Failed to update admin information.");
-            }
-
-            updateStmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-
     public static ArrayList<User> getAllUsers() {
         ArrayList<User> userList = new ArrayList<>();
 
@@ -229,7 +201,7 @@ public class Admin extends User {
     }
 
 
-    public void viewAllUsers() {
+   /* public void viewAllUsers() {
 
         try {
             Connection conn = DatabaseUtils.getConnection();
@@ -260,51 +232,40 @@ public class Admin extends User {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
-    public void viewAllCustomers() {
-        try {
-            Connection conn = DatabaseUtils.getConnection();
-            String sql = "SELECT * FROM User WHERE userType = 'cust'";
-            Statement stmt = conn.createStatement();
-            ResultSet resultSet = stmt.executeQuery(sql);
 
-            System.out.println("All Customers:\n");
-
-            System.out.println(String.format("%-10s %-15s %-30s %-15s %-15s", "User ID", "Username", "Email", "Date of Birth", "Account Status"));
-            System.out.println("----------------------------------------------------------------------------------------------");
-
-            while (resultSet.next()) {
-                int userId = resultSet.getInt("userID");
-                String username = resultSet.getString("username");
-                String email = resultSet.getString("email");
-                String dob = resultSet.getString("DOB");
-                String accStatus = resultSet.getString("accStatus");
-
-                System.out.println(String.format("%-10d %-15s %-30s %-15s %-15s", userId, username, email, dob, accStatus));
-            }
-
-            resultSet.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
 
     public void viewAllAdmins() {
+        ArrayList<User> adminList = getAdminDataFromDatabase();
+        System.out.println(adminList);
+
+        System.out.println("\nAll Admins:\n");
+
+        System.out.println(String.format("%-10s %-15s %-30s %-15s %-10s %-15s", "User ID", "Username", "Email", "Date of Birth", "Gender", "Phone Number"));
+        System.out.println("------------------------------------------------------------------------------------------------------------------");
+
+        for (User admin : adminList) {
+            int userId = admin.getUserId();
+            String username = admin.getLogin().getUsername();
+            String email = admin.getEmail();
+            String dob = admin.getDOB();
+            String gender = ((Admin) admin).getGender();
+            String phoneNo = ((Admin) admin).getPhoneNo();
+
+            System.out.println(String.format("%-10d %-15s %-30s %-15s %-10s %-15s", userId, username, email, dob, gender, phoneNo));
+        }
+    }
+
+    private ArrayList<User> getAdminDataFromDatabase() {
+        ArrayList<User> adminList = new ArrayList<>();
+
         try {
             Connection conn = DatabaseUtils.getConnection();
             String sql = "SELECT * FROM User WHERE userType = 'admin'";
             Statement stmt = conn.createStatement();
             ResultSet resultSet = stmt.executeQuery(sql);
-
-            System.out.println("All Admins:\n");
-
-
-            System.out.println(String.format("%-10s %-15s %-30s %-15s %-10s %-15s", "User ID", "Username", "Email", "Date of Birth", "Gender", "Phone Number"));
-            System.out.println("------------------------------------------------------------------------------------------------------------------");
 
             while (resultSet.next()) {
                 int userId = resultSet.getInt("userID");
@@ -314,8 +275,15 @@ public class Admin extends User {
                 String gender = resultSet.getString("gender");
                 String phoneNo = resultSet.getString("phoneNo");
 
+                Admin admin = new Admin();
+                admin.setAdminId(userId); // 设置管理员的唯一ID
+                admin.getLogin().setUsername(username);
+                admin.setEmail(email);
+                admin.setDOB(dob);
+                admin.setGender(gender);
+                admin.setPhoneNo(phoneNo);
 
-                System.out.println(String.format("%-10d %-15s %-30s %-15s %-10s %-15s", userId, username, email, dob, gender, phoneNo));
+                adminList.add(admin); // 将admin添加到列表中
             }
 
             resultSet.close();
@@ -324,7 +292,10 @@ public class Admin extends User {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return adminList;
     }
+
 
 
     public void deleteUserById(Scanner scanner) {

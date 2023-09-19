@@ -28,10 +28,6 @@ public abstract class User{
 
     public User() {
     }
-    /*public void viewProfile(User user) {
-        System.out.println(user.toString());
-    }*/
-
 
     public void updateUserInfo() throws SQLException {
         Connection conn = DatabaseUtils.getConnection();
@@ -185,34 +181,6 @@ public abstract class User{
                     break;
             }
         }
-    }
-    public static User registerUser(Scanner input) {
-        User newUser = new Customer();
-
-        System.out.println("Please Enter Username: ");
-        String username = RegisterValidator.validateUsername(input);
-        newUser.getLogin().setUsername(username);
-
-        System.out.println("Please Enter Password: ");
-        String password = RegisterValidator.validatePassword(input);
-        newUser.getLogin().setPassword(password);
-
-        System.out.println("Please Confirm Your Password: ");
-        String confirmPassword = RegisterValidator.validatePasswordConfirmation(input, password);
-
-        System.out.println("Please Enter Your email: ");
-        String email = RegisterValidator.validateEmail(input);
-        ((Customer)newUser).setEmail(email);
-
-        input.nextLine();
-
-        System.out.println("Please Enter Date of Birth(01-01-1990): ");
-        String dob = RegisterValidator.validateDateOfBirth(input);
-        newUser.setDOB(dob);
-
-        newUser.add();
-
-        return newUser;
     }
 
     public int getUserId() {
