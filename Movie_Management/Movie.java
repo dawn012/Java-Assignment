@@ -60,21 +60,35 @@ public class Movie implements DatabaseOperations {
             e.printStackTrace();
         }
 
-        System.out.printf("\nMovie Detail:\n");
-        System.out.println("Movie Name: " + mvName.getName());
+        System.out.println("\n----------------");
+        System.out.printf("| Movie Detail | \n");
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.printf("%c %-20s %c %-55s %c\n", '|', "Movie Name", '|', mvName.getName(), '|');
         if (result.next()) {
-            System.out.println("Genre: " + result.getString("genre_name"));
+            System.out.println("----------------------------------------------------------------------------------");
+            System.out.printf("%c %-20s %c %-55s %c\n", '|', "Genre", '|', result.getString("genre_name"), '|');
         }
-        System.out.println("Release Date: " + releaseDate.getDate());
-        System.out.println("Duration: " + duration + " minutes");
-        System.out.println("Language: " + language);
-        System.out.println("Director: " + director);
-        System.out.println("Writter: " + writter);
-        System.out.println("Starring: " + starring);
-        System.out.println("Music Producer: " + musicProvider);
-        System.out.println("Country: " + country);
-        System.out.printf("%s %.2f\n", "Basic Ticket Price:", basicTicketPrice);
-        System.out.println("\nSynopsis:\n" + metaDescription);
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.printf("%c %-20s %c %-55s %c\n", '|', "Release Date", '|', releaseDate.getDate(), '|');
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.printf("%c %-20s %c %-55s %c\n", '|', "Duration", '|', duration + " minutes", '|');
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.printf("%c %-20s %c %-55s %c\n", '|', "Language", '|', language, '|');
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.printf("%c %-20s %c %-55s %c\n", '|', "Director", '|', director, '|');
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.printf("%c %-20s %c %-55s %c\n", '|', "Writter", '|', writter, '|');
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.printf("%c %-20s %c %-55s %c\n", '|', "Starring", '|', starring, '|');
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.printf("%c %-20s %c %-55s %c\n", '|', "Music Producer", '|', musicProvider, '|');
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.printf("%c %-20s %c %-55s %c\n", '|', "Country", '|', country, '|');
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.printf("%c %-20s %c %-55s %c\n", '|', "Basic Ticket Price", '|', basicTicketPrice, '|');
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.printf("%c %-20s %c %-55s %c\n", '|', "Synopsis", '|', metaDescription, '|');
+        System.out.println("----------------------------------------------------------------------------------");
     }
 
     public boolean add() throws SQLException {
