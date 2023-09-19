@@ -349,7 +349,7 @@ public class Promotion implements DatabaseOperations {
                     ") AS subquery " +
                 ");";
 
-        Object[] params = {"USED", booking.getBooking_id(), promotionId, booking.getCustomer().getCustId(), promotionId, booking.getCustomer().getCustId(), "UNUSED"};
+        Object[] params = {"USED", booking.getBookingId(), promotionId, booking.getCustomer().getCustId(), promotionId, booking.getCustomer().getCustId(), "UNUSED"};
 
         try {
             DatabaseUtils.updateQuery(sql, params);

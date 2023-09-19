@@ -145,7 +145,7 @@ public abstract class Payment {
 
     public void addPayment() {
         String sql = "INSERT INTO PAYMENT (BOOKING_ID, PAYMENT_METHOD, PAYMENT_AMOUNT, CURRENCY, PAYMENT_DATE, PAYMENT_TIME, PAYMENT_STATUS) VALUES (?,?,?,?,?,?,?)";
-        Object[] params = {booking.getBooking_id(), paymentMethod, paymentAmount, currency, paymentDate, paymentTime, paymentStatus};
+        Object[] params = {booking.getBookingId(), paymentMethod, paymentAmount, currency, paymentDate, paymentTime, paymentStatus};
 
         try {
             DatabaseUtils.insertQuery(sql, params);
@@ -161,7 +161,7 @@ public abstract class Payment {
         System.out.println("\t\t\t\t\tPayment Details");
         System.out.println("\t\t-------------------------------------------");
         System.out.printf("\t\t Payment ID   : %04d\n", paymentId);
-        System.out.printf("\t\t Booking ID   : %04d\n", booking.getBooking_id());
+        System.out.printf("\t\t Booking ID   : %04d\n", booking.getBookingId());
         System.out.printf("\t\t Booking Date : %s\n", booking.getBookingDateTime().getDate());
         System.out.printf("\t\t Booking Time : %-8s\n", booking.getBookingTime());
         System.out.println("\t\t-------------------------------------------");
@@ -169,16 +169,16 @@ public abstract class Payment {
         System.out.printf("\t\t Movie Name   : %s\n\n", booking.getTicketList().get(0).getTimeTable().getMovie().getMvName().getName());
         System.out.println("\t\t Ticket Type\tUnit Price\tQty\t   Subtotal");
 
-        if(booking.getAdultTicket_qty()>0)
-            System.out.printf("\t\t Adult Ticket\tRM%6.2f     %2d\t   RM%6.2f\n", booking.getTicketList().get(0).getTimeTable().getMovie().getBasicTicketPrice() * 1.2, booking.getAdultTicket_qty(), booking.getTicketList().get(0).getTimeTable().getMovie().getBasicTicketPrice() * 1.2 * booking.getAdultTicket_qty());
+        if(booking.getAdultTicketQty()>0)
+            System.out.printf("\t\t Adult Ticket\tRM%6.2f     %2d\t   RM%6.2f\n", booking.getTicketList().get(0).getTimeTable().getMovie().getBasicTicketPrice() * 1.2, booking.getAdultTicketQty(), booking.getTicketList().get(0).getTimeTable().getMovie().getBasicTicketPrice() * 1.2 * booking.getAdultTicketQty());
 
-        if(booking.getChildTicket_qty()>0)
-            System.out.printf("\t\t Child Ticket\tRM%6.2f     %2d\t   RM%6.2f\n", booking.getTicketList().get(0).getTimeTable().getMovie().getBasicTicketPrice() * 0.8, booking.getChildTicket_qty(), booking.getTicketList().get(0).getTimeTable().getMovie().getBasicTicketPrice() * 0.8 * booking.getChildTicket_qty());
+        if(booking.getChildTicketQty()>0)
+            System.out.printf("\t\t Child Ticket\tRM%6.2f     %2d\t   RM%6.2f\n", booking.getTicketList().get(0).getTimeTable().getMovie().getBasicTicketPrice() * 0.8, booking.getChildTicketQty(), booking.getTicketList().get(0).getTimeTable().getMovie().getBasicTicketPrice() * 0.8 * booking.getChildTicketQty());
 
         System.out.print("\n\t\t Seat ID : ");
 
         for(Ticket t : booking.getTicketList()){
-            System.out.print(t.getSeat().getSeat_id()+"  ");
+            System.out.print(t.getSeat().getSeatId()+"  ");
         }
 
         System.out.println("\n\t\t-------------------------------------------");

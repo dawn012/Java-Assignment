@@ -37,7 +37,6 @@ public class SystemClass {
     public static void run(Scanner sc) throws Exception {
         SystemClass system = new SystemClass();
 
-
         int choice = 0;
         boolean error = true, continues = true, back = false;
 
@@ -264,12 +263,10 @@ public class SystemClass {
                                         } while (error);
 
                                         // 4. Select the seat chin yong part
-
                                         Booking booking = new Booking();
                                         Customer c = new Customer();//暂时用
                                         c.setCustId(2);//暂时用
                                         booking.setCustomer(c);//暂时用
-
                                         String confirmStr="R";
                                         while (confirmStr.equals("R")) {
                                             if (booking.executeBooking(schedule)) {
@@ -299,35 +296,6 @@ public class SystemClass {
                                                         //Promotion promotion = applyPromotion(sc, 1, booking);
 
                                                         applyPromotion(sc, booking);
-                                            if(booking.executeBooking(schedule)){
-                                                booking.printBookingDetail();
-                                                do {
-                                                    try {
-                                                        System.out.println("Confirm This Booking ? (Y=Yes R=No, Select Again N=No Confirm, Exit) : ");
-                                                        confirmStr = sc.next().toUpperCase();
-                                                        if (confirmStr.equals("Y")) {
-                                                            Booking.insertBooking(booking);
-                                                            for (Ticket t : booking.getTicketList()) {
-                                                                Ticket.insertTicket(t,booking);
-                                                            }
-                                                        }
-
-
-
-                                                    } catch (Exception e){
-                                                        System.out.println("Something wrong...");
-                                                        sc.nextLine();
-                                                    }
-                                                }while(!confirmStr.equals("Y") && !confirmStr.equals("N") && !confirmStr.equals("R"));
-                                            }
-                                        }
-                                        if (confirmStr.equals("Y")) {
-                                            //booking.printBookingDetail();
-                                            // Apply promotion
-                                            //booking.setBooking_status("completed");
-                                            //booking.updateStatus();
-
-                                            Promotion promotion = applyPromotion(sc, 1, booking);
 
                                                         // Make Payment
                                                         if (makePayment(sc, booking)) {
@@ -641,7 +609,7 @@ public class SystemClass {
                         ArrayList<Cinema> cinemas = new ArrayList<>();
                         do {
                             try {
-                                System.out.println("\nSelect the cinema you want to view: ");
+                                System.out.println("\nSelect the cinema: ");
                                 cinemas = Cinema.viewCinemaList(1);
                                 System.out.print("\nEnter the cinema no (0 - Back): ");
                                 cinemaNo = sc.nextInt();
@@ -1256,13 +1224,16 @@ public class SystemClass {
         boolean back = false;
         boolean error = true;
         boolean continues = true;
-        ArrayList<Cinema> cinemas = new ArrayList<>();
+
+        ArrayList<Cinema> cinemas = Cinema.viewCinemaList(1);
         int cinemaSelected = 0;
 
         do {
             try {
                 System.out.println("\nSelect the cinema you want to manage it's hall: ");
-                cinemas = Cinema.viewCinemaList(1);
+                for (int i = 0; i < cinemas.size(); i++) {
+                    System.out.println((i + 1) + ". " + cinemas.get(i).getCinemaName().getName());
+                }
                 System.out.print("\nEnter your selection: ");
                 cinemaSelected = sc.nextInt();
                 sc.nextLine();
@@ -1300,12 +1271,8 @@ public class SystemClass {
                                 System.out.println("\nSelect the hall: ");
                                 halls = cinema.getHallList(1);
 
-                                System.out.print("------------------------------------------------------");
-                                System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Hall Name", '|');
-                                System.out.println("------------------------------------------------------");
                                 for (int i = 0; i < halls.size(); i++) {
-                                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', (i + 1), '|', halls.get(i).getHallName().getName(), '|');
-                                    System.out.println("------------------------------------------------------");
+                                    System.out.println((i + 1) + ". " + halls.get(i).getHallName().getName());
                                 }
 
                                 System.out.print("\nEnter the hall no (0 - Back): ");
@@ -1328,7 +1295,7 @@ public class SystemClass {
 
                             String continueViewHall;
                             do {
-                                System.out.println("\nDo you want view another hall? (Y / N)");
+                                System.out.println("\nDo you want view another cinema? (Y / N)");
                                 System.out.print("Answer: ");
                                 String answer = sc.next();
                                 sc.nextLine();
@@ -1431,7 +1398,6 @@ public class SystemClass {
                             do {
                                 if (confirmation.equals("Y")) {
                                     success = cinema.addHall(hall);
-                                    hall.addNewSeatList();
                                 } else {
                                     success = true;
                                     System.out.println("This hall will not be added for the cinema.");
@@ -1494,12 +1460,8 @@ public class SystemClass {
                                 System.out.println("\nSelect the hall you want to modify: ");
                                 hallsModified = cinema.getHallList(1);
 
-                                System.out.print("------------------------------------------------------");
-                                System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Hall Name", '|');
-                                System.out.println("------------------------------------------------------");
                                 for (int i = 0; i < hallsModified.size(); i++) {
-                                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', (i + 1), '|', hallsModified.get(i).getHallName().getName(), '|');
-                                    System.out.println("------------------------------------------------------");
+                                    System.out.println((i + 1) + ". " + hallsModified.get(i).getHallName().getName());
                                 }
 
                                 System.out.print("\nEnter the hall no (0 - Back): ");
@@ -1614,11 +1576,39 @@ public class SystemClass {
                                         break;
                                     case 2:
                                         System.out.println("Hall type cannot be modified! Please retry.");
+                            /*do {
+                                try {
+                                    System.out.println("\nSelect the hall type: ");
+                                    System.out.println("1. Standard Hall");
+                                    System.out.println("2. 3D Hall");
+                                    System.out.print("\nEnter your selection: ");
+                                    int hallTypeSelection = sc.nextInt();
+
+                                    if (hallTypeSelection == 1) {
+                                        hallsModified.get(hallModified - 1).setHallType("STANDARD");
+                                        //cinema.setHall(new Hall(hallsModified.get(hallModified - 1).getHallName(), "STANDARD"));
+                                        error = false;
+                                    } else if (hallTypeSelection == 2) {
+                                        hallsModified.get(hallModified - 1).setHallType("3D");
+                                        //cinema.setHall(new Hall(hallsModified.get(hallModified - 1).getHallName(), "3D"));
+                                        error = false;
+                                    } else {
+                                        System.out.println("Your choice is not among the available options! PLease try again.");
+                                        error = true;
+                                    }
+                                }
+                                catch (InputMismatchException e) {
+                                    System.out.println("Please enter a valid hall type no!");
+                                    sc.nextLine();
+                                    error = true;
+                                }
+                            } while (error);*/
                                         break;
                                     case 3:
                                         System.out.println("Hall capacity cannot be modified! Please retry.");
                                         break;
                                     case 4: //ChinYong Part
+
                                         hallsModified.get(hallModified-1).initSeatList();
                                         String strRow=" ";
                                         int col = 0;
@@ -1710,12 +1700,8 @@ public class SystemClass {
                                 System.out.println("\nSelect the hall you want to delete: ");
                                 hallsDeleted = cinema.getHallList(1);
 
-                                System.out.print("------------------------------------------------------");
-                                System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Hall Name", '|');
-                                System.out.println("------------------------------------------------------");
                                 for (int i = 0; i < hallsDeleted.size(); i++) {
-                                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', (i + 1), '|', hallsDeleted.get(i).getHallName().getName(), '|');
-                                    System.out.println("------------------------------------------------------");
+                                    System.out.println((i + 1) + ". " + hallsDeleted.get(i).getHallName().getName());
                                 }
 
                                 System.out.print("\nEnter the hall no (0 - Back): ");
@@ -1744,6 +1730,12 @@ public class SystemClass {
 
                                 confirmation = SystemClass.askForContinue(answer);
                             } while (confirmation.equals("Invalid"));
+
+                            if (confirmation.equals("Y")) {
+                                cinema.getHall().deleteHall();
+                            } else {
+                                System.out.println("\nThe hall is saved.");
+                            }
 
                             // Confirm that the cinema is successfully deleted
                             boolean success;
@@ -3032,12 +3024,8 @@ public class SystemClass {
                                     System.out.println("\nSelect the hall: ");
                                     halls = cinemas.get(cinemaNo - 1).getHallList(1);
 
-                                    System.out.print("------------------------------------------------------");
-                                    System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Hall Name", '|');
-                                    System.out.println("------------------------------------------------------");
                                     for (int i = 0; i < halls.size(); i++) {
-                                        System.out.printf("%-3c %-4d %c %-41s %c\n", '|', (i + 1), '|', halls.get(i).getHallName().getName(), '|');
-                                        System.out.println("------------------------------------------------------");
+                                        System.out.println((i + 1) + ". " + halls.get(i).getHallName().getName());
                                     }
 
                                     System.out.print("\nEnter the hall no: ");
@@ -4752,8 +4740,6 @@ public class SystemClass {
             Card card = (Card) payment;
             card.setPaymentAmount(booking.getTotalPrice());
 
-            if(card.stripeValidator()) {
-                return new Card(booking.getBookingId(), booking.getTotalPrice(), "MYR", "CREDIT/DEBIT CARD", dateTime.getCurrentDate(), dateTime.getCurrentTime(), "PAID", card.getCardNo(), card.getExpiredDate(), card.getCvc(), card.getEmail());
             if(CardValidator.stripeValidator(card.createPaymentIntent())) {
                 return new Card(booking, "CREDIT/DEBIT CARD", booking.getTotalPrice(), "MYR", dateTime.getCurrentDate(), dateTime.getCurrentTime(), "PAID", card.getCardNo(), card.getExpiredDate(), card.getCvc(), card.getEmail());
             }
@@ -4761,7 +4747,6 @@ public class SystemClass {
         } else {
             TNG tng = (TNG) payment;
 
-            return new TNG(booking.getBookingId(), booking.getTotalPrice(), "MYR", "TNG", dateTime.getCurrentDate(), dateTime.getCurrentTime(), "PAID", tng.getPhoneNo(), tng.getPinNo());
             return new TNG(booking, "TNG", booking.getTotalPrice(), "MYR", dateTime.getCurrentDate(), dateTime.getCurrentTime(), "PAID", tng.getPhoneNo(), tng.getPinNo());
         }
 
@@ -4857,15 +4842,10 @@ public class SystemClass {
         do {
             try {
                 System.out.println("\nSelect the operation:");
-                System.out.println("---------------------------------");
-                System.out.printf("%c %d %c %-25s %c\n", '|', 1, '|', "View " + propertyName, '|');
-                System.out.println("---------------------------------");
-                System.out.printf("%c %d %c %-25s %c\n", '|', 2, '|', "Add " + propertyName, '|');
-                System.out.println("---------------------------------");
-                System.out.printf("%c %d %c %-25s %c\n", '|', 3, '|', "Modify " + propertyName, '|');
-                System.out.println("---------------------------------");
-                System.out.printf("%c %d %c %-25s %c\n", '|', 4, '|', "Delete " + propertyName, '|');
-                System.out.println("---------------------------------");
+                System.out.println("1. View " + propertyName);
+                System.out.println("2. Add " + propertyName);
+                System.out.println("3. Modify " + propertyName);
+                System.out.println("4. Delete " + propertyName);
                 System.out.print("\nEnter your selection (0 - Back): ");
                 choice = sc.nextInt();
                 sc.nextLine();

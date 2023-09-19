@@ -36,13 +36,10 @@ public class Booking {
     //}
     ////////////////////////////////////////////////////////
     private Customer customer;
+    private Promotion promotion;
     private int bookingId;
     private int adultTicketQty;
     private int childTicketQty;
-    private Promotion promotion;
-    private int booking_id;
-    private int adultTicket_qty;
-    private int childTicket_qty;
     private double totalPrice;
     private DateTime bookingDateTime;
     private LocalTime bookingTime;
@@ -74,16 +71,16 @@ public class Booking {
         this.customer=customer;
     }
 
-    public Booking(Customer customer, Promotion promotion, int booking_id, int adultTicket_qty, int childTicket_qty, double totalPrice, DateTime bookingDateTime, LocalTime bookingTime, String booking_status, ArrayList<Ticket> ticketList) {
+    public Booking(Customer customer, Promotion promotion, int bookingId, int adultTicketQty, int childTicketQty, double totalPrice, DateTime bookingDateTime, LocalTime bookingTime, String bookingStatus, ArrayList<Ticket> ticketList) {
         this.customer = customer;
         this.promotion = promotion;
-        this.booking_id = booking_id;
-        this.adultTicket_qty = adultTicket_qty;
-        this.childTicket_qty = childTicket_qty;
+        this.bookingId = bookingId;
+        this.adultTicketQty = adultTicketQty;
+        this.childTicketQty = childTicketQty;
         this.totalPrice = totalPrice;
         this.bookingDateTime = bookingDateTime;
         this.bookingTime = bookingTime;
-        this.booking_status = booking_status;
+        this.bookingStatus = bookingStatus;
         this.ticketList = ticketList;
     }
 
@@ -104,8 +101,14 @@ public class Booking {
 //        this.ticket_id+=count;
         //return this.booking_id;
     }
-    public int getAdultTicketQty() {
-        return adultTicketQty;
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
 
     public Promotion getPromotion() {
         return promotion;
@@ -115,68 +118,64 @@ public class Booking {
         this.promotion = promotion;
     }
 
-    public int getAdultTicket_qty() {
-        return adultTicket_qty;
+    public void setBookingId(int bookingId) {
+        this.bookingId = bookingId;
     }
+
+    public int getAdultTicketQty() {
+        return adultTicketQty;
+    }
+
+    public void setAdultTicketQty(int adultTicketQty) {
+        this.adultTicketQty = adultTicketQty;
+    }
+
     public int getChildTicketQty() {
         return childTicketQty;
     }
+
+    public void setChildTicketQty(int childTicketQty) {
+        this.childTicketQty = childTicketQty;
+    }
+
     public double getTotalPrice() {
         return totalPrice;
     }
 
-    public LocalTime getBookingTime() {
-        return bookingTime;
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
     public DateTime getBookingDateTime() {
         return bookingDateTime;
     }
 
-    public ArrayList<Ticket> getTicketList() {
-        return ticketList;
+    public void setBookingDateTime(DateTime bookingDateTime) {
+        this.bookingDateTime = bookingDateTime;
     }
 
-    public String getBookingStatus() {
-        return bookingStatus;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    //Setter
-    public void setBookingId(int bookingId) {
-        this.bookingId = bookingId;
-    }
-    public void setAdultTicketQty(int adultTicketQty) {
-        this.adultTicketQty = adultTicketQty;
-    }
-    public void setChildTicketQty(int childTicketQty) {
-        this.childTicketQty = childTicketQty;
-    }
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
+    public LocalTime getBookingTime() {
+        return bookingTime;
     }
 
     public void setBookingTime(LocalTime bookingTime) {
         this.bookingTime = bookingTime;
     }
 
-    public void setBookingDateTime(DateTime bookingDateTime) {
-        this.bookingDateTime = bookingDateTime;
+    public String getBookingStatus() {
+        return bookingStatus;
     }
 
     public void setBookingStatus(String bookingStatus) {
         this.bookingStatus = bookingStatus;
     }
 
-    public void setTicketList(ArrayList<Ticket> ticketList) {
-        this.ticketList = ticketList;
+    public ArrayList<Ticket> getTicketList() {
+        return ticketList;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setTicketList(ArrayList<Ticket> ticketList) {
+        this.ticketList = ticketList;
     }
 
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -705,7 +704,8 @@ public class Booking {
 
                     answer=scanner.next().toUpperCase();
 
-                }while (SystemClass.askForContinue(answer).equals("Invalid"));
+                } while (SystemClass.askForContinue(answer).equals("Invalid"));
+
                 if(SystemClass.askForContinue(answer).equals("N"))
                     break;
             }
@@ -767,10 +767,8 @@ public class Booking {
         int rowAffected = 0;
 
         try {
-            String updateSql = "UPDATE `booking` SET total_price = ?, `booking_status`= ? WHERE `booking_id` = ?";
-            Object[] params = {totalPrice, booking_status, booking_id};
             String updateSql = "UPDATE `booking` SET `booking_status`= ? , `total_price`= ? WHERE `booking_id` = ?";
-            Object[] params = {getBookingStatus(),getTotalPrice(), getBookingId()};
+            Object[] params = {totalPrice, bookingStatus, bookingId};
             rowAffected = DatabaseUtils.updateQuery(updateSql, params);
         }
         catch (SQLException e) {
@@ -795,7 +793,7 @@ public class Booking {
         this.updateBooking();
     }
     public void completeBooking() throws SQLException {
-        this.setBooking_status("completed");
+        this.setBookingStatus("completed");
         this.updateBooking();
     }
 }

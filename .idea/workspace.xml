@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="debug">
+    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="debug"></list>
       <change beforePath="$PROJECT_DIR$/Driver/SystemClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/Driver/SystemClass.java" afterDir="false" />
     <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="change the gender and phone from admin to customer">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
@@ -75,7 +75,7 @@
       <recent name="Driver" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager"></component>
   <component name="RunManager" selected="Application.Driver">
     <configuration name="AdminDriver" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Security_Management.AdminDriver" />
