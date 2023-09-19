@@ -267,33 +267,50 @@ public class SystemClass {
                                         Customer c = new Customer();//暂时用
                                         c.setCustId(2);//暂时用
                                         booking.setCustomer(c);//暂时用
-                                        String confirmStr="R";
+                                        String confirmStr=" ";
                                         boolean insert=false;
-                                        while (confirmStr.equals("R")) {
+                                        while (confirmStr.equals(" ")) {
                                             if (booking.executeBooking(schedule)) {
                                                 do {
+                                                    if(confirmStr.equals("R")){
+                                                        booking.executeBooking(schedule);
+                                                    }
                                                     booking.printBookingDetail();
                                                     do {
                                                         try {
-                                                            System.out.println("Confirm This Booking ? (Y=Yes R=No, Select Again N=No Confirm, Exit) : ");
+                                                            System.out.print("Confirm This Booking ? (Y=\"Yes\", R=\"Select Again\", N=\"Exit\") : ");
                                                             confirmStr = sc.next().toUpperCase();
-                                                            if(!insert) {
-                                                                if (confirmStr.equals("Y")) {
+
+                                                            if (confirmStr.equals("Y")) {
+                                                                if(!insert) {
                                                                     Booking.insertBooking(booking);
                                                                     for (Ticket t : booking.getTicketList()) {
                                                                         Ticket.insertTicket(t, booking);
                                                                     }
+                                                                    insert=true;
+                                                                } else{
+                                                                    // if already insert to the database so just to change the status from "cancelled" to "processing"😊
+                                                                    booking.setBookingStatus("processing");
+                                                                    for(Ticket t:booking.getTicketList()){
+                                                                        t.setTicketStatus(0);
+                                                                        t.updateStatus();
+                                                                    }
+                                                                    booking.updateBooking();
                                                                 }
-                                                                insert=true;
-                                                            }else{
-                                                                // if already insert to the database so just to change the status from "cancelled" to "processing"😊
-                                                                booking.setBookingStatus("processing");
-                                                                for(Ticket t:booking.getTicketList()){
-                                                                    t.setTicketStatus(0);
-                                                                    t.updateStatus();
+                                                            } else if (confirmStr.equals("N")) {
+                                                                if(insert) {
+                                                                    booking.cancelBooking();
+                                                                    insert=false;
                                                                 }
-                                                                booking.updateBooking();
+                                                                back = true;
+                                                            }else if(confirmStr.equals("R")){
+                                                                if(insert) {
+                                                                    booking.cancelBooking();
+                                                                    insert=false;
+                                                                }
                                                             }
+
+
                                                         } catch (Exception e) {
                                                             System.out.println("Something wrong...");
                                                             sc.nextLine();
