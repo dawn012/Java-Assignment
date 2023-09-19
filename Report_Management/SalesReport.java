@@ -89,7 +89,6 @@ public class SalesReport extends Report {
             while(rs.next()) {
 
                 int paymentId = rs.getInt("PAYMENT_ID");
-                int bookingId = rs.getInt("BOOKING_ID");
                 String paymentMtd = rs.getString("PAYMENT_METHOD");
                 double paymentAmount = rs.getDouble("PAYMENT_AMOUNT");
                 String currency = rs.getString("CURRENCY");
@@ -104,12 +103,12 @@ public class SalesReport extends Report {
                     String expiredDate = rs.getString("EXPIRED_DATE");
                     String cvc = rs.getString("CVC");
 
-                    payment = new Card(paymentId, bookingId, paymentMtd, paymentAmount, currency, paymentDate, paymentTime, paymentStatus, cardNo, expiredDate, cvc);
+                    payment = new Card(paymentId, paymentMtd, paymentAmount, currency, paymentDate, paymentTime, paymentStatus, cardNo, expiredDate, cvc);
                 } else {
                     String phoneNo = rs.getString("PHONE_NO");
                     String pinNo = rs.getString("PIN_NO");
 
-                    payment = new TNG(paymentId, bookingId, paymentMtd, paymentAmount, currency, paymentDate, paymentTime, paymentStatus, phoneNo, pinNo);
+                    payment = new TNG(paymentId, paymentMtd, paymentAmount, currency, paymentDate, paymentTime, paymentStatus, phoneNo, pinNo);
                 }
 
                 payments.add(payment);

@@ -4,18 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="debug">
-    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="fix">
+    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Booking_Management/Booking.java" beforeDir="false" afterPath="$PROJECT_DIR$/Booking_Management/Booking.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database/DatabaseUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/Database/DatabaseUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Driver/SystemClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/Driver/SystemClass.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Payment_Management/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/Payment_Management/Card.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Payment_Management/CardValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/Payment_Management/CardValidator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Payment_Management/Payment.java" beforeDir="false" afterPath="$PROJECT_DIR$/Payment_Management/Payment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Payment_Management/TNG.java" beforeDir="false" afterPath="$PROJECT_DIR$/Payment_Management/TNG.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Promotion_Management/Promotion.java" beforeDir="false" afterPath="$PROJECT_DIR$/Promotion_Management/Promotion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Promotion_Management/PromotionUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/Promotion_Management/PromotionUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Report_Management/SalesReport.java" beforeDir="false" afterPath="$PROJECT_DIR$/Report_Management/SalesReport.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/DatabaseUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/DatabaseUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sql.txt" beforeDir="false" afterPath="$PROJECT_DIR$/sql.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -132,9 +131,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.AdminDriver" />
         <item itemvalue="Application.LoginDriver" />
         <item itemvalue="Application.Driver" />
-        <item itemvalue="Application.AdminDriver" />
       </list>
     </recent_temporary>
   </component>
@@ -477,7 +476,6 @@
       <option name="project" value="LOCAL" />
       <updated>1695103499841</updated>
     </task>
-    <option name="localTasksCounter" value="44" />
     <option name="localTasksCounter" value="28" />
     <servers />
   </component>
@@ -552,7 +550,6 @@
     <MESSAGE value="upgrade function" />
     <MESSAGE value="fix bug" />
     <MESSAGE value="fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix" />
     <MESSAGE value="Add Payment" />
     <MESSAGE value="Add Promotion" />
     <MESSAGE value="Add Payment" />

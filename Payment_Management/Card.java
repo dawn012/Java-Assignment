@@ -1,5 +1,6 @@
 package Payment_Management;
 
+import Booking_Management.Booking;
 import Database.DatabaseUtils;
 
 import com.stripe.exception.StripeException;
@@ -22,35 +23,34 @@ public class Card extends Payment {
         super();
     }
 
-//    public Card(String cardNo, String expiredDate, String cvc, String email) {
-//        this.cardNo = cardNo;
-//        this.expiredDate = expiredDate;
-//        this.cvc = cvc;
-//        this.email = email;
-//    }
-
-    public Card(int bookingId, String paymentMethod, double paymentAmount, String currency, String paymentDate, String paymentTime, String paymentStatus, String cardNo, String expiredDate, String cvc, String email) {
-        super(bookingId, paymentMethod, paymentAmount, currency, paymentDate, paymentTime, paymentStatus);
+    public Card(String cardNo, String expiredDate, String cvc, String email) {
         this.cardNo = cardNo;
         this.expiredDate = expiredDate;
         this.cvc = cvc;
         this.email = email;
     }
 
-    public Card(int paymentId, int bookingId, String paymentMethod, double paymentAmount, String currency, String paymentDate, String paymentTime, String paymentStatus, String cardNo, String expiredDate, String cvc) {
-        super(paymentId, bookingId, paymentMethod, paymentAmount, currency, paymentDate, paymentTime, paymentStatus);
+    public Card(Booking booking, String paymentMethod, double paymentAmount, String currency, String paymentDate, String paymentTime, String paymentStatus, String cardNo, String expiredDate, String cvc, String email) {
+        super(booking, paymentMethod, paymentAmount, currency, paymentDate, paymentTime, paymentStatus);
+        this.cardNo = cardNo;
+        this.expiredDate = expiredDate;
+        this.cvc = cvc;
+        this.email = email;
+    }
+
+    public Card(int paymentId, Booking booking, String paymentMethod, double paymentAmount, String currency, String paymentDate, String paymentTime, String paymentStatus, String cardNo, String expiredDate, String cvc) {
+        super(paymentId, booking, paymentMethod, paymentAmount, currency, paymentDate, paymentTime, paymentStatus);
         this.cardNo = cardNo;
         this.expiredDate = expiredDate;
         this.cvc = cvc;
     }
 
-//    public Card(int paymentId, int bookingId, String paymentMethod, double paymentAmount, String currency, String paymentDate, String paymentTime, String paymentStatus, String cardNo, String expiredDate, String cvc, String email) {
-//        super(paymentId, bookingId, paymentMethod, paymentAmount, currency, paymentDate, paymentTime, paymentStatus);
-//        this.cardNo = cardNo;
-//        this.expiredDate = expiredDate;
-//        this.cvc = cvc;
-//        this.email = email;
-//    }
+    public Card(int paymentId, String paymentMethod, double paymentAmount, String currency, String paymentDate, String paymentTime, String paymentStatus, String cardNo, String expiredDate, String cvc) {
+        super(paymentId, paymentMethod, paymentAmount, currency, paymentDate, paymentTime, paymentStatus);
+        this.cardNo = cardNo;
+        this.expiredDate = expiredDate;
+        this.cvc = cvc;
+    }
 
     public String getCardNo() {
         return cardNo;

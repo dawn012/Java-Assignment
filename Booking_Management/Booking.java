@@ -727,7 +727,7 @@ public class Booking {
     }
 
 
-    public void printBookingDetail(){
+    public void printBookingDetail() {
         //System.out.println("\t\t-------------------------\n");
         System.out.println("Booking Details : ");
         System.out.println("\t\t-------------------------------------------");
@@ -746,17 +746,27 @@ public class Booking {
         for(Ticket t:getTicketList()){
             System.out.print(t.getSeat().getSeat_id()+"  ");
         }
-        System.out.println("\n\t\t-------------------------------------------");
-        System.out.printf("\t\t\tTotal : \t\t\t\t\t   RM%6.2f\n", totalPrice);
+
+        if (promotion == null) {
+            System.out.println("\n\t\t-------------------------------------------");
+            System.out.printf("\t\t\tTotal : \t\t\t\t\t   RM%6.2f\n", totalPrice);
+        } else {
+            System.out.println("\n\t\t-------------------------------------------");
+            System.out.printf("\t\t\tTotal : \t\t\t\t\t   RM%6.2f\n", totalPrice + promotion.getDiscountValue());
+            System.out.printf("\t\t\tDiscount\t\t\t\t- RM%6.2f\n", promotion.getDiscountValue());
+            System.out.println("\t\t-------------------------------------------");
+            System.out.printf("\t\t\tTotal Amount : \t\t\t\tRM%6.2f\n", totalPrice);
+        }
+
         System.out.println("\t\t-------------------------------------------");
     }
 
-    public boolean updateStatus() throws SQLException {
+    public boolean updateBooking() throws SQLException {
         int rowAffected = 0;
 
         try {
-            String updateSql = "UPDATE `booking` SET `booking_status`= ? WHERE `booking_id` = ?";
-            Object[] params = {getBooking_status(),getBooking_id()};
+            String updateSql = "UPDATE `booking` SET total_price = ?, `booking_status`= ? WHERE `booking_id` = ?";
+            Object[] params = {totalPrice, booking_status, booking_id};
             rowAffected = DatabaseUtils.updateQuery(updateSql, params);
         }
         catch (SQLException e) {
@@ -778,11 +788,11 @@ public class Booking {
             t.setTicketStatus(0);
             t.updateStatus();
         }
-        this.updateStatus();
+        this.updateBooking();
     }
     public void completeBooking() throws SQLException {
         this.setBooking_status("completed");
-        this.updateStatus();
+        this.updateBooking();
     }
 }
 
