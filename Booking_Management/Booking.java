@@ -36,10 +36,8 @@ public class Booking {
     //}
     ////////////////////////////////////////////////////////
     private Customer customer;
-
     private int booking_id;
     private int adultTicket_qty;
-
     private int childTicket_qty;
     private double totalPrice;
     private DateTime bookingDateTime;
