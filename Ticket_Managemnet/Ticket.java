@@ -26,12 +26,12 @@ public class Ticket {
 //        this.seat = seat;
 //        this.booking = booking;
 //    }
-    public Ticket(int ticket_id, Seat seat, Schedule schedule) {
-        this.ticket_id = ticket_id;
-        this.seat = seat;
-        this.schedule = schedule;
-        this.ticketStatus=1;
-    }
+//    public Ticket(int ticket_id, Seat seat, Schedule schedule) {
+//        this.ticket_id = ticket_id;
+//        this.seat = seat;
+//        this.schedule = schedule;
+//        this.ticketStatus=1;
+//    }
 
     public Ticket(int ticket_id, Seat seat, String ticketType, double price_rate, Schedule schedule) {
         this.ticket_id = ticket_id;
