@@ -1396,6 +1396,7 @@ public class SystemClass {
                             do {
                                 if (confirmation.equals("Y")) {
                                     success = cinema.addHall(hall);
+                                    hall.addNewSeatList();
                                 } else {
                                     success = true;
                                     System.out.println("This hall will not be added for the cinema.");
