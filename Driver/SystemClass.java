@@ -263,10 +263,12 @@ public class SystemClass {
                                         } while (error);
 
                                         // 4. Select the seat chin yong part
+
                                         Booking booking = new Booking();
                                         Customer c =new Customer();//暂时用
                                         c.setCustId(1);//暂时用
                                         booking.setCustomer(c);//暂时用
+
                                         String confirmStr="R";
                                         while (confirmStr.equals("R")) {
                                             if(booking.executeBooking(schedule)){
@@ -281,6 +283,9 @@ public class SystemClass {
                                                                 Ticket.insertTicket(t,booking);
                                                             }
                                                         }
+
+
+
                                                     } catch (Exception e){
                                                         System.out.println("Something wrong...");
                                                         sc.nextLine();
@@ -293,6 +298,7 @@ public class SystemClass {
                                             // Apply promotion
                                             //booking.setBooking_status("completed");
                                             //booking.updateStatus();
+
                                             Promotion promotion = applyPromotion(sc, 1, booking);
 
                                             // Make Payment
