@@ -3,14 +3,12 @@ package Payment_Management;
 import Booking_Management.Booking;
 import Database.DatabaseUtils;
 import Driver.DateTime;
-import Driver.SystemClass;
-import Promotion_Management.Promotion;
 import Ticket_Managemnet.Ticket;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Scanner;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public abstract class Payment {
     protected Booking booking;
@@ -19,27 +17,26 @@ public abstract class Payment {
     protected String paymentMethod;
     protected double paymentAmount;
     protected String currency;
-    protected String paymentDate;
-    protected String paymentTime;
+    protected LocalDate paymentDate;
+    protected LocalTime paymentTime;
     protected String paymentStatus;
 
     public Payment() {
     }
 
-    public Payment(Booking booking, String paymentMethod, double paymentAmount, String currency, String paymentDate, String paymentTime, String paymentStatus) {
+    public Payment(Booking booking, String paymentMethod, double paymentAmount, String currency, String paymentStatus) {
         this.paymentId = ++nextPaymentId;
         this.booking =  booking;
         this.paymentMethod = paymentMethod;
         this.paymentAmount = paymentAmount;
         this.currency = currency;
-        this.paymentDate = paymentDate;
-        this.paymentTime = paymentTime;
+        this.paymentDate = LocalDate.now();
+        this.paymentTime = LocalTime.now();
         this.paymentStatus = paymentStatus;
     }
 
-    public Payment(int paymentId, Booking booking, String paymentMethod, double paymentAmount, String currency, String paymentDate, String paymentTime, String paymentStatus) {
+    public Payment(int paymentId, String paymentMethod, double paymentAmount, String currency, LocalDate paymentDate, LocalTime paymentTime, String paymentStatus) {
         this.paymentId = paymentId;
-        this.booking = booking;
         this.paymentMethod = paymentMethod;
         this.paymentAmount = paymentAmount;
         this.currency = currency;
@@ -48,8 +45,9 @@ public abstract class Payment {
         this.paymentStatus = paymentStatus;
     }
 
-    public Payment(int paymentId, String paymentMethod, double paymentAmount, String currency, String paymentDate, String paymentTime, String paymentStatus) {
+    public Payment(int paymentId, Booking booking, String paymentMethod, double paymentAmount, String currency, LocalDate paymentDate, LocalTime paymentTime, String paymentStatus) {
         this.paymentId = paymentId;
+        this.booking = booking;
         this.paymentMethod = paymentMethod;
         this.paymentAmount = paymentAmount;
         this.currency = currency;
@@ -98,19 +96,19 @@ public abstract class Payment {
         this.paymentMethod = paymentMethod;
     }
 
-    public String getPaymentDate() {
+    public LocalDate getPaymentDate() {
         return paymentDate;
     }
 
-    public void setPaymentDate(String paymentDate) {
+    public void setPaymentDate(LocalDate paymentDate) {
         this.paymentDate = paymentDate;
     }
 
-    public String getPaymentTime() {
+    public LocalTime getPaymentTime() {
         return paymentTime;
     }
 
-    public void setPaymentTime(String paymentTime) {
+    public void setPaymentTime(LocalTime paymentTime) {
         this.paymentTime = paymentTime;
     }
 

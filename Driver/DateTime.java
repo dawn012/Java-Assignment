@@ -24,6 +24,11 @@ public class DateTime {
         day = this.date.getDayOfMonth();
     }
 
+    public DateTime(int year, int month){
+        this.year = year;
+        this.month = month;
+    }
+
     public DateTime(int year, int month, int day){
         this.year = year;
         this.month = month;
@@ -72,22 +77,31 @@ public class DateTime {
         }
     }
 
-    public static int[] dateFormatValidator(String date) {
+    public static int[] dateFormatValidator(String date, String regex) {
         // 使用正则表达式验证日期字符串格式
-        String regex = "^\\d{4}-\\d{2}-\\d{2}$"; // yyyy-MM-dd 格式
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(date);
 
         if (!matcher.matches()) {
-            System.out.println("Invalid date format. Please enter a valid date (yyyy-MM-dd).\n");
+            System.out.println("Invalid date format. Please enter a valid date.\n");
             return null;
         }
 
         try {
             String[] strDatePart = date.split("-");
-            int year = Integer.parseInt(strDatePart[0]);  // Java's built-in method for converting strings to integers (int type)
-            int month = Integer.parseInt(strDatePart[1]);
-            int day = Integer.parseInt(strDatePart[2]);
+
+            // Java's built-in method for converting strings to integers (int type)
+            int year = Integer.parseInt(strDatePart[0]);
+            int month = 1;
+            int day = 1;
+
+            if (strDatePart.length > 1) {
+                month = Integer.parseInt(strDatePart[1]);
+
+                if (strDatePart.length > 2) {
+                    day = Integer.parseInt(strDatePart[2]);
+                }
+            }
 
             return new int[]{year, month, day};
         } catch (DateTimeParseException e) {

@@ -5,6 +5,8 @@ import Database.DatabaseUtils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class TNG extends Payment {
     private String phoneNo;
@@ -13,19 +15,20 @@ public class TNG extends Payment {
     public TNG() {
     }
 
-    public TNG(Booking booking, String paymentMethod, double paymentAmount, String currency, String paymentDate, String paymentTime, String paymentStatus, String phoneNo, String pinNo) {
-        super(booking, paymentMethod, paymentAmount, currency, paymentDate, paymentTime, paymentStatus);
+    public TNG(Booking booking, String paymentMethod, double paymentAmount, String currency, String paymentStatus, String phoneNo, String pinNo) {
+        super(booking, paymentMethod, paymentAmount, currency, paymentStatus);
         this.phoneNo = phoneNo;
         this.pinNo = pinNo;
     }
 
-    public TNG(int paymentId, Booking booking, String paymentMethod, double paymentAmount, String currency, String paymentDate, String paymentTime, String paymentStatus, String phoneNo, String pinNo) {
-        super(paymentId, booking, paymentMethod, paymentAmount, currency, paymentDate, paymentTime, paymentStatus);
+    public TNG(int paymentId, String paymentMethod, double paymentAmount, String currency, LocalDate paymentDate, LocalTime paymentTime, String paymentStatus, String phoneNo, String pinNo) {
+        super(paymentId, paymentMethod, paymentAmount, currency, paymentDate, paymentTime, paymentStatus);
         this.phoneNo = phoneNo;
         this.pinNo = pinNo;
     }
-    public TNG(int paymentId, String paymentMethod, double paymentAmount, String currency, String paymentDate, String paymentTime, String paymentStatus, String phoneNo, String pinNo) {
-        super(paymentId, paymentMethod, paymentAmount, currency, paymentDate, paymentTime, paymentStatus);
+
+    public TNG(int paymentId, Booking booking, String paymentMethod, double paymentAmount, String currency, LocalDate paymentDate, LocalTime paymentTime, String paymentStatus, String phoneNo, String pinNo) {
+        super(paymentId, booking, paymentMethod, paymentAmount, currency, paymentDate, paymentTime, paymentStatus);
         this.phoneNo = phoneNo;
         this.pinNo = pinNo;
     }

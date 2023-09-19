@@ -12,6 +12,8 @@ import com.stripe.param.PaymentIntentCreateParams;
 import com.stripe.param.PaymentMethodCreateParams;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class Card extends Payment {
     private String cardNo;
@@ -30,23 +32,23 @@ public class Card extends Payment {
         this.email = email;
     }
 
-    public Card(Booking booking, String paymentMethod, double paymentAmount, String currency, String paymentDate, String paymentTime, String paymentStatus, String cardNo, String expiredDate, String cvc, String email) {
-        super(booking, paymentMethod, paymentAmount, currency, paymentDate, paymentTime, paymentStatus);
+    public Card(Booking booking, String paymentMethod, double paymentAmount, String currency, String paymentStatus, String cardNo, String expiredDate, String cvc, String email) {
+        super(booking, paymentMethod, paymentAmount, currency, paymentStatus);
         this.cardNo = cardNo;
         this.expiredDate = expiredDate;
         this.cvc = cvc;
         this.email = email;
     }
 
-    public Card(int paymentId, Booking booking, String paymentMethod, double paymentAmount, String currency, String paymentDate, String paymentTime, String paymentStatus, String cardNo, String expiredDate, String cvc) {
-        super(paymentId, booking, paymentMethod, paymentAmount, currency, paymentDate, paymentTime, paymentStatus);
+    public Card(int paymentId, String paymentMethod, double paymentAmount, String currency, LocalDate paymentDate, LocalTime paymentTime, String paymentStatus, String cardNo, String expiredDate, String cvc) {
+        super(paymentId, paymentMethod, paymentAmount, currency, paymentDate, paymentTime, paymentStatus);
         this.cardNo = cardNo;
         this.expiredDate = expiredDate;
         this.cvc = cvc;
     }
 
-    public Card(int paymentId, String paymentMethod, double paymentAmount, String currency, String paymentDate, String paymentTime, String paymentStatus, String cardNo, String expiredDate, String cvc) {
-        super(paymentId, paymentMethod, paymentAmount, currency, paymentDate, paymentTime, paymentStatus);
+    public Card(int paymentId, Booking booking, String paymentMethod, double paymentAmount, String currency, LocalDate paymentDate, LocalTime paymentTime, String paymentStatus, String cardNo, String expiredDate, String cvc) {
+        super(paymentId, booking, paymentMethod, paymentAmount, currency, paymentDate, paymentTime, paymentStatus);
         this.cardNo = cardNo;
         this.expiredDate = expiredDate;
         this.cvc = cvc;
