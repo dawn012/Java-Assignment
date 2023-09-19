@@ -152,7 +152,7 @@ public class RegisterValidator {
         do {
             System.out.print("Enter status (1 for active, 2 for inactive): ");
             int choice = scanner.nextInt();
-            scanner.nextLine(); // 消耗换行符
+            scanner.nextLine();
 
             switch (choice) {
                 case 1:
@@ -163,7 +163,7 @@ public class RegisterValidator {
                     break;
                 default:
                     System.out.println("Invalid choice. Please select a valid status option.");
-                    status = null; // 设置为 null 以重新提示用户输入
+                    status = null;
             }
         } while (status == null);
 

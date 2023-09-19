@@ -37,7 +37,7 @@ public class SystemClass {
         SystemClass system = new SystemClass();
 
         int choice = 0;
-        boolean error = true, back = false;
+        boolean error = true, continues = true, back = false;
 
         do {
             do {
@@ -288,9 +288,10 @@ public class SystemClass {
                                             }
                                         }
                                         if (confirmStr.equals("Y")) {
-                                            //用booking.printBookingDetail();
+                                            //booking.printBookingDetail();
                                             // Apply promotion
-                                            //用booking.cancelBooking();booking.cancelBooking();
+                                            //booking.setBooking_status("completed");
+                                            //booking.updateStatus();
                                             Promotion promotion = applyPromotion(sc, 1, booking);
 
                                             // Make Payment
@@ -323,7 +324,7 @@ public class SystemClass {
                     do {
                         error = true;
                         int searchingMethod = 0;
-                        boolean continues = true;
+                        continues = true;
                         ArrayList<Movie> searchResults;
                         String confirmation;
 
@@ -4587,10 +4588,6 @@ public class SystemClass {
         }
 
         return tng;
-    }
-
-    public void registration(Scanner sc) {
-
     }
 
     private static int displayMenu(String propertyName, Scanner sc){

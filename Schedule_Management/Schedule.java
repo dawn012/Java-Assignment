@@ -256,27 +256,44 @@ public class Schedule implements DatabaseOperations {
     }
 
     public int showHallAndTime(int count, ArrayList<Schedule> schedules) throws SQLException {
+        boolean validSchedule = false;
+
         ResultSet result = null;
         try {
             Object[] params = {hall.getHallID(), movie.getMovieID(), String.valueOf(showDate.getDate()), 1};
-            result = DatabaseUtils.selectQueryById("schedule_id, movie_startTime, movie_endTime", "timeTable", "hall_id = ? AND movie_id = ? AND movie_showDate = ? AND timeTable_status = ?", params);
+            result = DatabaseUtils.selectQueryById("*", "timeTable", "hall_id = ? AND movie_id = ? AND movie_showDate = ? AND timeTable_status = ?", params);
         }
         catch (SQLException e) {
             e.printStackTrace();
         }
 
         while (result.next()) {
-            Schedule schedule = new Schedule();
+            // 检查如果是今天的 schedule, 看 start time 有没有超过现在的时间, 有的话才显示
+            if (showDate.getDate().equals(LocalDate.now())) {
+                if (result.getTime("movie_startTime").toLocalTime().isAfter(LocalTime.now())) {
+                    validSchedule = true;
+                }
+                else {
+                    validSchedule = false;
+                }
+            }
+            else {
+                validSchedule = true;
+            }
 
-            schedule.scheduleID = result.getInt("schedule_id");
-            schedule.startTime = result.getTime("movie_startTime").toLocalTime();
-            schedule.endTime = result.getTime("movie_endTime").toLocalTime();
-            schedule.setHall(hall);
+            if (validSchedule == true) {
+                Schedule schedule = new Schedule();
 
-            schedules.add(schedule);
+                schedule.scheduleID = result.getInt("schedule_id");
+                schedule.startTime = result.getTime("movie_startTime").toLocalTime();
+                schedule.endTime = result.getTime("movie_endTime").toLocalTime();
+                schedule.setHall(hall);
 
-            System.out.printf(count + ". %-20s %17s %17s\n", hall.getHallName().getName(), schedule.startTime, schedule.endTime);
-            count++;
+                schedules.add(schedule);
+
+                System.out.printf(count + ". %-20s %17s %17s\n", hall.getHallName().getName(), schedule.startTime, schedule.endTime);
+                count++;
+            }
         }
 
         return count;

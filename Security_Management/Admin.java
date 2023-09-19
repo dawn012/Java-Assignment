@@ -1,7 +1,6 @@
 package Security_Management;
 
 
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
@@ -37,7 +36,7 @@ public class Admin extends User {
         }
 
         if (rowAffected > 0) {
-            System.out.println("\nAdministrator registration was successful, good luck with your work!\nWelcome "+ getLogin().getUsername() +" !");
+            System.out.println("\nAdministrator registration was successful, good luck with your work!\nWelcome " + getLogin().getUsername() + " !");
         } else {
             System.out.println("\nSomething went wrong!");
         }
@@ -80,7 +79,8 @@ public class Admin extends User {
     }
 
 
-    public void updateAdminInfo(Connection conn) throws SQLException {
+    public void updateAdminInfo() throws SQLException {
+        Connection conn = DatabaseUtils.getConnection();
         try {
             String updateSql = "UPDATE User SET username = ?, email = ?, DOB = ?, gender = ?, phoneNo = ? WHERE userID = ?";
             PreparedStatement updateStmt = conn.prepareStatement(updateSql);
@@ -103,89 +103,6 @@ public class Admin extends User {
             updateStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-    }
-
-    //auto detect cust or admin object to modify info
-    public void modifyUserInfo(Scanner scanner, User user) throws SQLException {
-        Connection conn = DatabaseUtils.getConnection();
-        boolean isEditing = true;
-
-        while (isEditing) {
-            int choice = 0;
-            boolean error = true;
-
-            do {
-                try {
-                    System.out.println("\nModify User Information (ID: " + user.getUserId() + "):");
-                    System.out.println("1. Username: " + user.getLogin().getUsername());
-                    System.out.println("2. Email: " + user.getEmail());
-                    System.out.println("3. Date of Birth: " + user.getDOB());
-                    System.out.println("4. Gender: " + getGender());
-                    System.out.println("5. Phone Number: " + getPhoneNo());
-                    System.out.println("6. Password: " + user.getLogin().getPassword());
-                    System.out.println("0. Editing completed");
-                    System.out.print("Please select your operation: ");
-
-                    choice = scanner.nextInt();
-                    scanner.nextLine();
-
-                    if (choice >= 0 && choice <= 6) {
-                        error = false;
-                    } else {
-                        System.out.println("Invalid Choice! Please try again.");
-                    }
-                } catch (InputMismatchException e) {
-                    System.out.println("Please enter a valid choice!");
-                    scanner.nextLine();
-                }
-            } while (error);
-
-            switch (choice) {
-                case 0:
-                    isEditing = false;
-                    user.updateUserById(user);
-                    break;
-                case 1:
-                    System.out.print("Enter new username: ");
-                    String newUsername = RegisterValidator.validateUsername(scanner);
-                    user.getLogin().setUsername(newUsername);
-                    System.out.println("Username updated to: " + newUsername);
-                    break;
-                case 2:
-                    System.out.print("Enter new email: ");
-                    String newEmail = RegisterValidator.validateEmail(scanner);
-                    user.setEmail(newEmail);
-                    System.out.println("Email updated to: " + newEmail);
-                    break;
-                case 3:
-                    System.out.print("Enter new date of birth (dd-MM-yyyy): ");
-                    String newDOB = RegisterValidator.validateDateOfBirth(scanner);
-                    user.setDOB(newDOB);
-                    System.out.println("Date of birth updated to: " + newDOB);
-                    break;
-                case 4:
-                    System.out.print("Enter new gender: ");
-                    String newGender = RegisterValidator.validateGender(scanner);
-                    setGender(newGender);
-                    System.out.println("Gender updated to: " + newGender);
-                    break;
-                case 5:
-                    System.out.print("Enter new phone number: ");
-                    String newPhoneNo = RegisterValidator.validatePhoneNumber(scanner);
-                    setPhoneNo(newPhoneNo);
-                    System.out.println("Phone number updated to: " + newPhoneNo);
-                    break;
-                case 6:
-                    System.out.print("Enter new password: ");
-                    String newPassword = RegisterValidator.validatePassword(scanner);
-                    user.getLogin().setPassword(newPassword);
-                    System.out.println("Password updated.");
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please select a valid option.");
-                    break;
-            }
         }
     }
 
@@ -344,6 +261,7 @@ public class Admin extends User {
             e.printStackTrace();
         }
     }
+
     public void viewAllCustomers() {
         try {
             Connection conn = DatabaseUtils.getConnection();
@@ -409,14 +327,13 @@ public class Admin extends User {
     }
 
 
-
     public void deleteUserById(Scanner scanner) {
         System.out.print("Please enter the ID of the user you want to delete: ");
         int userId = scanner.nextInt();
 
-        // 添加确认删除的选项
+
         System.out.print("Are you sure you want to delete this user? (Y/N): ");
-        scanner.nextLine(); // 消耗换行符
+        scanner.nextLine();
 
         String confirmation = scanner.nextLine().trim().toLowerCase();
 
@@ -448,7 +365,6 @@ public class Admin extends User {
     }
 
 
-
     public String getGender() {
         return gender;
     }
@@ -475,12 +391,13 @@ public class Admin extends User {
 
     @Override
     public String toString() {
-        return "Admin{" +
-                "adminId=" + adminId +
-                ", gender='" + gender + '\'' +
-                ", phoneNo='" + phoneNo + '\'' +
-                "} " + super.toString();
+        StringBuilder sb = new StringBuilder(super.toString());
+        sb.append("Gender        : ").append(getGender()).append("\n");
+        sb.append("Phone Number  : ").append(getPhoneNo()).append("\n");
+        return sb.toString();
     }
+
+
     @Override
     public int getUserId() {
         return adminId;

@@ -1,4 +1,5 @@
 package Security_Management;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -6,11 +7,9 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
-public class Customer extends User{
+public class Customer extends User {
     private int custId;
     private String accStatus;
-    private String email;
-    private String dob;
 
     public Customer() {
         this.setLogin(new Login());
@@ -20,6 +19,7 @@ public class Customer extends User{
         this.accStatus = "active";
 
     }
+
     public Customer(int custId, Login login, String email, String DOB, String usertype, String accStatus) {
         super(login, email, DOB, usertype);
         this.custId = custId;
@@ -36,15 +36,6 @@ public class Customer extends User{
         return null;
     }
 
-    public String toString() {
-        return "Customer{" +
-                "custId=" + custId +
-                ", accStatus='" + accStatus + '\'' +
-                ", email='" + email + '\'' +
-                ", dob='" + dob + '\'' +
-                "} " + super.toString();
-    }
-
     public void add() {
         int rowAffected = 0;
 
@@ -52,15 +43,13 @@ public class Customer extends User{
             String insertSql = "INSERT INTO User (username, password, email, userType, DOB, accStatus) VALUES (?, ?, ?, ?, ?, ?)";
             Object[] params = {getLogin().getUsername(), getLogin().getPassword(), getEmail(), "cust", getDOB(), "active"};
             rowAffected = DatabaseUtils.insertQuery(insertSql, params);
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
         if (rowAffected > 0) {
-            System.out.println("\nUser has been successfully registered!\nWelcome "+ getLogin().getUsername() +" !");
-        }
-        else {
+            System.out.println("\nUser has been successfully registered!\nWelcome " + getLogin().getUsername() + " !");
+        } else {
             System.out.println("\nSomething went wrong!");
         }
     }
@@ -107,7 +96,6 @@ public class Customer extends User{
     }
 
     public static boolean resetCustPassword(ArrayList<User> customerList, String username, String email) throws SQLException {
-        Connection conn = DatabaseUtils.getConnection();
         User customer = null;
         for (User cust : customerList) {
             if (cust.getLogin().getUsername().equals(username) && cust.getEmail().equals(email)) {
@@ -118,7 +106,8 @@ public class Customer extends User{
 
         if (customer != null) {
             String newPassword = generateRandomPassword();
-            updatePasswordToDatabase(customer, newPassword, conn);
+
+            customer.getLogin().updatePasswordToDatabase(newPassword, customer.getUserId());
 
             System.out.println("Your new password is: " + newPassword);
             System.out.println("Please change your password after login.");
@@ -131,9 +120,9 @@ public class Customer extends User{
     }
 
     public boolean resetCustPassword(ArrayList<User> customerList, String username) throws SQLException {
-        Connection conn = DatabaseUtils.getConnection();
         Scanner input = new Scanner(System.in);
         User customer = null;
+
         for (User cust : customerList) {
             if (cust.getLogin().getUsername().equals(username)) {
                 customer = cust;
@@ -142,14 +131,17 @@ public class Customer extends User{
         }
 
         if (customer != null) {
-            System.out.println("Please Enter Your New Password: ");
+            System.out.print("Enter new password: ");
             String newPassword = RegisterValidator.validatePassword(input);
-            updatePasswordToDatabase(customer, newPassword, conn);
+
+            customer.getLogin().updatePasswordToDatabase(newPassword, customer.getUserId());
 
             System.out.println("Your new password is: " + newPassword);
+            System.out.println("Password updated successfully.");
 
             return true;
         } else {
+            System.out.println("User not found. Password reset failed.");
             return false;
         }
     }
@@ -167,8 +159,8 @@ public class Customer extends User{
         return newPassword.toString();
     }
 
-
-    public void updateCustomerInfo(Connection conn) {
+    public void updateCustomerInfo() throws SQLException {
+        Connection conn = DatabaseUtils.getConnection();
         try {
             String updateSql = "UPDATE User SET username = ?, email = ?, DOB = ? WHERE userID = ?";
             PreparedStatement updateStmt = conn.prepareStatement(updateSql);
@@ -200,13 +192,6 @@ public class Customer extends User{
         this.custId = custId;
     }
 
-    public String getDob() {
-        return dob;
-    }
-
-    public void setDob(String dob) {
-        this.dob = dob;
-    }
     @Override
     public int getUserId() {
         return custId;
@@ -216,7 +201,11 @@ public class Customer extends User{
         return accStatus;
     }
 
-    public void setAccStatus(String accStatus) {
-        this.accStatus = accStatus;
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(super.toString());
+        sb.append("Account Status: ").append(getAccStatus()).append("\n");
+        return sb.toString();
     }
+
 }

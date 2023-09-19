@@ -30,8 +30,10 @@ public class LoginDriver {
             try {
                 System.out.print("Enter your choice: ");
                 choice = input.nextInt();
+                input.nextLine();
 
                 switch (choice) {
+
                     case 1:
                         System.out.println("You selected Option 1.");
                         registerUser(input);

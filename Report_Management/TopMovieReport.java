@@ -73,6 +73,8 @@ public class TopMovieReport extends Report {
             result.append(String.format("%-10d %-30s %-20.2f %-25d %.2f\n", (i + 1), movies.get(i).getMvName().getName(), totalBoxOffices.get(i), numOfScreenings.get(i), averageBoxOffices.get(i)));
         }
 
+        result.append(String.format("\nConclusion: \n%s\n", super.getConclusion()));
+
         return result.toString(); // 返回完整的字符串
     }
 

@@ -25,51 +25,21 @@ public abstract class User{
         this.userType = userType;
     }
 
+
     public User() {
     }
+    /*public void viewProfile(User user) {
+        System.out.println(user.toString());
+    }*/
 
-    public void viewProfile(Customer customer) {
-        int userId = customer.getCustId();
-        String username = customer.getLogin().getUsername();
-        String email = customer.getEmail();
-        String dob = customer.getDOB();
-        String userType = getUserType();
-        String accStatus = customer.getAccStatus();
-
-        System.out.println("\nUser ID: " + userId);
-        System.out.println("Username: " + username);
-        System.out.println("Email: " + email);
-        System.out.println("Date of Birth: " + dob);
-        System.out.println("User Type: " + userType);
-        System.out.println("Account Status: " + accStatus);
-    }
-    public void viewProfile(Admin admin) {
-        int adminId = admin.getAdminId();
-        String username = admin.getLogin().getUsername();
-        String email = admin.getEmail();
-        String dob = admin.getDOB();
-        String userType = admin.getUserType();
-        String gender = admin.getGender();
-        String phoneNo = admin.getPhoneNo();
-
-        System.out.println("\nAdmin ID: " + adminId);
-        System.out.println("Username: " + username);
-        System.out.println("Email: " + email);
-        System.out.println("Date of Birth: " + dob);
-        System.out.println("User Type: " + userType);
-        System.out.println("Gender: " + gender);
-        System.out.println("Phone Number: " + phoneNo);
-    }
 
     public void updateUserById(User user) throws SQLException {
-        Connection conn = DatabaseUtils.getConnection();
         if (user instanceof Admin) {
-            ((Admin) user).updateAdminInfo(conn);
+            ((Admin) user).updateAdminInfo();
         } else if (user instanceof Customer) {
-            ((Customer) user).updateCustomerInfo(conn);
+            ((Customer) user).updateCustomerInfo();
         }
     }
-
     public static User findUserById(int userId) {
         LoginValidator.userList = getAllUsers();
         User foundUser = null;
@@ -83,7 +53,8 @@ public abstract class User{
         return foundUser;
     }
 
-    public void modifyProfile(Scanner scanner, Admin admin) throws SQLException {
+    //auto detect cust or admin object to modify info
+    public void modifyUserInfo(Scanner scanner, User user) throws SQLException {
         Connection conn = DatabaseUtils.getConnection();
         boolean isEditing = true;
 
@@ -93,19 +64,24 @@ public abstract class User{
 
             do {
                 try {
-                    System.out.println("\nModify Admin Information:");
-                    System.out.println("1. Username     : " + admin.getLogin().getUsername());
-                    System.out.println("2. Email        : " + admin.getEmail());
-                    System.out.println("3. Date of Birth: " + admin.getDOB());
-                    System.out.println("4. Gender       : " + admin.getGender());
-                    System.out.println("5. Phone Number : " + admin.getPhoneNo());
+                    System.out.println("\nModify User Information (ID: " + user.getUserId() + "):");
+                    System.out.println("1. Username        : " + user.getLogin().getUsername());
+                    System.out.println("2. Email           : " + user.getEmail());
+                    System.out.println("3. Date of Birth   : " + user.getDOB());
+
+                    if (user instanceof Admin) {
+                        System.out.println("4. Password    : " + user.getLogin().getPassword());
+                        System.out.println("5. Gender      : " + ((Admin) user).getGender());
+                        System.out.println("6. Phone Number: " + ((Admin) user).getPhoneNo());
+                    }
+
                     System.out.println("0. Editing completed");
                     System.out.print("Please select your operation: ");
 
                     choice = scanner.nextInt();
                     scanner.nextLine();
 
-                    if (choice >= 0 && choice <= 5) {
+                    if (choice >= 0 && choice <= 6) {
                         error = false;
                     } else {
                         System.out.println("Invalid Choice! Please try again.");
@@ -119,98 +95,52 @@ public abstract class User{
             switch (choice) {
                 case 0:
                     isEditing = false;
-                    admin.updateAdminInfo(conn);
+                    user.updateUserById(user);
                     break;
                 case 1:
                     System.out.print("Enter new username: ");
                     String newUsername = RegisterValidator.validateUsername(scanner);
-                    admin.getLogin().setUsername(newUsername);
+                    user.getLogin().setUsername(newUsername);
                     System.out.println("Username updated to: " + newUsername);
                     break;
                 case 2:
                     System.out.print("Enter new email: ");
                     String newEmail = RegisterValidator.validateEmail(scanner);
-                    admin.setEmail(newEmail);
+                    user.setEmail(newEmail);
                     System.out.println("Email updated to: " + newEmail);
                     break;
                 case 3:
                     System.out.print("Enter new date of birth (dd-MM-yyyy): ");
                     String newDOB = RegisterValidator.validateDateOfBirth(scanner);
-                    admin.setDOB(newDOB);
+                    user.setDOB(newDOB);
                     System.out.println("Date of birth updated to: " + newDOB);
                     break;
                 case 4:
-                    System.out.print("Enter new gender: ");
-                    String newGender = RegisterValidator.validateGender(scanner);
-                    admin.setGender(newGender);
-                    System.out.println("Gender updated to: " + newGender);
+                    System.out.print("Enter new password: ");
+                    String newPassword = RegisterValidator.validatePassword(scanner);
+                    user.getLogin().setPassword(newPassword);
+                    System.out.println("Password updated.");
                     break;
                 case 5:
-                    System.out.print("Enter new phone number: ");
-                    String newPhoneNo = RegisterValidator.validatePhoneNumber(scanner);
-                    admin.setPhoneNo(newPhoneNo);
-                    System.out.println("Phone number updated to: " + newPhoneNo);
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please select a valid option.");
-                    break;
-            }
-        }
-    }
-
-    public void modifyProfile(Scanner scanner, Customer customer) throws SQLException {
-        Connection conn = DatabaseUtils.getConnection();
-        boolean isEditing = true;
-
-        while (isEditing) {
-            int choice = 0;
-            boolean error = true;
-
-            do {
-                try {
-                    System.out.println("\nModify Profile Information:");
-                    System.out.println("1. Username     : " + customer.getLogin().getUsername());
-                    System.out.println("2. Email        : " + customer.getEmail());
-                    System.out.println("3. Date of Birth: " + customer.getDOB());
-                    System.out.println("0. Editing completed");
-                    System.out.print("Please select your operation: ");
-
-                    choice = scanner.nextInt();
-                    scanner.nextLine();
-
-                    if (choice >= 0 && choice <= 3) {
-                        error = false;
+                    if (user instanceof Admin) {
+                        System.out.print("Enter new gender: ");
+                        String newGender = RegisterValidator.validateGender(scanner);
+                        ((Admin) user).setGender(newGender);
+                        System.out.println("Gender updated to: " + newGender);
                     } else {
-                        System.out.println("Invalid Choice! Please try again.");
+                        System.out.println("Invalid choice. Please select a valid option.");
                     }
-                } catch (InputMismatchException e) {
-                    System.out.println("Please enter a valid choice!");
-                    scanner.nextLine();
-                }
-            } while (error);
+                    break;
+                case 6:
+                    if (user instanceof Admin) {
+                        System.out.print("Enter new phone number: ");
+                        String newPhoneNo = RegisterValidator.validatePhoneNumber(scanner);
+                        ((Admin) user).setPhoneNo(newPhoneNo);
+                        System.out.println("Phone number updated to: " + newPhoneNo);
 
-            switch (choice) {
-                case 0:
-                    isEditing = false;
-                    customer.updateCustomerInfo(conn);
-                    break;
-                case 1:
-                    System.out.print("Enter new username: ");
-                    String newUsername = RegisterValidator.validateUsername(scanner);
-                    customer.getLogin().setUsername(newUsername);
-                    System.out.println("Username updated to: " + newUsername);
-                    break;
-                case 2:
-                    System.out.print("Enter new email: ");
-                    String newEmail = RegisterValidator.validateEmail(scanner);
-                    customer.setEmail(newEmail);
-                    System.out.println("Email updated to: " + newEmail);
-                    break;
-                case 3:
-                    System.out.print("Enter new date of birth (dd-MM-yyyy): ");
-                    String newDOB = RegisterValidator.validateDateOfBirth(scanner);
-                    customer.setDOB(newDOB);
-                    System.out.println("Date of birth updated to: " + newDOB);
+                    } else {
+                        System.out.println("Invalid choice. Please select a valid option.");
+                    }
                     break;
                 default:
                     System.out.println("Invalid choice. Please select a valid option.");
@@ -218,7 +148,6 @@ public abstract class User{
             }
         }
     }
-
     public static User registerUser(Scanner input) {
         User newUser = new Customer();
 
@@ -248,39 +177,14 @@ public abstract class User{
         return newUser;
     }
 
-    public static void updatePasswordToDatabase(User customer, String newPassword, Connection conn) {
-        try {
-            String updateSql = "UPDATE User SET password = ? WHERE userID = ?";
-            PreparedStatement updateStmt = conn.prepareStatement(updateSql);
-            updateStmt.setString(1, newPassword);
-            updateStmt.setInt(2, customer.getUserId());
-
-            int rowsUpdated = updateStmt.executeUpdate();
-
-            if (rowsUpdated > 0) {
-                System.out.println("Password updated successfully!");
-            } else {
-                System.out.println("Failed to update password.");
-            }
-
-            updateStmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "login=" + login +
-                ", email='" + email + '\'' +
-                ", DOB='" + DOB + '\'' +
-                ", userType='" + userType + '\'' +
-                '}';
-    }
-
     public int getUserId() {
-        return 0;
+        if (this instanceof Customer) {
+            return ((Customer) this).getCustId();
+        } else if (this instanceof Admin) {
+            return ((Admin) this).getAdminId();
+        } else {
+            return -1;
+        }
     }
 
     public Login getLogin() {
@@ -293,6 +197,7 @@ public abstract class User{
     public void setLogin(Login login) {
         this.login = login;
     }
+
 
     public String getDOB() {
         return DOB;
@@ -314,8 +219,16 @@ public abstract class User{
         this.email = email;
     }
 
-    public void setUserType(String usertype) {
-        this.userType = usertype;
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("User ID       : ").append(getUserId()).append("\n");
+        sb.append("Username      : ").append(getLogin().getUsername()).append("\n");
+        sb.append("Email         : ").append(getEmail()).append("\n");
+        sb.append("Date of Birth : ").append(getDOB()).append("\n");
+        sb.append("User Type     : ").append(getUserType()).append("\n");
+        return sb.toString();
     }
+
 
 }
