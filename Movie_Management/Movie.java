@@ -87,7 +87,7 @@ public class Movie implements DatabaseOperations {
         System.out.println("----------------------------------------------------------------------------------");
         System.out.printf("%c %-20s %c %-55s %c\n", '|', "Basic Ticket Price", '|', basicTicketPrice, '|');
         System.out.println("----------------------------------------------------------------------------------");
-        System.out.printf("%c %-20s %c %-55s %c\n", '|', "Synopsis", '|', metaDescription, '|');
+        MovieUtils.printWrappedTextForSynopsis("Synopsis", metaDescription, 50);
         System.out.println("----------------------------------------------------------------------------------");
     }
 
@@ -123,32 +123,46 @@ public class Movie implements DatabaseOperations {
 
                 try {
                     int count = 1;
-                    System.out.printf("\nMovie Detail:\n");
-                    System.out.println(count + ". Movie Name: " + mvName.getName());
+                    System.out.println("\n-----------------");
+                    System.out.printf("| Movie Detail | \n");
+                    System.out.println("----------------------------------------------------------------------------------");
+                    System.out.printf("%c %-2d %c %-20s %c %-50s %c\n", '|', count, '|', "Movie Name", '|', mvName.getName(), '|');
+                    System.out.println("----------------------------------------------------------------------------------");
                     count++;
                     if (result.next()) {
-                        System.out.println(count + ". Genre: " + result.getString("genre_name"));
+                        System.out.printf("%c %-2d %c %-20s %c %-50s %c\n", '|', count, '|', "Genre", '|', result.getString("genre_name"), '|');
+                        System.out.println("----------------------------------------------------------------------------------");
                         count++;
                     }
-                    System.out.println(count + ". Release Date: " + releaseDate.getDate());
+                    System.out.printf("%c %-2d %c %-20s %c %-50s %c\n", '|', count, '|', "Release Date", '|', releaseDate.getDate(), '|');
+                    System.out.println("----------------------------------------------------------------------------------");
                     count++;
-                    System.out.println(count + ". Duration: " + duration + " minutes");
+                    System.out.printf("%c %-2d %c %-20s %c %-50s %c\n", '|', count, '|', "Duration", '|', duration + " minutes ", '|');
+                    System.out.println("----------------------------------------------------------------------------------");
                     count++;
-                    System.out.println(count + ". Language: " + language);
+                    System.out.printf("%c %-2d %c %-20s %c %-50s %c\n", '|', count, '|', "Language", '|', language, '|');
+                    System.out.println("----------------------------------------------------------------------------------");
                     count++;
-                    System.out.println(count + ". Director: " + director);
+                    System.out.printf("%c %-2d %c %-20s %c %-50s %c\n", '|', count, '|', "Director", '|', director, '|');
+                    System.out.println("----------------------------------------------------------------------------------");
                     count++;
-                    System.out.println(count + ". Writter: " + writter);
+                    System.out.printf("%c %-2d %c %-20s %c %-50s %c\n", '|', count, '|', "Wrritter", '|', writter, '|');
+                    System.out.println("----------------------------------------------------------------------------------");
                     count++;
-                    System.out.println(count + ". Starring: " + starring);
+                    System.out.printf("%c %-2d %c %-20s %c %-50s %c\n", '|', count, '|', "Starring", '|', starring, '|');
+                    System.out.println("----------------------------------------------------------------------------------");
                     count++;
-                    System.out.println(count + ". Music Producer: " + musicProvider);
+                    System.out.printf("%c %-2d %c %-20s %c %-50s %c\n", '|', count, '|', "Music Producer", '|', musicProvider, '|');
+                    System.out.println("----------------------------------------------------------------------------------");
                     count++;
-                    System.out.println(count + ". Country: " + country);
+                    System.out.printf("%c %-2d %c %-20s %c %-50s %c\n", '|', count, '|', "Country", '|', country, '|');
+                    System.out.println("----------------------------------------------------------------------------------");
                     count++;
-                    System.out.printf("%d. %s: %.2f\n", count, "Basic Ticket Price", basicTicketPrice);
+                    System.out.printf("%c %-2d %c %-20s %c %-50s %c\n", '|', count, '|', "Basic Ticket Price", '|', basicTicketPrice, '|');
+                    System.out.println("----------------------------------------------------------------------------------");
                     count++;
-                    System.out.println("\n" + count + ". Synopsis:\n" + metaDescription + "\n");
+                    MovieUtils.printEditWrappedTextForSynopsis("Synopsis", metaDescription, 45, count);
+                    System.out.println("----------------------------------------------------------------------------------");
 
                     System.out.print("\nEnter the serial number of the movie information you want to change (0 - Stop): ");
                     int serialNum = sc.nextInt();

@@ -46,10 +46,13 @@ public class Genre implements DatabaseOperations {
             genres.add(genre);
         }
 
-        System.out.printf("\n%-5s %-15s\n", "No", "Genre Name");
+        System.out.print("-----------------------------------------------------");
+        System.out.printf("\n%-3c %-4s %c %-40s %c\n", '|', "No", '|', "Genre Name", '|');
+        System.out.println("-----------------------------------------------------");
 
         for (Genre genre : genres) {
-            System.out.printf("%-5d %-15s\n", count, genre.getGenreName().getName());
+            System.out.printf("%-3c %-4d %c %-40s %c\n", '|', count, '|', genre.getGenreName().getName(), '|');
+            System.out.println("-----------------------------------------------------");
             count++;
         }
 
@@ -57,9 +60,13 @@ public class Genre implements DatabaseOperations {
     }
 
     public void viewGenreDetails() throws SQLException {
-        System.out.printf("\nGenre Detail:\n");
-        System.out.println("Genre Name: " + genreName.getName());
-        System.out.println("Number of post: " + getPost());
+        System.out.println("\n----------------");
+        System.out.printf("| Genre Detail | \n");
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.printf("%c %-20s %c %-55s %c\n", '|', "Genre Name", '|', genreName.getName(), '|');
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.printf("%c %-20s %c %-55s %c\n", '|', "Number of Post", '|', getPost(), '|');
+        System.out.println("----------------------------------------------------------------------------------");
     }
 
     public boolean add() throws SQLException {

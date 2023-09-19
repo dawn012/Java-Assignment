@@ -172,10 +172,6 @@ public class Customer extends User {
         return custList;
     }
 
-
-
-
-
     public int getCustId() {
         return custId;
     }

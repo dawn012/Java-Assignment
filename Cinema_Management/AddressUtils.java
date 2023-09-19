@@ -10,7 +10,8 @@ public class AddressUtils {
         int count = 0;
 
         for (String state : Address.getStateToCities().keySet()) {
-            System.out.println((count + 1) + ". " + state);
+            System.out.printf("%-3c %-4d %c %-41s %c\n", '|', (count + 1), '|', state, '|');
+            System.out.println("------------------------------------------------------");
             count++;
         }
     }
@@ -28,7 +29,8 @@ public class AddressUtils {
         int count = 0;
 
         for (String city : Address.getStateToCities().get(selectedState)) {
-            System.out.println((count + 1) + ". " + city);
+            System.out.printf("%-3c %-4d %c %-41s %c\n", '|', (count + 1), '|', city, '|');
+            System.out.println("------------------------------------------------------");
             count++;
         }
         return count;
@@ -44,7 +46,8 @@ public class AddressUtils {
         int count = 0;
 
         for (String postcode : Address.getCityToPostcode().get(citySelected)) {
-            System.out.println((count + 1) + ". " + postcode);
+            System.out.printf("%-3c %-4d %c %-41s %c\n", '|', (count + 1), '|', postcode, '|');
+            System.out.println("------------------------------------------------------");
             count++;
         }
         return count;
