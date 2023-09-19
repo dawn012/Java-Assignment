@@ -367,7 +367,7 @@ public class Booking {
                     ticket.setTicketType(ticketType);
                     ticket.setTicket_id(ticket.countTicket_id(count));
                     //ticket.setTicket_id(ticket.countTicket_id(count));
-                    ticket.setBooking(this);
+                    //ticket.setBooking(this);
                     ticket.setSeat(seat);
                     ticket.setTimeTable(schedule);
                     cartTicket.add(ticket);
@@ -565,7 +565,7 @@ public class Booking {
 
                 Booking booking =new Booking();
                 booking.setBooking_id(result.getInt("booking_id"));
-                ticket.setBooking(booking);
+                //ticket.setBooking(booking);
 
                 Schedule timetable=new Schedule();
                 timetable.setScheduleID(result.getInt("schedule_id"));
