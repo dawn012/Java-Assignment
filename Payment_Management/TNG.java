@@ -1,5 +1,6 @@
 package Payment_Management;
 
+import Booking_Management.Booking;
 import Database.DatabaseUtils;
 
 import java.sql.Connection;
@@ -12,8 +13,19 @@ public class TNG extends Payment {
     public TNG() {
     }
 
-    public TNG(int bookingId, double paymentAmount, String currency, String paymentMethod, String paymentDate, String paymentTime, String paymentStatus, String phoneNo, String pinNo) {
-        super(bookingId, paymentAmount, currency, paymentMethod, paymentDate, paymentTime, paymentStatus);
+    public TNG(Booking booking, String paymentMethod, double paymentAmount, String currency, String paymentDate, String paymentTime, String paymentStatus, String phoneNo, String pinNo) {
+        super(booking, paymentMethod, paymentAmount, currency, paymentDate, paymentTime, paymentStatus);
+        this.phoneNo = phoneNo;
+        this.pinNo = pinNo;
+    }
+
+    public TNG(int paymentId, Booking booking, String paymentMethod, double paymentAmount, String currency, String paymentDate, String paymentTime, String paymentStatus, String phoneNo, String pinNo) {
+        super(paymentId, booking, paymentMethod, paymentAmount, currency, paymentDate, paymentTime, paymentStatus);
+        this.phoneNo = phoneNo;
+        this.pinNo = pinNo;
+    }
+    public TNG(int paymentId, String paymentMethod, double paymentAmount, String currency, String paymentDate, String paymentTime, String paymentStatus, String phoneNo, String pinNo) {
+        super(paymentId, paymentMethod, paymentAmount, currency, paymentDate, paymentTime, paymentStatus);
         this.phoneNo = phoneNo;
         this.pinNo = pinNo;
     }

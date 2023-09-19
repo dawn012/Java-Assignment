@@ -61,12 +61,21 @@ public class Seat {
     }
 //---------------------------------------------------------------------------------------------------------------------------------
 
-    public void addSeat(int hall_id) throws Exception {
-        int rowAffected = 0;
+    public void addSeat() throws Exception {
 
+
+        int hallId=0;
+        int rowAffected = 0;
+        if(seatId.length()==3) {
+            char firstChar = seatId.charAt(0);
+            hallId = Character.getNumericValue(firstChar);
+        }else if(seatId.length()==4){
+            String firstTwoChars = seatId.substring(0, 2);
+            hallId = Integer.parseInt(firstTwoChars);
+        }
         try {
             String insertSql = "INSERT INTO `seat` (`seat_id`,`hall_id`,`seatrow`,`seatcol`,`seat_status`) value(?,?,?,?,?);";
-            Object[] params = {getSeatId(),hall_id,getSeatRow(),getSeatCol(), getSeatStatus()};
+            Object[] params = {getSeatId(),hallId,getSeatRow(),getSeatCol(), getSeatStatus()};
             rowAffected = DatabaseUtils.insertQuery(insertSql, params);
         }
         catch (SQLException e) {
@@ -74,7 +83,7 @@ public class Seat {
         }
 
         if (rowAffected > 0) {
-            System.out.println("\nSeat successfully added...");
+            //System.out.println("\nSeat successfully added...");
         }
         else {
             System.out.println("\nSomething went wrong!");

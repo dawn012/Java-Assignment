@@ -12,6 +12,7 @@ import Movie_Management.MovieValidator;
 import Payment_Management.*;
 import Promotion_Management.*;
 import Report_Management.Report;
+import Report_Management.SalesReport;
 import Report_Management.TopMovieReport;
 import Schedule_Management.Schedule;
 import Booking_Management.Booking;
@@ -61,6 +62,7 @@ public class SystemClass {
                     System.out.println("------------------------------------------------------");
 
                     System.out.print("\nEnter your selection: ");
+
                     choice = sc.nextInt();
                     sc.nextLine();
 
@@ -102,6 +104,7 @@ public class SystemClass {
                                 System.out.println("------------------------------------------------------");
 
                                 System.out.print("\nEnter your selection (0 - Back): ");
+
                                 periodSelected = sc.nextInt();
                                 sc.nextLine();
 
@@ -327,40 +330,75 @@ public class SystemClass {
                                             // 4. Select the seat chin yong part
                                             Booking booking = new Booking();
                                             Customer c = new Customer();//暂时用
-                                            c.setCustId(1);//暂时用
+                                            c.setCustId(2);//暂时用
                                             booking.setCustomer(c);//暂时用
-
-                                            String confirmStr = "R";
-                                            while (confirmStr.equals("R")) {
+                                            String confirmStr = " ";
+                                            boolean insert = false;
+                                            while (confirmStr.equals(" ")) {
                                                 if (booking.executeBooking(schedule)) {
-                                                    booking.printBookingDetail();
                                                     do {
-                                                        try {
-                                                            System.out.println("Confirm This Booking ? (Y=Yes R=No, Select Again N=No Confirm, Exit) : ");
-                                                            confirmStr = sc.next().toUpperCase();
-                                                            if (confirmStr.equals("Y")) {
-                                                                Booking.insertBooking(booking);
-                                                                for (Ticket t : booking.getTicketList()) {
-                                                                    Ticket.insertTicket(t, booking);
-                                                                }
-                                                            }
-                                                        } catch (Exception e) {
-                                                            System.out.println("Something wrong...");
-                                                            sc.nextLine();
+                                                        if (confirmStr.equals("R")) {
+                                                            booking.executeBooking(schedule);
                                                         }
-                                                    } while (!confirmStr.equals("Y") && !confirmStr.equals("N") && !confirmStr.equals("R"));
+                                                        booking.printBookingDetail();
+                                                        do {
+                                                            try {
+                                                                System.out.print("Confirm This Booking ? (Y=\"Yes\", R=\"Select Again\", N=\"Exit\") : ");
+                                                                confirmStr = sc.next().toUpperCase();
+
+                                                                if (confirmStr.equals("Y")) {
+                                                                    if (!insert) {
+                                                                        Booking.insertBooking(booking);
+                                                                        for (Ticket t : booking.getTicketList()) {
+                                                                            Ticket.insertTicket(t, booking);
+                                                                        }
+                                                                        insert = true;
+                                                                    } else {
+                                                                        // if already insert to the database so just to change the status from "cancelled" to "processing"😊
+                                                                        booking.setBookingStatus("processing");
+                                                                        for (Ticket t : booking.getTicketList()) {
+                                                                            t.setTicketStatus(0);
+                                                                            t.updateStatus();
+                                                                        }
+                                                                        booking.updateBooking();
+                                                                    }
+                                                                } else if (confirmStr.equals("N")) {
+                                                                    if (insert) {
+                                                                        booking.cancelBooking();
+                                                                        insert = false;
+                                                                    }
+                                                                    //back = true;
+                                                                    break;
+                                                                } else if (confirmStr.equals("R")) {
+                                                                    if (insert) {
+                                                                        booking.cancelBooking();
+                                                                        insert = false;
+                                                                    }
+                                                                }
+
+
+                                                            } catch (Exception e) {
+                                                                System.out.println("Something wrong...");
+                                                                sc.nextLine();
+                                                            }
+                                                        } while (!confirmStr.equals("Y") && !confirmStr.equals("N") && !confirmStr.equals("R"));
+
+                                                        if (confirmStr.equals("Y")) {
+                                                            //booking.printBookingDetail();
+                                                            // Apply promotion
+                                                            //booking.setBooking_status("completed");
+                                                            //booking.updateStatus();
+                                                            //Promotion promotion = applyPromotion(sc, 1, booking);
+
+                                                            applyPromotion(sc, booking);
+
+                                                            // Make Payment
+                                                            if (makePayment(sc, booking)) {
+                                                                back = true;
+                                                            }
+                                                        }
+                                                    } while (!confirmStr.equals("N"));
                                                 }
-                                            }
-                                            if (confirmStr.equals("Y")) {
-                                                //booking.printBookingDetail();
-                                                // Apply promotion
-                                                //booking.setBooking_status("completed");
-                                                //booking.updateStatus();
-
-                                                Promotion promotion = applyPromotion(sc, 1, booking);
-
-                                                // Make Payment
-                                                system.makePayment(sc, 1, booking, promotion);
                                             }
                                         }
                                     } else {
@@ -380,11 +418,13 @@ public class SystemClass {
                     } while (back == false);
                     break;
                 case 3:
-                    back = customerPromotion(sc, 1);
+                    Customer c1 = new Customer();////暂时用
+                    c1.setCustId(2);//暂时用
+                    back = customerPromotion(sc, c1);
                     break;
                 case 4:
                     Customer c =new Customer();////暂时用
-                    c.setCustId(1);//暂时用
+                    c.setCustId(2);//暂时用
                     Booking.viewBookingHistory(c);
                     break;
                 case 5:
@@ -633,6 +673,7 @@ public class SystemClass {
                     System.out.println("------------------------------------------------------");
 
                     System.out.print("\nEnter your selection: ");
+
                     choice = sc.nextInt();
                     sc.nextLine();
 
@@ -2207,20 +2248,14 @@ public class SystemClass {
                         System.out.println("\nSelect the movie you want to modify: ");
                         moviesAfterFiltered = MovieUtils.getMovieListAfterFiltered(null, null, 1);
 
-                        System.out.print("-----------------------------------------------------");
-                        System.out.printf("\n%-3c %-4s %c %-40s %c\n", '|', "No", '|', "Movie Name", '|');
-                        System.out.println("-----------------------------------------------------");
-
                         if (!moviesAfterFiltered.isEmpty()) {
+                            System.out.printf("\n%-5s %s\n", "No", "Movie Name");
                             for (int i = 0; i < moviesAfterFiltered.size(); i++) {
-                                System.out.printf("%-3c %-4d %c %-40s %c\n", '|', (i + 1), '|', moviesAfterFiltered.get(i).getMvName().getName(), '|');
-                                System.out.println("-----------------------------------------------------");
+                                System.out.printf("%-5d %s\n", (i + 1), moviesAfterFiltered.get(i).getMvName().getName());
                             }
                         }
                         else {
-                            System.out.println("-----------------------------------------------------");
-                            System.out.printf("%-15c %-35s %c\n", '|', "Sorry, no movie found!", '|');
-                            System.out.println("-----------------------------------------------------");
+                            System.out.println("Sorry, no movie found!");
                         }
 
                         do {
@@ -2520,20 +2555,14 @@ public class SystemClass {
                         System.out.println("\nSelect the movie you want to delete: ");
                         moviesAfterFiltered = MovieUtils.getMovieListAfterFiltered(null, null, 1);
 
-                        System.out.print("-----------------------------------------------------");
-                        System.out.printf("\n%-3c %-4s %c %-40s %c\n", '|', "No", '|', "Movie Name", '|');
-                        System.out.println("-----------------------------------------------------");
-
                         if (!moviesAfterFiltered.isEmpty()) {
+                            System.out.printf("\n%-5s %s\n", "No", "Movie Name");
                             for (int i = 0; i < moviesAfterFiltered.size(); i++) {
-                                System.out.printf("%-3c %-4d %c %-40s %c\n", '|', (i + 1), '|', moviesAfterFiltered.get(i).getMvName().getName(), '|');
-                                System.out.println("-----------------------------------------------------");
+                                System.out.printf("%-5d %s\n", (i + 1), moviesAfterFiltered.get(i).getMvName().getName());
                             }
                         }
                         else {
-                            System.out.println("-----------------------------------------------------");
-                            System.out.printf("%-15c %-35s %c\n", '|', "Sorry, no movie found!", '|');
-                            System.out.println("-----------------------------------------------------");
+                            System.out.println("Sorry, no movie found!");
                         }
 
                         do {
@@ -2666,8 +2695,6 @@ public class SystemClass {
                     if (genreSelected != 0) {
                         Genre viewGenre = genres.get(genreSelected - 1);
                         viewGenre.viewGenreDetails();
-                        System.out.println("\n");
-                        pressEnterToBack();
                     }
                     back = false;
                     break;
@@ -3004,9 +3031,9 @@ public class SystemClass {
                         ArrayList<Cinema> cinemas = new ArrayList<>();
                         do {
                             try {
-                                System.out.print("\nSelect the cinema you want to view the schedule:\n");
+                                System.out.print("\nSelect the cinema you want to view the schedule (0 - Back): ");
                                 cinemas = Cinema.viewCinemaList(1);
-                                System.out.print("\nEnter the cinema no (0 - Back): ");
+                                System.out.print("\nEnter the cinema no: ");
                                 cinemaNo = sc.nextInt();
                                 sc.nextLine();
 
@@ -3834,6 +3861,94 @@ public class SystemClass {
         } while (back == false);
     }
 
+    public static SalesReport viewDailySalesReport(Scanner sc) {
+        SalesReport salesReport = new SalesReport();
+        ArrayList<Payment> allPayments;
+
+        System.out.print("\nEnter the date (yyyy-mm-dd): ");
+        String viewDate = sc.nextLine().trim();
+        DateTime searchDate;
+
+        int[] dateParts = DateTime.dateFormatValidator(viewDate);
+
+        if (!(dateParts == null)) {
+            searchDate = new DateTime(dateParts[0], dateParts[1], dateParts[2]);
+
+            if (searchDate.isValidDate()) {
+                if (!(searchDate.getDate().equals(LocalDate.now()) || searchDate.getDate().isAfter(LocalDate.now()))) {
+                    // Check the report generated is before today
+                    allPayments = SalesReport.allPayments();
+                    double totalSales = 0;
+                    int totalOrders = 0;
+                    int countCard = 0;
+                    int countTNG = 0;
+
+                    for (Payment payment : allPayments) {
+                        if (payment.getPaymentDate().equals(viewDate)) {
+                            totalSales += payment.getPaymentAmount();
+                            totalOrders++;
+
+                            if (payment.getPaymentMethod().equals("CARD")) {
+                                countCard++;
+                            }
+
+                            else {
+                                countTNG++;
+                            }
+
+                        }
+                    }
+
+                    salesReport.setSalesDate(searchDate);
+                    salesReport.setTotalSales(totalSales);
+                    salesReport.setTotalOrders(totalOrders);
+
+                    if (countCard == countTNG) {
+                        salesReport.setMostPaymentMtd("Credit/Debit Card & Touch 'n Go");
+                    } else if (countCard > countTNG) {
+                        salesReport.setMostPaymentMtd("Credit/Debit Card");
+                    } else {
+                        salesReport.setMostPaymentMtd("Touch 'n Go");
+                    }
+
+                    return salesReport;
+                }
+
+                else {
+                    System.out.println("Your new start date must before the end date.\n");
+                }
+            }
+
+            else {
+                System.out.println("Please enter valid date range.\n");
+            }
+        }
+
+        return null;
+    }
+
+//    private static Report generateReport(Report report, Scanner sc) {
+//        System.out.print("\n Please write the report purpose (0 - Use default purpose): ");
+//        String purpose = sc.nextLine().trim();
+//
+//        if (purpose.equals("0")) {
+//            purpose = report.getDefaultPurpose();
+//        }
+//
+//        if (report instanceof SalesReport) {
+//            SalesReport salesReport = (SalesReport) report;
+//            salesReport.setPurpose(purpose);
+//
+//            return new SalesReport(salesReport.getTitle(), salesReport.getDefaultPurpose(), salesReport.getConclusion(), salesReport.getSalesDate(), salesReport.getTotalSales(), salesReport.getTotalOrders(), salesReport.getMostPaymentMtd());
+//        } else {
+//            TopMovieReport topMovieReport = (TopMovieReport) report;
+//
+//            return new TopMovieReport();
+//        }
+//
+//        return null;
+//    }
+
     private static boolean managePromotion(Scanner sc) {
         boolean back = false;
         boolean error = false;
@@ -3874,7 +3989,9 @@ public class SystemClass {
                                     try {
                                         System.out.print("\nEnter the start date (yyyy-MM-dd): ");
                                         String startDateStr = sc.nextLine();
+
                                         startDate = LocalDate.parse(startDateStr);
+
                                         break; // 日期有效，退出循环
                                     } catch (DateTimeParseException e) {
                                         System.out.println("Invalid date format. Please enter a valid date (yyyy-MM-dd).\n");
@@ -4227,11 +4344,13 @@ public class SystemClass {
         return back;
     }
 
-    private static boolean customerPromotion(Scanner sc, int custId) {
+    private static boolean customerPromotion(Scanner sc, Customer cust) {
         boolean back = false;
         boolean error = false;
 
         ArrayList<Promotion> validPromotions;
+        Promotion promotion = new Promotion();
+        promotion.setCustomer(cust);
 
         do {
             System.out.println("\nSelect the operation: ");
@@ -4252,7 +4371,7 @@ public class SystemClass {
                         do {
                             error = false;
 
-                            validPromotions = PromotionUtils.validPromotionList(custId, sc);
+                            validPromotions = promotion.validPromotionList();
 
                             if (validPromotions.isEmpty()) {
                                 System.out.println("\nOops! There is no other promotion you can claim now.\n");
@@ -4283,7 +4402,8 @@ public class SystemClass {
                                 }
 
                                 else if (detailsChoice > 0 && detailsChoice <= validPromotions.size()) {
-                                    Promotion promotion = validPromotions.get(detailsChoice - 1);
+                                    promotion = validPromotions.get(detailsChoice - 1);
+                                    promotion.setCustomer(cust);
                                     System.out.println(promotion.viewNewPromotionDetails());
 
                                     String claim;
@@ -4299,7 +4419,7 @@ public class SystemClass {
 
                                     if (claim.equals("Y")) {
                                         for (int i = 0; i < promotion.getPerLimit(); i++) {
-                                            promotion.custClaimedPromotion(custId);
+                                            promotion.custClaimedPromotion();
                                         }
 
                                         promotion.updateReceiveCount();
@@ -4327,9 +4447,29 @@ public class SystemClass {
                             error = false;
                             back = false;
 
-                            validPromotions = Promotion.ownPromotionList(custId);
+                            ArrayList<Promotion> ownPromotions = promotion.ownPromotionList();
+                            validPromotions = new ArrayList<>();
 
-                            if (validPromotions.isEmpty()) {
+                            if (ownPromotions.isEmpty()) {
+                                System.out.println("\nOops! You don't have any promotion.\n");
+
+                                pressEnterToBack();
+
+                                back = true;
+                                break;
+                            }
+
+                            int found = 0;
+
+                            // To check whether the promotion is deleted by admin or not
+                            for(Promotion valid: ownPromotions) {
+                                if (valid.getPromotionStatus() == 1) {
+                                    validPromotions.add(valid);
+                                    found++;
+                                }
+                            }
+
+                            if (found == 0) {
                                 System.out.println("\nOops! You don't have any promotion.\n");
 
                                 pressEnterToBack();
@@ -4343,8 +4483,10 @@ public class SystemClass {
                             int count = 0;
 
                             for(Promotion details: validPromotions) {
-                                count++;
-                                System.out.printf("%d. %s\n", count, details.getDescription());
+                                if (details.getPromotionStatus() == 1) {
+                                    count++;
+                                    System.out.printf("%d. %s\n", count, details.getDescription());
+                                }
                             }
 
                             try {
@@ -4360,8 +4502,9 @@ public class SystemClass {
                                 }
 
                                 else if (detailsChoice > 0 && detailsChoice <= validPromotions.size()) {
-                                    Promotion promotion = validPromotions.get(detailsChoice - 1);
-                                    System.out.println(promotion.viewOwnPromotionDetails(custId) + "\n");
+                                    promotion = validPromotions.get(detailsChoice - 1);
+                                    promotion.setCustomer(cust);
+                                    System.out.println(promotion.viewOwnPromotionDetails() + "\n");
 
                                     pressEnterToBack();
                                 }
@@ -4394,9 +4537,10 @@ public class SystemClass {
         return true;
     }
 
-    private static Promotion applyPromotion(Scanner sc, int custId, Booking booking) {
+    private static boolean applyPromotion(Scanner sc, Booking booking) {
+        Promotion promotion = new Promotion();
+        promotion.setCustomer(booking.getCustomer());
         String apply;
-        Promotion applyPromotion = null;
 
         do {
             System.out.println("\nDo you want to apply promotion code? (Y/N) : ");
@@ -4409,7 +4553,7 @@ public class SystemClass {
 
 
         if (apply.equals("Y")) {
-            ArrayList<Promotion> ownPromotions = Promotion.ownPromotionList(custId);
+            ArrayList<Promotion> ownPromotions = promotion.ownPromotionList();
             ArrayList<Promotion> validPromotions = new ArrayList<>();
             Promotion bestPromotion = null; // 用于跟踪最佳促销
             double maxDiscount = 0;
@@ -4418,17 +4562,19 @@ public class SystemClass {
 
             if (!ownPromotions.isEmpty()) {
                 for (Promotion ownPromotion : ownPromotions) {
-                    if (ownPromotion.getMinSpend() <= booking.getTotalPrice()) {
-                        // Compare promotion min spend with booking total price to find out the valid promotion
-                        validPromotions.add(ownPromotion);
+                    if (ownPromotion.getPromotionStatus() == 1) {
+                        if (ownPromotion.getMinSpend() <= booking.getTotalPrice()) {
+                            // Compare promotion min spend with booking total price to find out the valid promotion
+                            validPromotions.add(ownPromotion);
 
-                        if (ownPromotion.getDiscountValue() > maxDiscount) {
-                            maxDiscount = ownPromotion.getDiscountValue();
-                            bestPromotion = ownPromotion; // 更新最佳促销
-                            record = i; // Record the position of best promotion in validPromotions
+                            if (ownPromotion.getDiscountValue() > maxDiscount) {
+                                maxDiscount = ownPromotion.getDiscountValue();
+                                bestPromotion = ownPromotion; // 更新最佳促销
+                                record = i; // Record the position of best promotion in validPromotions
+                            }
+
+                            i++;
                         }
-
-                        i++;
                     }
                 }
             }
@@ -4438,6 +4584,16 @@ public class SystemClass {
                 validPromotions.set(0, bestPromotion);
                 validPromotions.set(record, firstValidPromotion);
             }
+
+
+            if (validPromotions.isEmpty()) {
+                System.out.println("\nOops! You don't have any applicable promotion.\n");
+
+                pressEnterToContinue();
+
+                return false;
+            }
+
 
             System.out.println("\nValid Promotion: ");
             i = 1;
@@ -4465,7 +4621,9 @@ public class SystemClass {
                     }
 
                     else if (applyChoice > 0 && applyChoice <= validPromotions.size()) {
-                        return validPromotions.get(applyChoice - 1);
+                        booking.setPromotion(validPromotions.get(applyChoice - 1));
+
+                        return true;
                     }
 
                     else {
@@ -4480,25 +4638,31 @@ public class SystemClass {
             } while (!ctn);
         }
 
-        return null;
+        return false;
     }
 
-    private boolean makePayment(Scanner sc, int custId, Booking booking, Promotion promotion) {
-        // Deduct discount value
-        if (promotion != null) {
-            booking.setTotalPrice(booking.getTotalPrice() - promotion.getDiscountValue());
-        }
+    private static boolean makePayment(Scanner sc, Booking booking) {
+        // Remain original amount
+        double remainAmount = booking.getTotalPrice();
 
-        String paymentMethod;
+        // Deduct discount value
+        if (booking.getPromotion() != null) {
+            booking.setTotalPrice(booking.getTotalPrice() - booking.getPromotion().getDiscountValue());
+        }
 
         // Payment payment;
         Payment payment;
         Payment validPayment = null;
 
+        String paymentMethod;
         boolean back;
         boolean successPayment = false;
 
         do {
+            if (booking.getPromotion() != null) {
+                booking.printBookingDetail();
+            }
+
             System.out.println("\nPayment Method: ");
             System.out.println("1. Credit/Debit Card");
             System.out.println("2. Touch 'n Go");
@@ -4551,10 +4715,13 @@ public class SystemClass {
                         validPayment = validPayment(payment, booking);
 
                         back = true;
+                        successPayment = true;
 
                         break;
+
                     default:
                         System.out.println("Invalid selection. Please retry.");
+                        back = true;
                 }
 
             } while (!back);
@@ -4569,6 +4736,8 @@ public class SystemClass {
         String cancelPayment;
 
         do {
+            validPayment.printPaymentDetail(remainAmount);
+
             do {
                 System.out.println("\nContinue to make payment? (Y / N)");
                 System.out.print("Answer: ");
@@ -4580,12 +4749,21 @@ public class SystemClass {
 
             if (ctnMakePayment.equals("Y")) {
                 // Confirm to make payment
-                validPayment.addPayment();
-                validPayment.pay();
+                if (validPayment != null) {
+                    validPayment.addPayment();
+                    validPayment.pay();
 
-                if(promotion != null) {
+                    try {
+                        // Update booking status
+                        booking.completeBooking();
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                if(booking.getPromotion() != null) {
                     // User use promotion code, update promotion code status
-                    promotion.custApplyPromotion(validPayment.getPaymentId(), custId);
+                    booking.getPromotion().custApplyPromotion(booking);
                 }
 
                 System.out.println("\nPayment Successfully! Thanks for your payment.");
@@ -4602,33 +4780,46 @@ public class SystemClass {
 
                     cancelPayment = SystemClass.askForContinue(answer);
                 } while (cancelPayment.equals("Invalid"));
+
+                if (cancelPayment.equals("Y")) {
+                    // If customer cancel payment, restore booking amount
+                    booking.setTotalPrice(remainAmount);
+                    booking.setPromotion(null);
+
+                    try {
+                        // Cancel booking
+                        booking.cancelBooking();
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
             }
         } while (cancelPayment.equals("N"));
 
         return false;
     }
 
-    private Payment validPayment(Payment payment, Booking booking) {
+    private static Payment validPayment(Payment payment, Booking booking) {
         DateTime dateTime = new DateTime();
 
         if (payment instanceof Card) {
             Card card = (Card) payment;
             card.setPaymentAmount(booking.getTotalPrice());
 
-            if(card.stripeValidator()) {
-                return new Card(booking.getBookingId(), booking.getTotalPrice(), "MYR", "CREDIT/DEBIT CARD", dateTime.getCurrentDate(), dateTime.getCurrentTime(), "PAID", card.getCardNo(), card.getExpiredDate(), card.getCvc(), card.getEmail());
+            if(CardValidator.stripeValidator(card.createPaymentIntent())) {
+                return new Card(booking, "CREDIT/DEBIT CARD", booking.getTotalPrice(), "MYR", dateTime.getCurrentDate(), dateTime.getCurrentTime(), "PAID", card.getCardNo(), card.getExpiredDate(), card.getCvc(), card.getEmail());
             }
 
         } else {
             TNG tng = (TNG) payment;
 
-            return new TNG(booking.getBookingId(), booking.getTotalPrice(), "MYR", "TNG", dateTime.getCurrentDate(), dateTime.getCurrentTime(), "PAID", tng.getPhoneNo(), tng.getPinNo());
+            return new TNG(booking, "TNG", booking.getTotalPrice(), "MYR", dateTime.getCurrentDate(), dateTime.getCurrentTime(), "PAID", tng.getPhoneNo(), tng.getPinNo());
         }
 
         return null;
     }
 
-    private Card cardPaymentInfo(Scanner input) {
+    private static Card cardPaymentInfo(Scanner input) {
         Card card = new Card();
 
         // Card Number
@@ -4681,7 +4872,7 @@ public class SystemClass {
         return card;
     }
 
-    private TNG tngPaymentInfo(Scanner input) {
+    private static TNG tngPaymentInfo(Scanner input) {
         TNG tng = new TNG();
 
         while (true) {
@@ -4763,6 +4954,16 @@ public class SystemClass {
 
     private static void pressEnterToBack() {
         System.out.print("Press Enter to back...");
+
+        try {
+            System.in.read();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void pressEnterToContinue() {
+        System.out.print("Press Enter to continue...");
 
         try {
             System.in.read();

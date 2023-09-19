@@ -6,6 +6,7 @@ import Driver.Name;
 import Driver.SystemClass;
 import Hall_Management.Hall;
 import Movie_Management.Movie;
+import Promotion_Management.Promotion;
 import Schedule_Management.Schedule;
 import Seat_Management.Seat;
 
@@ -35,6 +36,7 @@ public class Booking {
     //}
     ////////////////////////////////////////////////////////
     private Customer customer;
+    private Promotion promotion;
     private int bookingId;
     private int adultTicketQty;
     private int childTicketQty;
@@ -69,6 +71,19 @@ public class Booking {
         this.customer=customer;
     }
 
+    public Booking(Customer customer, Promotion promotion, int bookingId, int adultTicketQty, int childTicketQty, double totalPrice, DateTime bookingDateTime, LocalTime bookingTime, String bookingStatus, ArrayList<Ticket> ticketList) {
+        this.customer = customer;
+        this.promotion = promotion;
+        this.bookingId = bookingId;
+        this.adultTicketQty = adultTicketQty;
+        this.childTicketQty = childTicketQty;
+        this.totalPrice = totalPrice;
+        this.bookingDateTime = bookingDateTime;
+        this.bookingTime = bookingTime;
+        this.bookingStatus = bookingStatus;
+        this.ticketList = ticketList;
+    }
+
     //Getter
     public int getBookingId() {
         return bookingId;
@@ -86,68 +101,81 @@ public class Booking {
 //        this.ticket_id+=count;
         //return this.booking_id;
     }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Promotion getPromotion() {
+        return promotion;
+    }
+
+    public void setPromotion(Promotion promotion) {
+        this.promotion = promotion;
+    }
+
+    public void setBookingId(int bookingId) {
+        this.bookingId = bookingId;
+    }
+
     public int getAdultTicketQty() {
         return adultTicketQty;
     }
+
+    public void setAdultTicketQty(int adultTicketQty) {
+        this.adultTicketQty = adultTicketQty;
+    }
+
     public int getChildTicketQty() {
         return childTicketQty;
     }
+
+    public void setChildTicketQty(int childTicketQty) {
+        this.childTicketQty = childTicketQty;
+    }
+
     public double getTotalPrice() {
         return totalPrice;
     }
 
-    public LocalTime getBookingTime() {
-        return bookingTime;
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
     public DateTime getBookingDateTime() {
         return bookingDateTime;
     }
 
-    public ArrayList<Ticket> getTicketList() {
-        return ticketList;
+    public void setBookingDateTime(DateTime bookingDateTime) {
+        this.bookingDateTime = bookingDateTime;
     }
 
-    public String getBookingStatus() {
-        return bookingStatus;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    //Setter
-    public void setBookingId(int bookingId) {
-        this.bookingId = bookingId;
-    }
-    public void setAdultTicketQty(int adultTicketQty) {
-        this.adultTicketQty = adultTicketQty;
-    }
-    public void setChildTicketQty(int childTicketQty) {
-        this.childTicketQty = childTicketQty;
-    }
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
+    public LocalTime getBookingTime() {
+        return bookingTime;
     }
 
     public void setBookingTime(LocalTime bookingTime) {
         this.bookingTime = bookingTime;
     }
 
-    public void setBookingDateTime(DateTime bookingDateTime) {
-        this.bookingDateTime = bookingDateTime;
+    public String getBookingStatus() {
+        return bookingStatus;
     }
 
     public void setBookingStatus(String bookingStatus) {
         this.bookingStatus = bookingStatus;
     }
 
-    public void setTicketList(ArrayList<Ticket> ticketList) {
-        this.ticketList = ticketList;
+    public ArrayList<Ticket> getTicketList() {
+        return ticketList;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setTicketList(ArrayList<Ticket> ticketList) {
+        this.ticketList = ticketList;
     }
 
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -676,7 +704,8 @@ public class Booking {
 
                     answer=scanner.next().toUpperCase();
 
-                }while (SystemClass.askForContinue(answer).equals("Invalid"));
+                } while (SystemClass.askForContinue(answer).equals("Invalid"));
+
                 if(SystemClass.askForContinue(answer).equals("N"))
                     break;
             }
@@ -700,7 +729,7 @@ public class Booking {
     }
 
 
-    public void printBookingDetail(){
+    public void printBookingDetail() {
         //System.out.println("\t\t-------------------------\n");
         System.out.println("Booking Details : ");
         System.out.println("\t\t-------------------------------------------");
@@ -719,17 +748,27 @@ public class Booking {
         for(Ticket t:getTicketList()){
             System.out.print(t.getSeat().getSeatId()+"  ");
         }
-        System.out.println("\n\t\t-------------------------------------------");
-        System.out.printf("\t\t\tTotal : \t\t\t\t\t   RM%6.2f\n", totalPrice);
+
+        if (promotion == null) {
+            System.out.println("\n\t\t-------------------------------------------");
+            System.out.printf("\t\t\tTotal : \t\t\t\t\t   RM%6.2f\n", totalPrice);
+        } else {
+            System.out.println("\n\t\t-------------------------------------------");
+            System.out.printf("\t\t\tTotal : \t\t\t\t\t   RM%6.2f\n", totalPrice + promotion.getDiscountValue());
+            System.out.printf("\t\t\tDiscount\t\t\t\t- RM%6.2f\n", promotion.getDiscountValue());
+            System.out.println("\t\t-------------------------------------------");
+            System.out.printf("\t\t\tTotal Amount : \t\t\t\tRM%6.2f\n", totalPrice);
+        }
+
         System.out.println("\t\t-------------------------------------------");
     }
 
-    public boolean updateStatus() throws SQLException {
+    public boolean updateBooking() throws SQLException {
         int rowAffected = 0;
 
         try {
-            String updateSql = "UPDATE `booking` SET `booking_status`= ? , `total_price`= ? WHERE `booking_id` = ?";
-            Object[] params = {getBookingStatus(),getTotalPrice(), getBookingId()};
+            String updateSql = "UPDATE `booking` SET `booking_status`= ? , `total_price`= ? , `adultTicket_qty`=? , `childTicket_qty`=?  WHERE `booking_id` = ?";
+            Object[] params = {bookingStatus,totalPrice,adultTicketQty,childTicketQty, bookingId};
             rowAffected = DatabaseUtils.updateQuery(updateSql, params);
         }
         catch (SQLException e) {
@@ -751,11 +790,11 @@ public class Booking {
             t.setTicketStatus(0);
             t.updateStatus();
         }
-        this.updateStatus();
+        this.updateBooking();
     }
     public void completeBooking() throws SQLException {
         this.setBookingStatus("completed");
-        this.updateStatus();
+        this.updateBooking();
     }
 }
 

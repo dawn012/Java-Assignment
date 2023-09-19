@@ -1,5 +1,6 @@
 package Payment_Management;
 
+import Booking_Management.Booking;
 import Database.DatabaseUtils;
 
 import com.stripe.exception.StripeException;
@@ -29,12 +30,26 @@ public class Card extends Payment {
         this.email = email;
     }
 
-    public Card(int bookingId, double paymentAmount, String currency, String paymentMethod, String paymentDate, String paymentTime, String paymentStatus, String cardNo, String expiredDate, String cvc, String email) {
-        super(bookingId, paymentAmount, currency, paymentMethod, paymentDate, paymentTime, paymentStatus);
+    public Card(Booking booking, String paymentMethod, double paymentAmount, String currency, String paymentDate, String paymentTime, String paymentStatus, String cardNo, String expiredDate, String cvc, String email) {
+        super(booking, paymentMethod, paymentAmount, currency, paymentDate, paymentTime, paymentStatus);
         this.cardNo = cardNo;
         this.expiredDate = expiredDate;
         this.cvc = cvc;
         this.email = email;
+    }
+
+    public Card(int paymentId, Booking booking, String paymentMethod, double paymentAmount, String currency, String paymentDate, String paymentTime, String paymentStatus, String cardNo, String expiredDate, String cvc) {
+        super(paymentId, booking, paymentMethod, paymentAmount, currency, paymentDate, paymentTime, paymentStatus);
+        this.cardNo = cardNo;
+        this.expiredDate = expiredDate;
+        this.cvc = cvc;
+    }
+
+    public Card(int paymentId, String paymentMethod, double paymentAmount, String currency, String paymentDate, String paymentTime, String paymentStatus, String cardNo, String expiredDate, String cvc) {
+        super(paymentId, paymentMethod, paymentAmount, currency, paymentDate, paymentTime, paymentStatus);
+        this.cardNo = cardNo;
+        this.expiredDate = expiredDate;
+        this.cvc = cvc;
     }
 
     public String getCardNo() {
@@ -83,18 +98,18 @@ public class Card extends Payment {
         }
     }
 
-    public boolean stripeValidator() {
-        // Set Secret Key
-        StripeAPIKey.init();
-
-        PaymentIntent paymentIntent = createPaymentIntent();
-
-        if (paymentIntent != null) {
-            return true;
-        }
-
-        return false;
-    }
+//    public boolean stripeValidator() {
+//        // Set Secret Key
+//        StripeAPIKey.init();
+//
+//        PaymentIntent paymentIntent = createPaymentIntent();
+//
+//        if (paymentIntent != null) {
+//            return true;
+//        }
+//
+//        return false;
+//    }
 
     private int getExpiredMonth(){
         // Date user entered
@@ -143,7 +158,7 @@ public class Card extends Payment {
         }
     }
 
-    private PaymentIntent createPaymentIntent() {
+    public PaymentIntent createPaymentIntent() {
         if (createPaymentMethod() != null && createCustomer() != null) {
             try {
                 PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()

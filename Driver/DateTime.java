@@ -72,7 +72,7 @@ public class DateTime {
         }
     }
 
-    public static int[] dateFormatValidator(String date, String format) {
+    public static int[] dateFormatValidator(String date) {
         // 使用正则表达式验证日期字符串格式
         String regex = "^\\d{4}-\\d{2}-\\d{2}$"; // yyyy-MM-dd 格式
         Pattern pattern = Pattern.compile(regex);

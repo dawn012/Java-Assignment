@@ -1,6 +1,20 @@
 package Payment_Management;
 
+import com.stripe.model.PaymentIntent;
+import com.stripe.model.PaymentMethod;
+
 public class CardValidator {
+    public static boolean stripeValidator(PaymentIntent createPaymentIntent) {
+        // Set Secret Key
+        StripeAPIKey.init();
+
+        if (createPaymentIntent != null) {
+            return true;
+        }
+
+        return false;
+    }
+
     public static boolean cardNoFormatValidator(String cardNo) {
         String regex = "^\\d{16}$";
 

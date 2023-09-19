@@ -22,6 +22,9 @@ public abstract class Report {
         reportDate = LocalDate.now();
     }
 
+
+    //public abstract double calculate();
+    @Override
     public String toString() {
         return String.format("\nTitle: %s\t\t\t\tReport Date: %s\n\nPurpose: \n%s\n\n", title, reportDate, purpose);
     }

@@ -209,6 +209,52 @@ public class Hall {
         System.out.printf("\nO = Available/intact and undamaged\tX = Unavailable/damaged");
         //return 0;
     }
+    public void addNewSeatList() throws Exception {
+
+        try {
+            Object[] params = {hallName.getName()};
+            ResultSet result = DatabaseUtils.selectQueryById("*", "hall", "hall_name = ?", params);
+
+            while (result.next()) {
+
+                setHallID(result.getInt("hall_id"));
+
+            }
+
+            result.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Seat> seatList = new ArrayList<>();
+        int i=1;
+        int j=1;
+        int seatsPerRow = 8;
+        int row = hallCapacity / seatsPerRow;
+        int count=hallCapacity;
+        if (hallCapacity % seatsPerRow != 0) {
+            row++;
+        }
+
+        for(i=1;i<=row;i++){
+                char letter = (char) ('A' + i - 1); // 将整数 i 转换为字母
+                for (j=1;j<=seatsPerRow;j++){
+                    if(count>0) {
+                        Seat seat =new Seat();
+                        String seatId = String.valueOf(hallID) + letter + String.valueOf(j);
+                        seat.setSeatId(seatId);
+                        seat.setSeatRow(i);
+                        seat.setSeatCol(j);
+                        seat.setSeatStatus(1);
+                        seat.addSeat();
+                        seatList.add(seat);
+                    }
+                    count--;
+                }
+            }
+        setSeats(seatList);
+    }
 
     // Setter
     public void setHallID(int hallID) {
