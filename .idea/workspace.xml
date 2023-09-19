@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="debug"></list>
-      <change beforePath="$PROJECT_DIR$/Driver/SystemClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/Driver/SystemClass.java" afterDir="false" />
-    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="change the gender and phone from admin to customer">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Movie_Management/Movie.java" beforeDir="false" afterPath="$PROJECT_DIR$/Movie_Management/Movie.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/Login.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/Login.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/LoginDriver.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/LoginDriver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/LoginValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/LoginValidator.java" afterDir="false" />
-    </list>
+    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="debug" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -75,7 +67,6 @@
       <recent name="Driver" />
     </key>
   </component>
-  <component name="RunManager"></component>
   <component name="RunManager" selected="Application.Driver">
     <configuration name="AdminDriver" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Security_Management.AdminDriver" />
@@ -370,12 +361,13 @@
       <option name="project" value="LOCAL" />
       <updated>1695128235847</updated>
     </task>
-    <task id="LOCAL-00029" summary="Add Promotion">
-      <created>1694954172519</created>
+    <task id="LOCAL-00029" summary="debug">
+      <option name="closed" value="true" />
+      <created>1695130784458</created>
       <option name="number" value="00029" />
       <option name="presentableId" value="LOCAL-00029" />
       <option name="project" value="LOCAL" />
-      <updated>1694954172519</updated>
+      <updated>1695130784458</updated>
     </task>
     <task id="LOCAL-00030" summary="debug">
       <option name="closed" value="true" />
@@ -484,8 +476,7 @@
       <option name="project" value="LOCAL" />
       <updated>1695121680217</updated>
     </task>
-    <option name="localTasksCounter" value="45" />
-    <option name="localTasksCounter" value="29" />
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -534,7 +525,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="add the sql" />
     <MESSAGE value="add the yong package" />
     <MESSAGE value="change the hall package" />
     <MESSAGE value="change the SystemClass.java" />
@@ -562,10 +552,9 @@
     <MESSAGE value="Add Promotion" />
     <MESSAGE value="Add Payment" />
     <MESSAGE value="Merge" />
+    <MESSAGE value="change the gender and phone from admin to customer" />
     <MESSAGE value="debug" />
     <option name="LAST_COMMIT_MESSAGE" value="debug" />
-    <MESSAGE value="change the gender and phone from admin to customer" />
-    <option name="LAST_COMMIT_MESSAGE" value="change the gender and phone from admin to customer" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
