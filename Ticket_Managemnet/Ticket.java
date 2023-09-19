@@ -12,7 +12,6 @@ import java.util.ArrayList;
 public class Ticket {
     private int ticket_id;
     private Seat seat;
-    private Booking booking;
     private Schedule schedule;
     private String ticketType;
     private double price_rate;
@@ -30,15 +29,13 @@ public class Ticket {
     public Ticket(int ticket_id, Seat seat, Booking booking, Schedule schedule) {
         this.ticket_id = ticket_id;
         this.seat = seat;
-        this.booking = booking;
         this.schedule = schedule;
         this.ticketStatus=1;
     }
 
-    public Ticket(int ticket_id, Seat seat, Booking booking, String ticketType, double price_rate, Schedule schedule) {
+    public Ticket(int ticket_id, Seat seat, String ticketType, double price_rate, Schedule schedule) {
         this.ticket_id = ticket_id;
         this.seat = seat;
-        this.booking = booking;
         this.ticketType = ticketType;
         this.price_rate = price_rate;
         this.schedule = schedule;
@@ -53,9 +50,6 @@ public class Ticket {
     }
     public Schedule getTimeTable() {
         return schedule;
-    }
-    public Booking getBooking() {
-        return booking;
     }
     public String getTicketType() {
         return ticketType;
@@ -94,9 +88,6 @@ public class Ticket {
     }
     public void setTimeTable(Schedule schedule) {
         this.schedule = schedule;
-    }
-    public void setBooking(Booking booking) {
-        this.booking = booking;
     }
     public void setTicketType(String ticketType) {
         this.ticketType = ticketType;
@@ -138,25 +129,24 @@ public class Ticket {
             while (result.next()) {
 
                 Ticket ticket = new Ticket();
-
                 ticket.setTicketType(result.getString("ticket_type"));
                 ticket.setTicket_id(result.getInt("ticket_id"));
+
                 Seat seat = new Seat();
                 seat.setSeat_id(result.getString("seat_id"));
                 ticket.setSeat(seat);
 
-                Booking booking =new Booking();
+                Booking booking = new Booking();
                 booking.setBooking_id(result.getInt("booking_id"));
                 ticket.setBooking(booking);
                 //ticket.booking.setBooking_id(result.getInt("booking_id"));
-                Schedule timetable=new Schedule();
+
+                Schedule timetable = new Schedule();
                 timetable.setScheduleID(result.getInt("schedule_id"));
                 ticket.setBooking(booking);
                 ticket.setTicketStatus(result.getInt("ticket_status"));
                 ticket.setPrice_rate(result.getDouble("price_rate"));
                 tickets.add(ticket);
-
-
             }
 
             result.close();
@@ -169,33 +159,32 @@ public class Ticket {
         return tickets;
     }
 
-
     public static ArrayList<Ticket> getBookedTicketList(int schedule_id){
         boolean error = false;
         ArrayList<Ticket> tickets = new ArrayList<>();
 
         try {
-            Object[] params = {schedule_id,1};
+            Object[] params = {schedule_id, 1};
             ResultSet result = DatabaseUtils.selectQueryById("*", "ticket","schedule_id = ? AND ticket_status = ?",params);
             //Ticket ticket = null;
             while (result.next()) {
 
                 Ticket ticket = new Ticket();
-
                 ticket.setTicketType(result.getString("ticket_type"));
                 ticket.setTicket_id(result.getInt("ticket_id"));
+
                 Seat seat = new Seat();
                 seat.setSeat_id(result.getString("seat_id"));
                 ticket.setSeat(seat);
                 ticket.setTicketStatus(result.getInt("ticket_status"));
+
                 Booking booking =new Booking();
                 booking.setBooking_id(result.getInt("booking_id"));
                 ticket.setBooking(booking);
 
-                Schedule timetable=new Schedule();
+                Schedule timetable = new Schedule();
                 timetable.setScheduleID(result.getInt("schedule_id"));
                 ticket.setBooking(booking);
-
                 ticket.setPrice_rate(result.getDouble("price_rate"));
                 tickets.add(ticket);
 
