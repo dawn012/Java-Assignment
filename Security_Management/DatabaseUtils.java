@@ -16,7 +16,7 @@ public class DatabaseUtils {
         return DriverManager.getConnection(DB_URL, DB_UNAME, DB_PSD);
     }
 
-    public static ResultSet selectQueryById(String selectedThing, String tableName, String idColumn, Object... params) throws SQLException {
+    public static ResultSet selectQuery(String selectedThing, String tableName, String idColumn, Object... params) throws SQLException {
         try {
             Connection conn = getConnection();
 
@@ -79,7 +79,7 @@ public class DatabaseUtils {
         }
     }
 
-    public static int deleteQueryById(String tableName, String statusColumnName, String idColumn, Object... params) throws SQLException {
+    public static int delectQuery(String tableName, String statusColumnName, String idColumn, Object... params) throws SQLException {
         try {
             Connection conn = getConnection();
 

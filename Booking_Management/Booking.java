@@ -206,7 +206,7 @@ public class Booking {
         int largestCol=0;
         try {
             Object[] params = {schedule.getHall().getHallID()};
-            ResultSet result = DatabaseUtils.selectQueryById("*", "seat", "hall_id = ?", params);
+            ResultSet result = DatabaseUtils.selectQuery("*", "seat", "hall_id = ?", params);
             //find hall
 
             while (result.next()) {
@@ -474,7 +474,7 @@ public class Booking {
 //
 //        try {
 //            Object[] params = { };
-//            ResultSet result = DatabaseUtils.selectQueryById("*", "booking",null,null);
+//            ResultSet result = DatabaseUtils.selectQuery("*", "booking",null,null);
 //
 //            while (result.next()) {
 //                Booking booking =new Booking();
@@ -503,7 +503,7 @@ public class Booking {
 
         try {
             Object[] params = { };
-            ResultSet result = DatabaseUtils.selectQueryById("*", "booking",null,null);
+            ResultSet result = DatabaseUtils.selectQuery("*", "booking",null,null);
 
             while (result.next()) {
 
@@ -538,7 +538,7 @@ public class Booking {
 
         try {
             Object[] params = {customerId};
-            ResultSet result = DatabaseUtils.selectQueryById("*", "booking","customer_id=?",params);
+            ResultSet result = DatabaseUtils.selectQuery("*", "booking","customer_id=?",params);
 
             while (result.next()) {
 
@@ -574,7 +574,7 @@ public class Booking {
 
         try {
             Object[] params = {bookingId};
-            ResultSet result = DatabaseUtils.selectQueryById("*", "ticket","booking_id = ?",params);
+            ResultSet result = DatabaseUtils.selectQuery("*", "ticket","booking_id = ?",params);
 
             while (result.next()) {
 
@@ -615,7 +615,7 @@ public class Booking {
         for (Ticket t:tickets) {
             try {
                 Object[] params = {t.getTimeTable().getScheduleID()};
-                ResultSet result = DatabaseUtils.selectQueryById("*", "timetable", "schedule_id = ?", params);
+                ResultSet result = DatabaseUtils.selectQuery("*", "timetable", "schedule_id = ?", params);
 
                 while (result.next()) {
 //                    Schedule schedule=new Schedule();
@@ -638,7 +638,7 @@ public class Booking {
         for (Ticket t:tickets) {
             try {
                 Object[] params = {t.getTimeTable().getMovie().getMovieID()};
-                ResultSet result = DatabaseUtils.selectQueryById("*", "movie", "movie_id = ?", params);
+                ResultSet result = DatabaseUtils.selectQuery("*", "movie", "movie_id = ?", params);
 
                 while (result.next()) {
 //                    Schedule schedule=new Schedule();
@@ -667,7 +667,7 @@ public class Booking {
 //
 //        try {
 //            Object[] params = {booking_id};
-//            rowAffected = DatabaseUtils.deleteQueryById("booking", "booking_status", "booking_id", params);
+//            rowAffected = DatabaseUtils.delectQuery("booking", "booking_status", "booking_id", params);
 //        }
 //        catch (SQLException e) {
 //            e.printStackTrace();

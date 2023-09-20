@@ -145,7 +145,7 @@ public class Customer extends User {
         ArrayList<User> custList = new ArrayList<>();
 
         try {
-            ResultSet resultSet = DatabaseUtils.selectQueryById("*", "User", "userType = ?", "cust");
+            ResultSet resultSet = DatabaseUtils.selectQuery("*", "User", "userType = ?", "cust");
 
             while (resultSet.next()) {
                 int userId = resultSet.getInt("userID");

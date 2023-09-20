@@ -201,7 +201,7 @@ public class Promotion implements DatabaseOperations {
         int delete;
 
         try {
-            delete = DatabaseUtils.deleteQueryById("PROMOTION", "PROMOTION_STATUS", "PROMOTION_ID", params);
+            delete = DatabaseUtils.delectQuery("PROMOTION", "PROMOTION_STATUS", "PROMOTION_ID", params);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -250,7 +250,7 @@ public class Promotion implements DatabaseOperations {
         Object[] params = {currentDate.getCurrentDate(), 1, customer.getCustId()};
 
         try {
-            rs = DatabaseUtils.selectQueryById("*", "PROMOTION", "? BETWEEN START_DATE AND END_DATE AND RECEIVE_COUNT < PUBLISH_COUNT AND PROMOTION_STATUS = ? AND PROMOTION_ID NOT IN (SELECT PROMOTION_ID FROM PROMOTION_HISTORY WHERE USER_ID = ?);", params);
+            rs = DatabaseUtils.selectQuery("*", "PROMOTION", "? BETWEEN START_DATE AND END_DATE AND RECEIVE_COUNT < PUBLISH_COUNT AND PROMOTION_STATUS = ? AND PROMOTION_ID NOT IN (SELECT PROMOTION_ID FROM PROMOTION_HISTORY WHERE USER_ID = ?);", params);
 
             while(rs.next()) {
                 Promotion promotion = new Promotion();
@@ -284,7 +284,7 @@ public class Promotion implements DatabaseOperations {
         ResultSet rs;
 
         try {
-            rs = DatabaseUtils.selectQueryById("*", "PROMOTION", "PROMOTION_ID IN (SELECT PROMOTION_ID FROM PROMOTION_HISTORY WHERE USER_ID = ? AND PROMOTION_STATUS = ?);", params);
+            rs = DatabaseUtils.selectQuery("*", "PROMOTION", "PROMOTION_ID IN (SELECT PROMOTION_ID FROM PROMOTION_HISTORY WHERE USER_ID = ? AND PROMOTION_STATUS = ?);", params);
 
             while(rs.next()) {
                 Promotion promotion = new Promotion();
@@ -317,7 +317,7 @@ public class Promotion implements DatabaseOperations {
         ResultSet rs;
 
         try {
-            rs = DatabaseUtils.selectQueryById("COUNT(*)", "PROMOTION_HISTORY", "USER_ID = ? AND PROMOTION_ID = ? AND PROMOTION_STATUS = ?", params);
+            rs = DatabaseUtils.selectQuery("COUNT(*)", "PROMOTION_HISTORY", "USER_ID = ? AND PROMOTION_ID = ? AND PROMOTION_STATUS = ?", params);
 
             // 获取整数结果
             if (rs.next()) {

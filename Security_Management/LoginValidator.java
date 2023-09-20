@@ -18,7 +18,7 @@ public class LoginValidator {
 
         try {
             String sql = "SELECT * FROM User";
-            ResultSet resultSet = DatabaseUtils.selectQueryById("*", "User", null, null);
+            ResultSet resultSet = DatabaseUtils.selectQuery("*", "User", null, null);
 
             while (resultSet.next()) {
                 int userId = resultSet.getInt("userID");

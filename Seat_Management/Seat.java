@@ -97,7 +97,7 @@ public class Seat {
         int largestCol=0;
         try {
             Object[] params = {hallId};
-            ResultSet result = DatabaseUtils.selectQueryById("*", "seat", "hall_id = ?", params);
+            ResultSet result = DatabaseUtils.selectQuery("*", "seat", "hall_id = ?", params);
             //find hall
 
             while (result.next()) {
@@ -146,7 +146,7 @@ public class Seat {
         int largestCol=0;
         try {
             Object[] params = {hallId};
-            ResultSet result = DatabaseUtils.selectQueryById("*", "seat", "hall_id = ?", params);
+            ResultSet result = DatabaseUtils.selectQuery("*", "seat", "hall_id = ?", params);
             //find hall
 
             while (result.next()) {

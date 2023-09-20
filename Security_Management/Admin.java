@@ -123,7 +123,7 @@ public class Admin extends User {
         ArrayList<User> userList = new ArrayList<>();
 
         try {
-            ResultSet resultSet = DatabaseUtils.selectQueryById("*", "User", null,null);
+            ResultSet resultSet = DatabaseUtils.selectQuery("*", "User", null,null);
 
             while (resultSet.next()) {
                 int userId = resultSet.getInt("userID");
@@ -242,7 +242,7 @@ public class Admin extends User {
 
         try {
             String sql = "SELECT * FROM User WHERE userType = 'admin'";
-            ResultSet resultSet = DatabaseUtils.selectQueryById("*", "User", "userType = 'admin'");
+            ResultSet resultSet = DatabaseUtils.selectQuery("*", "User", "userType = 'admin'");
 
             while (resultSet.next()) {
                 int userId = resultSet.getInt("userID");
@@ -283,7 +283,7 @@ public class Admin extends User {
         if (confirmation.equals("y")) {
             try {
                 String sql = "DELETE FROM User WHERE userID = ?";
-                int rowsAffected = DatabaseUtils.deleteQueryById("User", "accStatus", "userID", userId);
+                int rowsAffected = DatabaseUtils.delectQuery("User", "accStatus", "userID", userId);
 
                 if (rowsAffected > 0) {
                     System.out.println("User with ID " + userId + " has been deleted successfully.");

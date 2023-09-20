@@ -83,7 +83,7 @@ public class TopMovieReport extends Report {
 
             try {
                 Object[] params = {moviesList.get(i).getMovieID()};
-                ResultSet result = DatabaseUtils.selectQueryById("*", "timeTable", "movie_id = ?", params);
+                ResultSet result = DatabaseUtils.selectQuery("*", "timeTable", "movie_id = ?", params);
 
                 while (result.next()) {
                     Schedule schedule = new Schedule();
@@ -138,7 +138,7 @@ public class TopMovieReport extends Report {
         for (int i = 0; i < schedules.size(); i++) {
             try {
                 Object[] params = {schedules.get(i).getScheduleID()};
-                ResultSet result = DatabaseUtils.selectQueryById("DISTINCT booking_id", "ticket", "schedule_id = ?", params);
+                ResultSet result = DatabaseUtils.selectQuery("DISTINCT booking_id", "ticket", "schedule_id = ?", params);
 
                 while (result.next()) {
                     Booking booking = new Booking();
@@ -158,7 +158,7 @@ public class TopMovieReport extends Report {
         for (int i = 0; i < bookings.size(); i++) {
             try {
                 Object[] params = {bookings.get(i).getBookingId()};
-                ResultSet result = DatabaseUtils.selectQueryById("total_price", "booking", "booking_id = ?", params);
+                ResultSet result = DatabaseUtils.selectQuery("total_price", "booking", "booking_id = ?", params);
 
                 while (result.next()) {
                     if (result.getString("booking_status").equals("completed")) {

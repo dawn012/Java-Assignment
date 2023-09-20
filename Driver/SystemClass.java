@@ -792,7 +792,7 @@ public class SystemClass {
 
                             ResultSet result = null;
                             try {
-                                result = DatabaseUtils.selectQueryById("cinema_name", "cinema", null, null);
+                                result = DatabaseUtils.selectQuery("cinema_name", "cinema", null, null);
                             } catch (SQLException e) {
                                 throw new RuntimeException(e);
                             }
@@ -908,7 +908,7 @@ public class SystemClass {
 
                             ResultSet result = null;
                             try {
-                                result = DatabaseUtils.selectQueryById("cinema_address", "cinema", null, null);
+                                result = DatabaseUtils.selectQuery("cinema_address", "cinema", null, null);
                             } catch (SQLException e) {
                                 throw new RuntimeException(e);
                             }
@@ -1115,7 +1115,7 @@ public class SystemClass {
 
                                             ResultSet result = null;
                                             try {
-                                                result = DatabaseUtils.selectQueryById("cinema_name", "cinema", null, null);
+                                                result = DatabaseUtils.selectQuery("cinema_name", "cinema", null, null);
                                             } catch (SQLException e) {
                                                 throw new RuntimeException(e);
                                             }
@@ -1232,7 +1232,7 @@ public class SystemClass {
 
                                             ResultSet result = null;
                                             try {
-                                                result = DatabaseUtils.selectQueryById("cinema_address", "cinema", null, null);
+                                                result = DatabaseUtils.selectQuery("cinema_address", "cinema", null, null);
                                             } catch (SQLException e) {
                                                 throw new RuntimeException(e);
                                             }
@@ -1490,7 +1490,7 @@ public class SystemClass {
                                 ResultSet result = null;
                                 try {
                                     Object[] params = {cinema.getCinemaID()};
-                                    result = DatabaseUtils.selectQueryById("hall_name", "hall", "cinema_id = ?", params);
+                                    result = DatabaseUtils.selectQuery("hall_name", "hall", "cinema_id = ?", params);
                                 } catch (SQLException e) {
                                     throw new RuntimeException(e);
                                 }
@@ -1719,7 +1719,7 @@ public class SystemClass {
                                             ResultSet result = null;
                                             try {
                                                 Object[] params = {cinema.getCinemaID()};
-                                                result = DatabaseUtils.selectQueryById("hall_name", "hall", "cinema_id = ?", params);
+                                                result = DatabaseUtils.selectQuery("hall_name", "hall", "cinema_id = ?", params);
                                             } catch (SQLException e) {
                                                 throw new RuntimeException(e);
                                             }
@@ -2022,7 +2022,7 @@ public class SystemClass {
 
                             ResultSet result = null;
                             try {
-                                result = DatabaseUtils.selectQueryById("mv_name", "movie", null, null);
+                                result = DatabaseUtils.selectQuery("mv_name", "movie", null, null);
                             } catch (SQLException e) {
                                 throw new RuntimeException(e);
                             }
@@ -2042,7 +2042,7 @@ public class SystemClass {
                         do {
                             try {
                                 Object[] params = {1};
-                                ResultSet result = DatabaseUtils.selectQueryById("genre_id, genre_name", "genre", "genre_status = ?", params);
+                                ResultSet result = DatabaseUtils.selectQuery("genre_id, genre_name", "genre", "genre_status = ?", params);
 
                                 try {
                                     int i = 1;
@@ -2371,7 +2371,7 @@ public class SystemClass {
 
                                             ResultSet result = null;
                                             try {
-                                                result = DatabaseUtils.selectQueryById("mv_name", "movie", null, null);
+                                                result = DatabaseUtils.selectQuery("mv_name", "movie", null, null);
                                             } catch (SQLException e) {
                                                 throw new RuntimeException(e);
                                             }
@@ -2392,7 +2392,7 @@ public class SystemClass {
                                         do {
                                             try {
                                                 Object[] params = {1};
-                                                ResultSet result = DatabaseUtils.selectQueryById("genre_id, genre_name", "genre", "genre_status = ?", params);
+                                                ResultSet result = DatabaseUtils.selectQuery("genre_id, genre_name", "genre", "genre_status = ?", params);
 
                                                 try {
                                                     int i = 1;
@@ -2725,7 +2725,7 @@ public class SystemClass {
 
                             ResultSet result = null;
                             try {
-                                result = DatabaseUtils.selectQueryById("genre_name", "genre", null, null);
+                                result = DatabaseUtils.selectQuery("genre_name", "genre", null, null);
                             } catch (SQLException e) {
                                 throw new RuntimeException(e);
                             }
@@ -2841,7 +2841,7 @@ public class SystemClass {
 
                                     ResultSet result = null;
                                     try {
-                                        result = DatabaseUtils.selectQueryById("genre_name", "genre", null, null);
+                                        result = DatabaseUtils.selectQuery("genre_name", "genre", null, null);
                                     } catch (SQLException e) {
                                         throw new RuntimeException(e);
                                     }

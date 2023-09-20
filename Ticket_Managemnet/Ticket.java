@@ -70,7 +70,7 @@ public class Ticket {
         ArrayList<Ticket> tickets = new ArrayList<>();
         try {
             Object[] params = {};
-            ResultSet result = DatabaseUtils.selectQueryById("*", "ticket",null,null);
+            ResultSet result = DatabaseUtils.selectQuery("*", "ticket",null,null);
 
             while (result.next()) {
                 Ticket ticket = new Ticket();
@@ -92,8 +92,6 @@ public class Ticket {
         catch (SQLException e) {
             e.printStackTrace();
         }
-
-
 
         for(Ticket t:tickets){
             if(t.getTicket_id()>=largeId)
@@ -153,7 +151,7 @@ public class Ticket {
 
         try {
             Object[] params = {1};
-            ResultSet result = DatabaseUtils.selectQueryById("*", "ticket","ticket_status = ?",params);
+            ResultSet result = DatabaseUtils.selectQuery("*", "ticket","ticket_status = ?",params);
 
             while (result.next()) {
 
@@ -196,7 +194,7 @@ public class Ticket {
 
         try {
             Object[] params = {schedule_id,1};
-            ResultSet result = DatabaseUtils.selectQueryById("*", "ticket","schedule_id = ? AND ticket_status = ?",params);
+            ResultSet result = DatabaseUtils.selectQuery("*", "ticket","schedule_id = ? AND ticket_status = ?",params);
             //Ticket ticket = null;
             while (result.next()) {
 

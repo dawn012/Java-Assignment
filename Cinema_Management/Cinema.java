@@ -44,7 +44,7 @@ public class Cinema implements DatabaseOperations {
 
         try {
             Object[] params = {status};
-            ResultSet result = DatabaseUtils.selectQueryById("*", "cinema", "cinema_status = ?", params);
+            ResultSet result = DatabaseUtils.selectQuery("*", "cinema", "cinema_status = ?", params);
 
             while (result.next()) {
                 Cinema cinema = new Cinema();
@@ -96,7 +96,7 @@ public class Cinema implements DatabaseOperations {
 
     public boolean isPhoneNumberUnique() {
         try {
-            ResultSet result = DatabaseUtils.selectQueryById("cinema_phone", "cinema", null, null);
+            ResultSet result = DatabaseUtils.selectQuery("cinema_phone", "cinema", null, null);
 
             while (result.next()) {
                 if (cinemaPhone.equals(result.getString("cinema_phone"))) {
@@ -199,7 +199,7 @@ public class Cinema implements DatabaseOperations {
 
         try {
             Object[] params = {cinemaID};
-            rowAffected = DatabaseUtils.deleteQueryById("cinema", "cinema_status", "cinema_id", params);
+            rowAffected = DatabaseUtils.delectQuery("cinema", "cinema_status", "cinema_id", params);
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -219,7 +219,7 @@ public class Cinema implements DatabaseOperations {
 
         try {
             Object[] params = {cinemaID, status};
-            ResultSet result = DatabaseUtils.selectQueryById("*", "hall", "cinema_id = ? AND hall_status = ?", params);
+            ResultSet result = DatabaseUtils.selectQuery("*", "hall", "cinema_id = ? AND hall_status = ?", params);
 
             while (result.next()) {
                 Hall hall = new Hall();
