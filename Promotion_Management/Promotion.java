@@ -202,7 +202,7 @@ public class Promotion implements DatabaseOperations {
         int delete;
 
         try {
-            delete = DatabaseUtils.deleteQueryById("PROMOTION", "PROMOTION_STATUS", "PROMOTION_ID", params);
+            delete = DatabaseUtils.delectQuery("PROMOTION", "PROMOTION_STATUS", "PROMOTION_ID", params);
 
             if (delete == 1) {
                 return true;
@@ -456,17 +456,5 @@ public class Promotion implements DatabaseOperations {
                 startDate.getDate(), endDate.getDate(), publishCount, receiveCount
         );
     }
-
-//    public String toString() {
-//        return  "\nPromotion ID : " + promotionId
-//                + "\n1. Description : " + description
-//                + "\n2. Discount value : " + discountValue
-//                + "\n3. Minimum Spend : " + minSpend
-//                + "\n4. Per Limit : " + perLimit
-//                + "\n5. Start date : " + startDate.getDate()
-//                + "\n6. End date : " + endDate.getDate()
-//                + "\n7. Publish count : " + publishCount
-//                + "\n8. Receive count : " + receiveCount;
-//    }
 }
 
