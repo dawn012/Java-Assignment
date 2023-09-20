@@ -767,8 +767,8 @@ public class Booking {
         int rowAffected = 0;
 
         try {
-            String updateSql = "UPDATE `booking` SET `booking_status`= ? , `total_price`= ? WHERE `booking_id` = ?";
-            Object[] params = {bookingStatus, totalPrice, bookingId};
+            String updateSql = "UPDATE `booking` SET `booking_status`= ? , `total_price`= ? , `adultTicket_qty`=? , `childTicket_qty`=?  WHERE `booking_id` = ?";
+            Object[] params = {bookingStatus,totalPrice,adultTicketQty,childTicketQty, bookingId};
             rowAffected = DatabaseUtils.updateQuery(updateSql, params);
         }
         catch (SQLException e) {

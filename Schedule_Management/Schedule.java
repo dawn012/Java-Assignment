@@ -98,10 +98,15 @@ public class Schedule implements DatabaseOperations {
 
     public static void printing(ArrayList<Schedule> schedules) {
         if (!schedules.isEmpty()) {
-            System.out.println("\nMovie Schedule List for " + schedules.get(0).showDate.getDate() + " at Hall " + schedules.get(0).hall.getHallID() + ":\n");
-            System.out.printf("%-30s %15s %15s\n", "Movie Name", "Start Time", "End Time");
+            System.out.println("\nMovie Schedule List for " + schedules.get(0).showDate.getDate() + " at Hall " + schedules.get(0).hall.getHallID() + ":");
+
+            System.out.println("------------------------------------------------------------------------------");
+            System.out.printf("%-3c %-4s %c %-31s %-3c %-12s %-4c %-11s %c\n", '|', "No", '|', "Movie Name", '|', "Start Time", '|', "End Time", '|');
+            System.out.println("------------------------------------------------------------------------------");
+
             for (int i = 0; i < schedules.size(); i++) {
-                System.out.printf((i + 1) + ". %-20s %17s %17s\n", schedules.get(i).movie.getMvName().getName(), schedules.get(i).startTime, schedules.get(i).endTime);
+                System.out.printf("%-3c %-4d %c %-31s %-5c %-10s %-5c %-10s %c\n", '|', (i + 1), '|', schedules.get(i).movie.getMvName().getName(), '|', schedules.get(i).startTime, '|', schedules.get(i).endTime, '|');
+                System.out.println("------------------------------------------------------------------------------");
             }
         }
         else {
@@ -250,9 +255,11 @@ public class Schedule implements DatabaseOperations {
         LocalDate currentDate = LocalDate.now(); // 获取当前日期
 
         // 生成一周内的日期
+        System.out.println("--------------------------------");
         for (int i = 0; i <= 6; i++) { // 一周有7天
             dateList.add(currentDate);  // 将日期添加到列表中
-            System.out.println((i + 1) + ". " + dateList.get(i));
+            System.out.printf("%-4c %-4d %-5c %-14s %c\n", '|', (i + 1), '|', dateList.get(i), '|');
+            System.out.println("--------------------------------");
             currentDate = currentDate.plusDays(1); // 增加一天
         }
 
@@ -295,7 +302,8 @@ public class Schedule implements DatabaseOperations {
 
                 schedules.add(schedule);
 
-                System.out.printf(count + ". %-20s %17s %17s\n", hall.getHallName().getName(), schedule.startTime, schedule.endTime);
+                System.out.printf("%-3c %-4d %c %-31s %-5c %-10s %-5c %-10s %c\n", '|', count, '|', hall.getHallName().getName(), '|', schedule.startTime, '|', schedule.endTime, '|');
+                System.out.println("------------------------------------------------------------------------------");
                 count++;
             }
         }

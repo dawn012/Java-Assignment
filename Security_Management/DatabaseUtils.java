@@ -5,7 +5,7 @@ import java.sql.*;
 public class DatabaseUtils {
     private static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/cinema";
     private static final String DB_UNAME = "root";
-    private static final String DB_PSD = "{M8246+qpzmS}";
+    private static final String DB_PSD = "";
 
     // 不能创建对象
     private DatabaseUtils() {

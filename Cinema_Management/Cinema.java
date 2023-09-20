@@ -19,7 +19,6 @@ public class Cinema implements DatabaseOperations {
     private Name cinemaName;
     private Address cinemaAddress;
     private String cinemaPhone;
-    private static final String OFFICE_PHONE_REGEX = "^(01[023456789]-[0-9]{7}|011-[0-9]{8}|03-[0-9]{8}|08[0-9]-[0-9]{6}|0[12456789]-[0-9]{7})$";
 
     public Cinema(){
     }
@@ -88,10 +87,30 @@ public class Cinema implements DatabaseOperations {
     }
 
     public boolean isValidOfficePhoneNumber() {
-        Pattern pattern = Pattern.compile(OFFICE_PHONE_REGEX);
+        String regex = "^(01[023456789]-[0-9]{7}|011-[0-9]{8}|03-[0-9]{8}|08[0-9]-[0-9]{6}|0[12456789]-[0-9]{7})$";
+        Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(cinemaPhone);
 
         return matcher.matches();
+    }
+
+    public boolean isPhoneNumberUnique() {
+        try {
+            ResultSet result = DatabaseUtils.selectQueryById("cinema_phone", "cinema", null, null);
+
+            while (result.next()) {
+                if (cinemaPhone.equals(result.getString("cinema_phone"))) {
+                    return false;
+                }
+            }
+
+            result.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return true;
     }
 
     public boolean add() throws SQLException {

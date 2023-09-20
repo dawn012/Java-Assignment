@@ -12,7 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RegisterValidator {
-    public static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+    //public static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
     public static String validateUsername(Scanner input) {
         String uname;

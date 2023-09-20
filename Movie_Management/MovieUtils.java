@@ -72,13 +72,22 @@ public class MovieUtils {
         do {
             do {
                 try {
-                    System.out.println("\nPlease select a movie filtering from the list below: ");
-                    System.out.println("1. Future Movie");
-                    System.out.println("2. Movie within 1 week");
-                    System.out.println("3. Movie within 1 month");
-                    System.out.println("4. Movie within 3 months");
-                    System.out.println("5. Movie within 1 year");
-                    System.out.println("6. All movies");
+                    System.out.println("\nPlease select a movie filtering from the list below:");
+                    System.out.printf("------------------------------------------------------");
+                    System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Filtering", '|');
+                    System.out.println("------------------------------------------------------");
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 1, '|', "Future Movie", '|');
+                    System.out.println("------------------------------------------------------");
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 2, '|', "Movie within 1 week", '|');
+                    System.out.println("------------------------------------------------------");
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 3, '|', "Movie within 1 month", '|');
+                    System.out.println("------------------------------------------------------");
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 4, '|', "Movie within 3 months", '|');
+                    System.out.println("------------------------------------------------------");
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 5, '|', "Movie within 1 year", '|');
+                    System.out.println("------------------------------------------------------");
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 6, '|', "All movies", '|');
+                    System.out.println("------------------------------------------------------");
                     System.out.print("\nEnter your selection (0 - Back): ");
                     choice = sc.nextInt();
                     sc.nextLine();
@@ -128,14 +137,20 @@ public class MovieUtils {
                     break;
             }
 
+            System.out.print("-----------------------------------------------------");
+            System.out.printf("\n%-3c %-4s %c %-40s %c\n", '|', "No", '|', "Movie Name", '|');
+            System.out.println("-----------------------------------------------------");
+
             if (!moviesAfterFiltered.isEmpty()) {
-                System.out.printf("\n%-5s %s\n", "No", "Movie Name");
                 for (int i = 0; i < moviesAfterFiltered.size(); i++) {
-                    System.out.printf("%-5d %s\n", (i + 1), moviesAfterFiltered.get(i).getMvName().getName());
+                    System.out.printf("%-3c %-4d %c %-40s %c\n", '|', (i + 1), '|', moviesAfterFiltered.get(i).getMvName().getName(), '|');
+                    System.out.println("-----------------------------------------------------");
                 }
             }
             else {
-                System.out.println("Sorry, no movie found!");
+                System.out.println("-----------------------------------------------------");
+                System.out.printf("%-15c %-35s %c\n", '|', "Sorry, no movie found!", '|');
+                System.out.println("-----------------------------------------------------");
             }
         } while (moviesAfterFiltered.isEmpty() && choice != 0);
 
@@ -304,5 +319,55 @@ public class MovieUtils {
         } while (error);
 
         return 0;
+    }
+
+    public static void printWrappedTextForSynopsis(String header, String text, int lineLength) {
+        String[] lines = text.split("\\s+");
+        String border = new String(new char[lineLength]).replace('\0', '-');
+
+        System.out.printf("| %-20s |                                                         |", header);
+
+        StringBuilder currentLine = new StringBuilder();
+        for (String word : lines) {
+            if (currentLine.length() + word.length() - 3 <= lineLength) {
+                if (currentLine.length() > 0) {
+                    currentLine.append(" ");
+                }
+                currentLine.append(word);
+            } else {
+                System.out.printf("\n| %-20s | %-55s |", "", currentLine.toString());
+                currentLine = new StringBuilder();
+                currentLine.append(word);
+            }
+        }
+
+        if (currentLine.length() > 0) {
+            System.out.printf("\n| %-20s | %-55s |\n", "", currentLine.toString());
+        }
+    }
+
+    public static void printEditWrappedTextForSynopsis(String header, String text, int lineLength, int num) {
+        String[] lines = text.split("\\s+");
+        String border = new String(new char[lineLength]).replace('\0', '-');
+
+        System.out.printf("| %-2d | %-20s |                                                    |", num, header);
+
+        StringBuilder currentLine = new StringBuilder();
+        for (String word : lines) {
+            if (currentLine.length() + word.length() - 3 <= lineLength) {
+                if (currentLine.length() > 0) {
+                    currentLine.append(" ");
+                }
+                currentLine.append(word);
+            } else {
+                System.out.printf("\n| %-2s | %-20s | %-50s |", "", "", currentLine.toString());
+                currentLine = new StringBuilder();
+                currentLine.append(word);
+            }
+        }
+
+        if (currentLine.length() > 0) {
+            System.out.printf("\n| %-2s | %-20s | %-50s |\n", "", "", currentLine.toString());
+        }
     }
 }

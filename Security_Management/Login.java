@@ -365,7 +365,6 @@ public class Login {
         }
     }
 
-
     @Override
     public String toString() {
         return "Login{" +
@@ -389,6 +388,4 @@ public class Login {
     public void setPassword(String password) {
         this.password = password;
     }
-
-
 }

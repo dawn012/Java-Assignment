@@ -38,6 +38,7 @@ public class SystemClass {
     public static void run(Scanner sc) throws Exception {
         SystemClass system = new SystemClass();
 
+
         int choice = 0;
         boolean error = true, continues = true, back = false;
 
@@ -45,12 +46,22 @@ public class SystemClass {
             do {
                 try {
                     System.out.println("\nSelect the operation: ");
-                    System.out.println("1. View Profile");
-                    System.out.println("2. View Movie");
-                    System.out.println("3. View Promotion");
-                    System.out.println("4. View Booking History");
-                    System.out.println("5. Search Movie");
-                    System.out.println("6. Log out");
+                    System.out.printf("------------------------------------------------------");
+                    System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Operation", '|');
+                    System.out.println("------------------------------------------------------");
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 1, '|', "View Profile", '|');
+                    System.out.println("------------------------------------------------------");
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 2, '|', "View Movie", '|');
+                    System.out.println("------------------------------------------------------");
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 3, '|', "View Promotion", '|');
+                    System.out.println("------------------------------------------------------");
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 4, '|', "View Booking History", '|');
+                    System.out.println("------------------------------------------------------");
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 5, '|', "Search Movie", '|');
+                    System.out.println("------------------------------------------------------");
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 6, '|', "Log out", '|');
+                    System.out.println("------------------------------------------------------");
+
                     System.out.print("\nEnter your selection: ");
 
                     choice = sc.nextInt();
@@ -81,10 +92,18 @@ public class SystemClass {
                         do {
                             try {
                                 System.out.println("\nSelect the time period: ");
-                                System.out.println("1. Opening This Week");
-                                System.out.println("2. Opening This Month");
-                                System.out.println("3. Release Within 3 Months");
-                                System.out.println("4. Coming Soon");
+                                System.out.printf("------------------------------------------------------");
+                                System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Time Period", '|');
+                                System.out.println("------------------------------------------------------");
+                                System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 1, '|', "Opening This Week", '|');
+                                System.out.println("------------------------------------------------------");
+                                System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 2, '|', "Opening This Month", '|');
+                                System.out.println("------------------------------------------------------");
+                                System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 3, '|', "Release Within 3 Months", '|');
+                                System.out.println("------------------------------------------------------");
+                                System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 4, '|', "Coming Soon", '|');
+                                System.out.println("------------------------------------------------------");
+
                                 System.out.print("\nEnter your selection (0 - Back): ");
 
                                 periodSelected = sc.nextInt();
@@ -108,40 +127,50 @@ public class SystemClass {
                             case 1:
                                 LocalDate oneWeekAgo = currentDate.minusWeeks(1);
 
-                                System.out.println("\nOpening This Week");
+                                System.out.print("\n---------------------\n");
+                                System.out.println("| Opening This Week |");
                                 moviesAfterFiltered = MovieUtils.getMovieListAfterFiltered(oneWeekAgo, currentDate, 1);
                                 break;
                             case 2:
                                 LocalDate oneMonthAgo = currentDate.minusMonths(1);
 
-                                System.out.println("\nOpening This Month");
+                                System.out.print("\n----------------------\n");
+                                System.out.println("| Opening This Month |");
                                 moviesAfterFiltered = MovieUtils.getMovieListAfterFiltered(oneMonthAgo, currentDate, 1);
                                 break;
                             case 3:
                                 LocalDate threeMonthAgo = currentDate.minusMonths(3);
 
-                                System.out.println("\nRelease within 3 months");
+                                System.out.printf("\n---------------------------\n");
+                                System.out.println("| Release within 3 months |");
                                 moviesAfterFiltered = MovieUtils.getMovieListAfterFiltered(threeMonthAgo, currentDate, 1);
                                 break;
                             case 4:
                                 LocalDate comingSoon = currentDate.plusDays(1);
 
-                                System.out.println("\nComing Soon");
+                                System.out.print("\n---------------\n");
+                                System.out.println("| Coming Soon |");
                                 moviesAfterFiltered = MovieUtils.getMovieListAfterFiltered(comingSoon, null, 1);
                                 break;
                         }
 
                         if (!moviesAfterFiltered.isEmpty()) {
-                            System.out.printf("\n%-5s %s\n", "No", "Movie Name");
+                            System.out.print("-----------------------------------------------------");
+                            System.out.printf("\n%-3c %-4s %c %-40s %c\n", '|', "No", '|', "Movie Name", '|');
+                            System.out.println("-----------------------------------------------------");
                             for (int i = 0; i < moviesAfterFiltered.size(); i++) {
-                                System.out.printf("%-5d %s\n", (i + 1), moviesAfterFiltered.get(i).getMvName().getName());
+                                System.out.printf("%-3c %-4d %c %-40s %c\n", '|', (i + 1), '|', moviesAfterFiltered.get(i).getMvName().getName(), '|');
+                                System.out.println("-----------------------------------------------------");
                             }
                         }
                         else {
-                            System.out.println("Sorry, no movie found!");
+                            System.out.println("-----------------------------------------------------");
+                            System.out.printf("%-15c %-35s %c\n", '|', "Sorry, no movie found!", '|');
+                            System.out.println("-----------------------------------------------------");
+                            back = false;
                         }
 
-                        if (periodSelected != 0) {
+                        if (periodSelected != 0 && !moviesAfterFiltered.isEmpty()) {
                             do {
                                 try {
                                     System.out.print("\nEnter the movie no (0 - Back): ");
@@ -178,125 +207,191 @@ public class SystemClass {
                                     } while (bookNow.equals("Invalid"));
 
                                     if (bookNow.equals("Y")) {
-                                        Schedule schedule = new Schedule();
-                                        schedule.setMovie(movie);
+                                        boolean scheduleFound = false;
+                                        Schedule schedule;
 
-                                        // 1. Select the cinema
-                                        int cinemaNo = 0;
-                                        error = true;
-                                        ArrayList<Cinema> cinemas = new ArrayList<>();
                                         do {
-                                            try {
-                                                System.out.print("\nSelect the cinema you want to view the schedule: ");
-                                                cinemas = Cinema.viewCinemaList(1);
-                                                System.out.print("\nEnter the cinema no: ");
-                                                cinemaNo = sc.nextInt();
-                                                sc.nextLine();
+                                            schedule = new Schedule();
+                                            schedule.setMovie(movie);
 
-                                                if (cinemaNo > 0 && cinemaNo <= cinemas.size()) {
-                                                    error = false;
-                                                } else {
-                                                    System.out.println("Your choice is not among the available options! PLease try again.");
+                                            // 1. Select the cinema
+                                            int cinemaNo = 0;
+                                            error = true;
+                                            ArrayList<Cinema> cinemas = new ArrayList<>();
+                                            do {
+                                                try {
+                                                    System.out.println("\nSelect the cinema you want to view the schedule:");
+                                                    cinemas = Cinema.viewCinemaList(1);
+                                                    System.out.print("\nEnter the cinema no: ");
+                                                    cinemaNo = sc.nextInt();
+                                                    sc.nextLine();
+
+                                                    if (cinemaNo > 0 && cinemaNo <= cinemas.size()) {
+                                                        error = false;
+                                                    } else {
+                                                        System.out.println("Your choice is not among the available options! PLease try again.");
+                                                    }
+                                                } catch (InputMismatchException e) {
+                                                    System.out.println("Please enter a valid cinema no!");
+                                                    sc.nextLine();
                                                 }
-                                            } catch (InputMismatchException e) {
-                                                System.out.println("Please enter a valid cinema no!");
-                                                sc.nextLine();
-                                            }
-                                        } while (error);
+                                            } while (error);
 
-                                        // 2. Select the show date
-                                        int dateNo = 0;
-                                        error = true;
-                                        ArrayList<LocalDate> dateList;
-                                        do {
-                                            try {
-                                                System.out.println("\nSelect the date you want to view the schedule: ");
-                                                dateList = Schedule.generateOneWeekDateList();
-                                                System.out.print("\nEnter the date no: ");
-                                                dateNo = sc.nextInt();
-                                                sc.nextLine();
+                                            // 2. Select the show date
+                                            int dateNo = 0;
+                                            error = true;
+                                            ArrayList<LocalDate> dateList;
+                                            do {
+                                                try {
+                                                    System.out.println("\nSelect the date you want to view the schedule: ");
+                                                    dateList = Schedule.generateOneWeekDateList();
+                                                    System.out.print("\nEnter the date no: ");
+                                                    dateNo = sc.nextInt();
+                                                    sc.nextLine();
 
-                                                if (dateNo > 0 && dateNo <= dateList.size()) {
-                                                    DateTime date = new DateTime(dateList.get(dateNo - 1));
-                                                    schedule.setShowDate(date);
-                                                    error = false;
-                                                } else {
-                                                    System.out.println("Your choice is not among the available options! PLease try again.");
+                                                    if (dateNo > 0 && dateNo <= dateList.size()) {
+                                                        DateTime date = new DateTime(dateList.get(dateNo - 1));
+                                                        schedule.setShowDate(date);
+                                                        error = false;
+                                                    } else {
+                                                        System.out.println("Your choice is not among the available options! PLease try again.");
+                                                    }
+                                                } catch (InputMismatchException e) {
+                                                    System.out.println("Please enter a valid date no!");
+                                                    sc.nextLine();
                                                 }
-                                            } catch (InputMismatchException e) {
-                                                System.out.println("Please enter a valid date no!");
-                                                sc.nextLine();
-                                            }
-                                        } while (error);
+                                            } while (error);
 
-                                        // 3. Select the time
-                                        error = true;
-                                        int scheduleSelected = 0;
-                                        do {
-                                            ArrayList<Hall> halls = cinemas.get(cinemaNo - 1).getHallList(1);
-                                            ArrayList<Schedule> schedules = new ArrayList<>();
+                                            // 3. Select the time
+                                            error = true;
+                                            int scheduleSelected = 0;
 
-                                            int count = 1;
-                                            System.out.printf("\n%-30s %15s %15s\n", "Hall Name", "Start Time", "End Time");
-                                            for (int i = 0; i < halls.size(); i++) {
-                                                schedule.setHall(halls.get(i));
-                                                count = schedule.showHallAndTime(count, schedules);
-                                            }
+                                            do {
+                                                ArrayList<Hall> halls = cinemas.get(cinemaNo - 1).getHallList(1);
+                                                ArrayList<Schedule> schedules = new ArrayList<>();
 
-                                            try {
-                                                System.out.print("\nEnter the schedule no: ");
-                                                scheduleSelected = sc.nextInt();
-                                                sc.nextLine();
-
-                                                if (scheduleSelected > 0 && scheduleSelected <= schedules.size()) {
-                                                    schedule.setScheduleID(schedules.get(scheduleSelected - 1).getScheduleID());
-                                                    schedule.setHall(schedules.get(scheduleSelected - 1).getHall());
-                                                    schedule.setStartTime(schedules.get(scheduleSelected - 1).getStartTime());
-                                                    schedule.setEndTime(schedules.get(scheduleSelected - 1).getEndTime());
-                                                    error = false;
-                                                } else {
-                                                    System.out.println("Your choice is not among the available options! PLease try again.");
+                                                int count = 1;
+                                                System.out.println("\n------------------------------------------------------------------------------");
+                                                System.out.printf("%-3c %-4s %c %-31s %-3c %-12s %-4c %-11s %c\n", '|', "No", '|', "Hall Name", '|', "Start Time", '|', "End Time", '|');
+                                                System.out.println("------------------------------------------------------------------------------");
+                                                for (int i = 0; i < halls.size(); i++) {
+                                                    schedule.setHall(halls.get(i));
+                                                    count = schedule.showHallAndTime(count, schedules);
                                                 }
-                                            } catch (InputMismatchException e) {
-                                                System.out.println("Please enter a valid schedule no!");
-                                                sc.nextLine();
-                                            }
-                                        } while (error);
 
-                                        // 4. Select the seat chin yong part
-                                        Booking booking = new Booking();
-                                        Customer c = new Customer();//暂时用
-                                        c.setCustId(2);//暂时用
-                                        booking.setCustomer(c);//暂时用
-                                        String confirmStr="R";
-                                        while (confirmStr.equals("R")) {
-                                            if (booking.executeBooking(schedule)) {
-                                                do {
-                                                    booking.printBookingDetail();
-                                                    do {
-                                                        try {
-                                                            System.out.println("Confirm This Booking ? (Y=Yes R=No, Select Again N=No Confirm, Exit) : ");
-                                                            confirmStr = sc.next().toUpperCase();
-                                                            if (confirmStr.equals("Y")) {
-                                                                Booking.insertBooking(booking);
-                                                                for (Ticket t : booking.getTicketList()) {
-                                                                    Ticket.insertTicket(t, booking);
-                                                                }
-                                                            }
-                                                        } catch (Exception e) {
-                                                            System.out.println("Something wrong...");
-                                                            sc.nextLine();
+                                                if (count != 1) {
+                                                    scheduleFound = true;
+
+                                                    try {
+                                                        System.out.print("\nEnter the schedule no: ");
+                                                        scheduleSelected = sc.nextInt();
+                                                        sc.nextLine();
+
+                                                        if (scheduleSelected > 0 && scheduleSelected <= schedules.size()) {
+                                                            schedule.setScheduleID(schedules.get(scheduleSelected - 1).getScheduleID());
+                                                            schedule.setHall(schedules.get(scheduleSelected - 1).getHall());
+                                                            schedule.setStartTime(schedules.get(scheduleSelected - 1).getStartTime());
+                                                            schedule.setEndTime(schedules.get(scheduleSelected - 1).getEndTime());
+                                                            error = false;
+                                                            continues = false;
+                                                        } else {
+                                                            System.out.println("Your choice is not among the available options! PLease try again.");
+                                                            error = true;
                                                         }
-                                                    } while (!confirmStr.equals("Y") && !confirmStr.equals("N") && !confirmStr.equals("R"));
+                                                    } catch (InputMismatchException e) {
+                                                        System.out.println("Please enter a valid schedule no!");
+                                                        sc.nextLine();
+                                                    }
+                                                } else {
+                                                    System.out.printf("| %50s %25c\n", "Sorry, no schedule found!", '|');
+                                                    System.out.println("------------------------------------------------------------------------------");
 
-                                                    if (confirmStr.equals("Y")) {
-                                                        //booking.printBookingDetail();
-                                                        // Apply promotion
-                                                        //booking.setBooking_status("completed");
-                                                        //booking.updateStatus();
-                                                        //Promotion promotion = applyPromotion(sc, 1, booking);
+                                                    error = false;
+                                                    scheduleFound = false;
 
-                                                        applyPromotion(sc, booking);
+                                                    String confirmation;
+                                                    do {
+                                                        System.out.println("\nDo you want to search another schedule for this movie? (Y / N)");
+                                                        System.out.print("Answer: ");
+                                                        String answer = sc.nextLine();
+
+                                                        confirmation = SystemClass.askForContinue(answer);
+                                                    } while (confirmation.equals("Invalid"));
+
+                                                    if (confirmation.equals("Y")) {
+                                                        continues = true;
+                                                    } else {
+                                                        continues = false;
+                                                    }
+                                                }
+                                            } while (error);
+                                        } while (continues);
+
+                                        if (scheduleFound == true) {
+                                            // 4. Select the seat chin yong part
+                                            Booking booking = new Booking();
+                                            Customer c = new Customer();//暂时用
+                                            c.setCustId(2);//暂时用
+                                            booking.setCustomer(c);//暂时用
+                                            String confirmStr = " ";
+                                            boolean insert = false;
+                                            while (confirmStr.equals(" ")) {
+                                                if (booking.executeBooking(schedule)) {
+                                                    do {
+                                                        if (confirmStr.equals("R")) {
+                                                            booking.executeBooking(schedule);
+                                                        }
+                                                        booking.printBookingDetail();
+                                                        do {
+                                                            try {
+                                                                System.out.print("Confirm This Booking ? (Y=\"Yes\", R=\"Select Again\", N=\"Exit\") : ");
+                                                                confirmStr = sc.next().toUpperCase();
+
+                                                                if (confirmStr.equals("Y")) {
+                                                                    if (!insert) {
+                                                                        Booking.insertBooking(booking);
+                                                                        for (Ticket t : booking.getTicketList()) {
+                                                                            Ticket.insertTicket(t, booking);
+                                                                        }
+                                                                        insert = true;
+                                                                    } else {
+                                                                        // if already insert to the database so just to change the status from "cancelled" to "processing"😊
+                                                                        booking.setBookingStatus("processing");
+                                                                        for (Ticket t : booking.getTicketList()) {
+                                                                            t.setTicketStatus(0);
+                                                                            t.updateStatus();
+                                                                        }
+                                                                        booking.updateBooking();
+                                                                    }
+                                                                } else if (confirmStr.equals("N")) {
+                                                                    if (insert) {
+                                                                        booking.cancelBooking();
+                                                                        insert = false;
+                                                                    }
+                                                                    //back = true;
+                                                                    break;
+                                                                } else if (confirmStr.equals("R")) {
+                                                                    if (insert) {
+                                                                        booking.cancelBooking();
+                                                                        insert = false;
+                                                                    }
+                                                                }
+
+
+                                                            } catch (Exception e) {
+                                                                System.out.println("Something wrong...");
+                                                                sc.nextLine();
+                                                            }
+                                                        } while (!confirmStr.equals("Y") && !confirmStr.equals("N") && !confirmStr.equals("R"));
+
+                                                        if (confirmStr.equals("Y")) {
+                                                            //booking.printBookingDetail();
+                                                            // Apply promotion
+                                                            //booking.setBooking_status("completed");
+                                                            //booking.updateStatus();
+                                                            //Promotion promotion = applyPromotion(sc, 1, booking);
+
+                                                            applyPromotion(sc, booking);
 
                                                         // Make Payment
                                                         Payment payment = makePayment(sc, booking);
@@ -310,11 +405,10 @@ public class SystemClass {
 
                                                             back = true;
                                                         }
-                                                    }
-                                                } while (!back);
+                                                    } while (!confirmStr.equals("N"));
+                                                }
                                             }
                                         }
-
                                     } else {
                                         back = false;
                                     }
@@ -325,7 +419,9 @@ public class SystemClass {
                                 back = false;
                             }
                         } else {
-                            break;
+                            if (periodSelected == 0) {
+                                break;
+                            }
                         }
                     } while (back == false);
                     break;
@@ -350,8 +446,14 @@ public class SystemClass {
                         do {
                             try {
                                 System.out.println("\nSelect the searching method:");
-                                System.out.println("1. Search by movie name");
-                                System.out.println("2. Search by genre");
+                                System.out.printf("------------------------------------------------------");
+                                System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Searching Method", '|');
+                                System.out.println("------------------------------------------------------");
+                                System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 1, '|', "Search by movie name", '|');
+                                System.out.println("------------------------------------------------------");
+                                System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 2, '|', "Search by genre", '|');
+                                System.out.println("------------------------------------------------------");
+
                                 System.out.print("\nEnter your selection (0 - Back): ");
                                 searchingMethod = sc.nextInt();
                                 sc.nextLine();
@@ -394,10 +496,14 @@ public class SystemClass {
 
                                         error = true;
                                         System.out.println("\nSearch Results: ");
+                                        System.out.printf("------------------------------------------------------");
+                                        System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Movie Name", '|');
+                                        System.out.println("------------------------------------------------------");
 
                                         if (!searchResults.isEmpty()) {
                                             for (int i = 0; i < searchResults.size(); i++) {
-                                                System.out.println((i + 1) + ". " + searchResults.get(i).getMvName().getName());
+                                                System.out.printf("%-3c %-4d %c %-41s %c\n", '|', (i + 1), '|', searchResults.get(i).getMvName().getName(), '|');
+                                                System.out.println("------------------------------------------------------");
                                             }
 
                                             do {
@@ -422,7 +528,8 @@ public class SystemClass {
                                                 searchedMovie.viewMovieDetails();
                                             }
                                         } else {
-                                            System.out.println("Sorry, no movie was found!");
+                                            System.out.printf("%-15c %-36s %c\n", '|', "Sorry, no movie found!", '|');
+                                            System.out.println("------------------------------------------------------");
                                         }
 
                                         do {
@@ -451,7 +558,7 @@ public class SystemClass {
                                     int genreSelected = 0;
                                     int movieNum = 0;
 
-                                    System.out.println("Select the genre you want to view the movie:");
+                                    System.out.println("\nSelect the genre you want to view the movie:");
                                     ArrayList<Genre> genres = Genre.viewGenreList(1);
 
                                     do {
@@ -477,10 +584,15 @@ public class SystemClass {
                                         Genre viewGenre = genres.get(genreSelected - 1);
                                         searchResults = MovieUtils.queryMovies(null, viewGenre);
 
+                                        System.out.println("\nSearch Results: ");
+                                        System.out.printf("------------------------------------------------------");
+                                        System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Movie Name", '|');
+                                        System.out.println("------------------------------------------------------");
+
                                         if (!searchResults.isEmpty()) {
-                                            System.out.println("\nSearch Results: ");
                                             for (int i = 0; i < searchResults.size(); i++) {
-                                                System.out.println((i + 1) + ". " + searchResults.get(i).getMvName().getName());
+                                                System.out.printf("%-3c %-4d %c %-41s %c\n", '|', (i + 1), '|', searchResults.get(i).getMvName().getName(), '|');
+                                                System.out.println("------------------------------------------------------");
                                             }
 
                                             error = true;
@@ -506,7 +618,8 @@ public class SystemClass {
                                                 searchedMovie.viewMovieDetails();
                                             }
                                         } else {
-                                            System.out.println("Sorry, no movie was found!");
+                                            System.out.printf("%-15c %-36s %c\n", '|', "Sorry, no movie found!", '|');
+                                            System.out.println("------------------------------------------------------");
                                         }
 
                                         do {
@@ -547,14 +660,26 @@ public class SystemClass {
             do {
                 try {
                     System.out.println("\nSelect the operation:");
-                    System.out.println("1. Manage Cinema");
-                    System.out.println("2. Manage Hall");
-                    System.out.println("3. Manage Movie");
-                    System.out.println("4. Manage Genre");
-                    System.out.println("5. Manage Schedule");
-                    System.out.println("6. Manage Promotion");
-                    System.out.println("7. View Report");
-                    System.out.println("8. Log out");
+                    System.out.printf("------------------------------------------------------");
+                    System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Operation", '|');
+                    System.out.println("------------------------------------------------------");
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 1, '|', "Manage Cinema", '|');
+                    System.out.println("------------------------------------------------------");
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 2, '|', "Manage Hall", '|');
+                    System.out.println("------------------------------------------------------");
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 3, '|', "Manage Movie", '|');
+                    System.out.println("------------------------------------------------------");
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 4, '|', "Manage Genre", '|');
+                    System.out.println("------------------------------------------------------");
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 5, '|', "Manage Schedule", '|');
+                    System.out.println("------------------------------------------------------");
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 6, '|', "Manage Promotion", '|');
+                    System.out.println("------------------------------------------------------");
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 7, '|', "View Report", '|');
+                    System.out.println("------------------------------------------------------");
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 8, '|', "Log Out", '|');
+                    System.out.println("------------------------------------------------------");
+
                     System.out.print("\nEnter your selection: ");
 
                     choice = sc.nextInt();
@@ -618,7 +743,7 @@ public class SystemClass {
                         ArrayList<Cinema> cinemas = new ArrayList<>();
                         do {
                             try {
-                                System.out.println("\nSelect the cinema: ");
+                                System.out.println("\nSelect the cinema you want to view: ");
                                 cinemas = Cinema.viewCinemaList(1);
                                 System.out.print("\nEnter the cinema no (0 - Back): ");
                                 cinemaNo = sc.nextInt();
@@ -698,6 +823,9 @@ public class SystemClass {
                             do {
                                 try {
                                     System.out.println("\nSelect the state: ");
+                                    System.out.printf("------------------------------------------------------");
+                                    System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "State", '|');
+                                    System.out.println("------------------------------------------------------");
                                     AddressUtils.viewStateList();
                                     System.out.print("\nEnter your selection: ");
                                     stateSelected = sc.nextInt();
@@ -721,6 +849,9 @@ public class SystemClass {
                             do {
                                 try {
                                     System.out.println("\nSelect the city: ");
+                                    System.out.printf("------------------------------------------------------");
+                                    System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "City", '|');
+                                    System.out.println("------------------------------------------------------");
                                     int count = AddressUtils.viewCityList(stateSelected - 1);
                                     System.out.print("\nEnter your selection: ");
                                     citySelected = sc.nextInt();
@@ -743,7 +874,10 @@ public class SystemClass {
                             int postcodeSelected = 0;
                             do {
                                 try {
-                                    System.out.println("\nSelect the city: ");
+                                    System.out.println("\nSelect the postcode: ");
+                                    System.out.printf("------------------------------------------------------");
+                                    System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Postcode", '|');
+                                    System.out.println("------------------------------------------------------");
                                     int count = AddressUtils.viewPostcodeList(cityName);
                                     System.out.print("\nEnter your selection: ");
                                     postcodeSelected = sc.nextInt();
@@ -806,7 +940,13 @@ public class SystemClass {
                                 newCinema.setCinemaPhone(phoneNumber.trim());
 
                                 if (newCinema.isValidOfficePhoneNumber()) {
-                                    error = false;
+                                    if (newCinema.isPhoneNumberUnique()) {
+                                        error = false;
+                                    }
+                                    else {
+                                        System.out.println("The phone number is same as other cinema phone number.");
+                                        error = true;
+                                    }
                                 } else {
                                     System.out.println("The phone number is invalid.");
                                     error = true;
@@ -1007,6 +1147,9 @@ public class SystemClass {
                                             do {
                                                 try {
                                                     System.out.println("\nSelect the state: ");
+                                                    System.out.printf("------------------------------------------------------");
+                                                    System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "State", '|');
+                                                    System.out.println("------------------------------------------------------");
                                                     AddressUtils.viewStateList();
                                                     System.out.print("\nEnter your selection: ");
                                                     stateSelected = sc.nextInt();
@@ -1030,6 +1173,9 @@ public class SystemClass {
                                             do {
                                                 try {
                                                     System.out.println("\nSelect the city: ");
+                                                    System.out.printf("------------------------------------------------------");
+                                                    System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "City", '|');
+                                                    System.out.println("------------------------------------------------------");
                                                     int count = AddressUtils.viewCityList(stateSelected - 1);
                                                     System.out.print("\nEnter your selection: ");
                                                     citySelected = sc.nextInt();
@@ -1052,7 +1198,10 @@ public class SystemClass {
                                             int postcodeSelected = 0;
                                             do {
                                                 try {
-                                                    System.out.println("\nSelect the city: ");
+                                                    System.out.println("\nSelect the postcode: ");
+                                                    System.out.printf("------------------------------------------------------");
+                                                    System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Postcode", '|');
+                                                    System.out.println("------------------------------------------------------");
                                                     int count = AddressUtils.viewPostcodeList(cityName);
                                                     System.out.print("\nEnter your selection: ");
                                                     postcodeSelected = sc.nextInt();
@@ -1116,7 +1265,13 @@ public class SystemClass {
                                                 cinema.setCinemaPhone(phoneNumber.trim());
 
                                                 if (cinema.isValidOfficePhoneNumber()) {
-                                                    error = false;
+                                                    if (cinema.isPhoneNumberUnique()) {
+                                                        error = false;
+                                                    }
+                                                    else {
+                                                        System.out.println("The phone number is same as other cinema phone number.");
+                                                        error = true;
+                                                    }
                                                 } else {
                                                     System.out.println("The phone number is invalid.");
                                                     error = true;
@@ -1233,16 +1388,13 @@ public class SystemClass {
         boolean back = false;
         boolean error = true;
         boolean continues = true;
-
-        ArrayList<Cinema> cinemas = Cinema.viewCinemaList(1);
+        ArrayList<Cinema> cinemas = new ArrayList<>();
         int cinemaSelected = 0;
 
         do {
             try {
                 System.out.println("\nSelect the cinema you want to manage it's hall: ");
-                for (int i = 0; i < cinemas.size(); i++) {
-                    System.out.println((i + 1) + ". " + cinemas.get(i).getCinemaName().getName());
-                }
+                cinemas = Cinema.viewCinemaList(1);
                 System.out.print("\nEnter your selection: ");
                 cinemaSelected = sc.nextInt();
                 sc.nextLine();
@@ -1280,8 +1432,12 @@ public class SystemClass {
                                 System.out.println("\nSelect the hall: ");
                                 halls = cinema.getHallList(1);
 
+                                System.out.print("------------------------------------------------------");
+                                System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Hall Name", '|');
+                                System.out.println("------------------------------------------------------");
                                 for (int i = 0; i < halls.size(); i++) {
-                                    System.out.println((i + 1) + ". " + halls.get(i).getHallName().getName());
+                                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', (i + 1), '|', halls.get(i).getHallName().getName(), '|');
+                                    System.out.println("------------------------------------------------------");
                                 }
 
                                 System.out.print("\nEnter the hall no (0 - Back): ");
@@ -1304,7 +1460,7 @@ public class SystemClass {
 
                             String continueViewHall;
                             do {
-                                System.out.println("\nDo you want view another cinema? (Y / N)");
+                                System.out.println("\nDo you want view another hall? (Y / N)");
                                 System.out.print("Answer: ");
                                 String answer = sc.next();
                                 sc.nextLine();
@@ -1469,8 +1625,12 @@ public class SystemClass {
                                 System.out.println("\nSelect the hall you want to modify: ");
                                 hallsModified = cinema.getHallList(1);
 
+                                System.out.print("------------------------------------------------------");
+                                System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Hall Name", '|');
+                                System.out.println("------------------------------------------------------");
                                 for (int i = 0; i < hallsModified.size(); i++) {
-                                    System.out.println((i + 1) + ". " + hallsModified.get(i).getHallName().getName());
+                                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', (i + 1), '|', hallsModified.get(i).getHallName().getName(), '|');
+                                    System.out.println("------------------------------------------------------");
                                 }
 
                                 System.out.print("\nEnter the hall no (0 - Back): ");
@@ -1585,39 +1745,11 @@ public class SystemClass {
                                         break;
                                     case 2:
                                         System.out.println("Hall type cannot be modified! Please retry.");
-                            /*do {
-                                try {
-                                    System.out.println("\nSelect the hall type: ");
-                                    System.out.println("1. Standard Hall");
-                                    System.out.println("2. 3D Hall");
-                                    System.out.print("\nEnter your selection: ");
-                                    int hallTypeSelection = sc.nextInt();
-
-                                    if (hallTypeSelection == 1) {
-                                        hallsModified.get(hallModified - 1).setHallType("STANDARD");
-                                        //cinema.setHall(new Hall(hallsModified.get(hallModified - 1).getHallName(), "STANDARD"));
-                                        error = false;
-                                    } else if (hallTypeSelection == 2) {
-                                        hallsModified.get(hallModified - 1).setHallType("3D");
-                                        //cinema.setHall(new Hall(hallsModified.get(hallModified - 1).getHallName(), "3D"));
-                                        error = false;
-                                    } else {
-                                        System.out.println("Your choice is not among the available options! PLease try again.");
-                                        error = true;
-                                    }
-                                }
-                                catch (InputMismatchException e) {
-                                    System.out.println("Please enter a valid hall type no!");
-                                    sc.nextLine();
-                                    error = true;
-                                }
-                            } while (error);*/
                                         break;
                                     case 3:
                                         System.out.println("Hall capacity cannot be modified! Please retry.");
                                         break;
                                     case 4: //ChinYong Part
-
                                         hallsModified.get(hallModified-1).initSeatList();
                                         String strRow=" ";
                                         int col = 0;
@@ -1709,8 +1841,12 @@ public class SystemClass {
                                 System.out.println("\nSelect the hall you want to delete: ");
                                 hallsDeleted = cinema.getHallList(1);
 
+                                System.out.print("------------------------------------------------------");
+                                System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Hall Name", '|');
+                                System.out.println("------------------------------------------------------");
                                 for (int i = 0; i < hallsDeleted.size(); i++) {
-                                    System.out.println((i + 1) + ". " + hallsDeleted.get(i).getHallName().getName());
+                                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', (i + 1), '|', hallsDeleted.get(i).getHallName().getName(), '|');
+                                    System.out.println("------------------------------------------------------");
                                 }
 
                                 System.out.print("\nEnter the hall no (0 - Back): ");
@@ -1739,12 +1875,6 @@ public class SystemClass {
 
                                 confirmation = SystemClass.askForContinue(answer);
                             } while (confirmation.equals("Invalid"));
-
-                            if (confirmation.equals("Y")) {
-                                cinema.getHall().deleteHall();
-                            } else {
-                                System.out.println("\nThe hall is saved.");
-                            }
 
                             // Confirm that the cinema is successfully deleted
                             boolean success;
@@ -1821,14 +1951,21 @@ public class SystemClass {
                         int choice1 = 0;
                         ArrayList<Movie> moviesAfterFiltered = MovieUtils.getMovieListAfterFiltered(null, null, 1);
 
+                        System.out.println("\nSelect the movie you want to view:");
+                        System.out.print("-----------------------------------------------------");
+                        System.out.printf("\n%-3c %-4s %c %-40s %c\n", '|', "No", '|', "Movie Name", '|');
+                        System.out.println("-----------------------------------------------------");
+
                         if (!moviesAfterFiltered.isEmpty()) {
-                            System.out.printf("\n%-5s %s\n", "No", "Movie Name");
                             for (int i = 0; i < moviesAfterFiltered.size(); i++) {
-                                System.out.printf("%-5d %s\n", (i + 1), moviesAfterFiltered.get(i).getMvName().getName());
+                                System.out.printf("%-3c %-4d %c %-40s %c\n", '|', (i + 1), '|', moviesAfterFiltered.get(i).getMvName().getName(), '|');
+                                System.out.println("-----------------------------------------------------");
                             }
                         }
                         else {
-                            System.out.println("Sorry, no movie found!");
+                            System.out.println("-----------------------------------------------------");
+                            System.out.printf("%-15c %-35s %c\n", '|', "Sorry, no movie found!", '|');
+                            System.out.println("-----------------------------------------------------");
                         }
 
                         do {
@@ -3033,8 +3170,12 @@ public class SystemClass {
                                     System.out.println("\nSelect the hall: ");
                                     halls = cinemas.get(cinemaNo - 1).getHallList(1);
 
+                                    System.out.print("------------------------------------------------------");
+                                    System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Hall Name", '|');
+                                    System.out.println("------------------------------------------------------");
                                     for (int i = 0; i < halls.size(); i++) {
-                                        System.out.println((i + 1) + ". " + halls.get(i).getHallName().getName());
+                                        System.out.printf("%-3c %-4d %c %-41s %c\n", '|', (i + 1), '|', halls.get(i).getHallName().getName(), '|');
+                                        System.out.println("------------------------------------------------------");
                                     }
 
                                     System.out.print("\nEnter the hall no: ");
@@ -3181,7 +3322,7 @@ public class SystemClass {
 
                     do {
                         try {
-                            System.out.print("\nSelect the cinema you want to view the schedule: ");
+                            System.out.println("\nSelect the cinema you want to view the schedule:");
                             cinemas = Cinema.viewCinemaList(1);
                             System.out.print("\nEnter the cinema no (0 - Back): ");
                             cinemaNo = sc.nextInt();
@@ -3231,10 +3372,17 @@ public class SystemClass {
                             do {
                                 try {
                                     System.out.println("\nSelect the operation:");
-                                    System.out.println("1. Modify the movie show time");
-                                    System.out.println("2. Modify the movie show date");
-                                    System.out.println("3. Modify the movie to be played");
-                                    System.out.println("4. Modify the location of the movie to be played");
+                                    System.out.printf("---------------------------------------------------------------");
+                                    System.out.printf("\n%-3c %-4s %c %-50s %c\n", '|', "No", '|', "Operation", '|');
+                                    System.out.println("---------------------------------------------------------------");
+                                    System.out.printf("%-3c %-4d %c %-50s %c\n", '|', 1, '|', "Modify the movie show time", '|');
+                                    System.out.println("---------------------------------------------------------------");
+                                    System.out.printf("%-3c %-4d %c %-50s %c\n", '|', 2, '|', "Modify the movie show date", '|');
+                                    System.out.println("---------------------------------------------------------------");
+                                    System.out.printf("%-3c %-4d %c %-50s %c\n", '|', 3, '|', "Modify the movie to be played", '|');
+                                    System.out.println("---------------------------------------------------------------");
+                                    System.out.printf("%-3c %-4d %c %-50s %c\n", '|', 4, '|', "Modify the location of the movie to be played", '|');
+                                    System.out.println("---------------------------------------------------------------");
                                     System.out.print("\nEnter your selection: ");
                                     choice2 = sc.nextInt();
                                     sc.nextLine();
@@ -3456,12 +3604,12 @@ public class SystemClass {
                                     success = modifySchedule.modify();
                                 } else {
                                     success = true;
-                                    System.out.println("This schedule will not be modified.");
+                                    System.out.println("\nThis schedule will not be modified.");
                                 }
 
                                 if (success == false) {
                                     do {
-                                        System.out.println("\nDo you want to retry to modify the hall? (Y / N)");
+                                        System.out.println("\nDo you want to retry to modify the schedule? (Y / N)");
                                         System.out.print("Answer: ");
                                         String answer = sc.next();
                                         sc.nextLine();
@@ -3491,7 +3639,7 @@ public class SystemClass {
 
                     do {
                         try {
-                            System.out.print("\nSelect the cinema you want to view the schedule: ");
+                            System.out.println("\nSelect the cinema you want to view the schedule:");
                             cinemas = Cinema.viewCinemaList(1);
                             System.out.print("\nEnter the cinema no (0 - Back): ");
                             cinemaNo = sc.nextInt();
@@ -4065,6 +4213,7 @@ public class SystemClass {
                         // Set promotion end date
                         Promotion_Management.PromotionValidator.checkEndDate(sc, newPromotion, newPromotion.getStartDate());
 
+
                         // Set promotion publish count
                         Promotion_Management.PromotionValidator.checkPublishCount(sc, newPromotion);
 
@@ -4303,6 +4452,7 @@ public class SystemClass {
             System.out.println("\nSelect the operation: ");
             System.out.println("1. New promotion");
             System.out.println("2. My promotion");
+            // System.out.println("3. Past promotion\n");
             System.out.print("\nEnter your selection (0 - Back): ");
             String operation = sc.nextLine();
 
@@ -4854,10 +5004,15 @@ public class SystemClass {
         do {
             try {
                 System.out.println("\nSelect the operation:");
-                System.out.println("1. View " + propertyName);
-                System.out.println("2. Add " + propertyName);
-                System.out.println("3. Modify " + propertyName);
-                System.out.println("4. Delete " + propertyName);
+                System.out.println("---------------------------------");
+                System.out.printf("%c %d %c %-25s %c\n", '|', 1, '|', "View " + propertyName, '|');
+                System.out.println("---------------------------------");
+                System.out.printf("%c %d %c %-25s %c\n", '|', 2, '|', "Add " + propertyName, '|');
+                System.out.println("---------------------------------");
+                System.out.printf("%c %d %c %-25s %c\n", '|', 3, '|', "Modify " + propertyName, '|');
+                System.out.println("---------------------------------");
+                System.out.printf("%c %d %c %-25s %c\n", '|', 4, '|', "Delete " + propertyName, '|');
+                System.out.println("---------------------------------");
                 System.out.print("\nEnter your selection (0 - Back): ");
                 choice = sc.nextInt();
                 sc.nextLine();
