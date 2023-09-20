@@ -39,6 +39,7 @@ public abstract class User{
         this.userType = userType;
     }
 
+
     public abstract void add();
 
 
@@ -99,7 +100,7 @@ public abstract class User{
 
                 User user;
                 if ("cust".equals(userType)) {
-                    user = new Customer(userId, new Login(username, password), email, DOB, userType, accStatus);
+                    user = new Customer(userId, new Login(username, password), email, DOB, userType, accStatus, gender,phoneNo);
                 } else {
                     user = new Admin(new Login(username, password), email, DOB, userType, gender, phoneNo, userId);
                 }
@@ -236,12 +237,12 @@ public abstract class User{
                     if (user instanceof Admin) {
                         System.out.print("Enter new gender: ");
                         String newGender = RegisterValidator.validateGender(scanner);
-                        ((Admin) user).setGender(newGender);
+                         user.setGender(newGender);
                         System.out.println("Gender updated to: " + newGender);
                     } else if (user instanceof Customer) {
                         System.out.print("Enter new gender: ");
                         String newGender = RegisterValidator.validateGender(scanner);
-                        ((Customer) user).setGender(newGender);
+                         user.setGender(newGender);
                         System.out.println("Gender updated to: " + newGender);
                     } else {
                         System.out.println("Invalid choice. Please select a valid option.");
@@ -251,12 +252,12 @@ public abstract class User{
                     if (user instanceof Admin) {
                         System.out.print("Enter new phone number: ");
                         String newPhoneNo = RegisterValidator.validatePhoneNumber(scanner);
-                        ((Admin) user).setPhoneNo(newPhoneNo);
+                        user.setPhoneNo(newPhoneNo);
                         System.out.println("Phone number updated to: " + newPhoneNo);
                     } else if (user instanceof Customer) {
                         System.out.print("Enter new phone number: ");
                         String newPhoneNo = RegisterValidator.validatePhoneNumber(scanner);
-                        ((Customer) user).setPhoneNo(newPhoneNo);
+                        user.setPhoneNo(newPhoneNo);
                         System.out.println("Phone number updated to: " + newPhoneNo);
                     } else {
                         System.out.println("Invalid choice. Please select a valid option.");
@@ -342,6 +343,8 @@ public abstract class User{
         sb.append("Username      : ").append(getLogin().getUsername()).append("\n");
         sb.append("Email         : ").append(getEmail()).append("\n");
         sb.append("Date of Birth : ").append(getDOB()).append("\n");
+        sb.append("Gender        : ").append(getGender()).append("\n");
+        sb.append("Phone Number  : ").append(getPhoneNo()).append("\n");
         sb.append("User Type     : ").append(getUserType()).append("\n");
         return sb.toString();
     }

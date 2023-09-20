@@ -13,13 +13,12 @@ public class Customer extends User {
         this.setLogin(new Login());
     }
 
-    public Customer(String accStatus) {
-        this.accStatus = "active";
 
-    }
 
-    public Customer(int custId, Login login, String email, String DOB, String usertype, String accStatus) {
-        super(login, email, DOB, usertype);
+
+
+    public Customer(int custId, Login login, String email, String DOB, String usertype, String accStatus, String gender, String phoneNo) {
+        super(login, email, DOB, usertype, gender, phoneNo);
         this.custId = custId;
         this.accStatus = accStatus;
     }
@@ -29,8 +28,8 @@ public class Customer extends User {
         int rowAffected = 0;
 
         try {
-            String insertSql = "INSERT INTO User (username, password, email, userType, DOB, accStatus) VALUES (?, ?, ?, ?, ?, ?)";
-            Object[] params = {getLogin().getUsername(), getLogin().getPassword(), getEmail(), "cust", getDOB(), "active"};
+            String insertSql = "INSERT INTO User (username, password, email, userType, DOB, accStatus, gender, phoneNo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            Object[] params = {getLogin().getUsername(), getLogin().getPassword(), getEmail(), "cust", getDOB(), "active",getGender(),getPhoneNo()};
             rowAffected = DatabaseUtils.insertQuery(insertSql, params);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -98,14 +97,13 @@ public class Customer extends User {
         System.out.println("Please Confirm Your Password: ");
         String confirmPassword = RegisterValidator.validatePasswordConfirmation(input, password);
 
-
         System.out.println("Please Enter Your Gender: ");
         String gender = RegisterValidator.validateGender(input);
-        ((Customer)newUser).setGender(gender);
+        newUser.setGender(gender);
 
         System.out.println("Please Enter Your email: ");
         String email = RegisterValidator.validateEmail(input);
-        ((Customer)newUser).setEmail(email);
+        newUser.setEmail(email);
 
         input.nextLine();
 
@@ -115,7 +113,7 @@ public class Customer extends User {
 
         System.out.println("Please Enter Your Phone Number : ");
         String phone = RegisterValidator.validatePhoneNumber(input);
-        ((Customer)newUser).setPhoneNo(phone);
+        newUser.setPhoneNo(phone);
 
         newUser.add();
 
@@ -202,8 +200,6 @@ public class Customer extends User {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder(super.toString());
-        sb.append("Gender        : ").append(getGender()).append("\n");
-        sb.append("Phone Number  : ").append(getPhoneNo()).append("\n");
         sb.append("Account Status: ").append(getAccStatus()).append("\n");
         return sb.toString();
     }

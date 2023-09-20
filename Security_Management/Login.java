@@ -45,6 +45,7 @@ public class Login {
             String username = scanner.nextLine();
 
             User foundUser = findUserByUsername(username);
+
             String userStatus = getUserStatusByUsername(username);
 
             if (foundUser == null) {
@@ -56,11 +57,8 @@ public class Login {
                 int result = handlePasswordInput(foundUser, passwordAttempts);
                 if (result == 0) {
 
-                    if ("admin".equals(foundUser.getUserType())) {
-                        return (Admin) foundUser;
-                    } else if ("cust".equals(foundUser.getUserType())) {
-                        return (Customer) foundUser;
-                    }
+                    return foundUser;
+
                 } else if (result == -1) {
                     return null;
                 } else {

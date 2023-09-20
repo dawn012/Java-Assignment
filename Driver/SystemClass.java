@@ -72,10 +72,12 @@ public class SystemClass {
                     case 2:
                         System.out.println("You selected Option 2.");
                         User user = loginMenu();
-
+                        System.out.println(user);
                         if (user != null) {
                             if (user instanceof Customer) {
                                 Customer customer = (Customer) user;
+                                System.out.println(customer.getGender() + customer.getPhoneNo());
+
                                 custMenu(customer);
                             } else if (user instanceof Admin) {
                                 Admin admin = (Admin) user;
@@ -108,7 +110,7 @@ public class SystemClass {
     }
 
     public static void custMenu(Customer customer) throws Exception {
-
+        System.out.println(customer);
         int choice = 0;
         Scanner sc = new Scanner(System.in);
         boolean error = true, continues = true, back = false;
