@@ -11,6 +11,7 @@ import Movie_Management.MovieUtils;
 import Movie_Management.MovieValidator;
 import Payment_Management.*;
 import Promotion_Management.*;
+import Receipt_Management.Receipt;
 import Report_Management.Report;
 import Report_Management.SalesReport;
 import Report_Management.TopMovieReport;
@@ -340,7 +341,9 @@ public class SystemClass {
                                                         if (confirmStr.equals("R")) {
                                                             booking.executeBooking(schedule);
                                                         }
+
                                                         booking.printBookingDetail();
+
                                                         do {
                                                             try {
                                                                 System.out.print("Confirm This Booking ? (Y=\"Yes\", R=\"Select Again\", N=\"Exit\") : ");
@@ -349,19 +352,25 @@ public class SystemClass {
                                                                 if (confirmStr.equals("Y")) {
                                                                     if (!insert) {
                                                                         Booking.insertBooking(booking);
+
                                                                         for (Ticket t : booking.getTicketList()) {
                                                                             Ticket.insertTicket(t, booking);
                                                                         }
+
                                                                         insert = true;
+
                                                                     } else {
                                                                         // if already insert to the database so just to change the status from "cancelled" to "processing"😊
                                                                         booking.setBookingStatus("processing");
+
                                                                         for (Ticket t : booking.getTicketList()) {
                                                                             t.setTicketStatus(0);
                                                                             t.updateStatus();
                                                                         }
+
                                                                         booking.updateBooking();
                                                                     }
+
                                                                 } else if (confirmStr.equals("N")) {
                                                                     if (insert) {
                                                                         booking.cancelBooking();
@@ -369,6 +378,7 @@ public class SystemClass {
                                                                     }
                                                                     //back = true;
                                                                     break;
+
                                                                 } else if (confirmStr.equals("R")) {
                                                                     if (insert) {
                                                                         booking.cancelBooking();
@@ -376,29 +386,37 @@ public class SystemClass {
                                                                     }
                                                                 }
 
-
                                                             } catch (Exception e) {
                                                                 System.out.println("Something wrong...");
                                                                 sc.nextLine();
                                                             }
+
                                                         } while (!confirmStr.equals("Y") && !confirmStr.equals("N") && !confirmStr.equals("R"));
 
                                                         if (confirmStr.equals("Y")) {
-                                                            //booking.printBookingDetail();
-                                                            // Apply promotion
-                                                            //booking.setBooking_status("completed");
-                                                            //booking.updateStatus();
-                                                            //Promotion promotion = applyPromotion(sc, 1, booking);
-
                                                             applyPromotion(sc, booking);
 
                                                             // Make Payment
-                                                            if (makePayment(sc, booking)) {
+                                                            Payment payment = makePayment(sc, booking);
+
+                                                            if (payment != null) {
+                                                                // Print Receipt
+                                                                Receipt receipt = new Receipt(payment);
+
+                                                                receipt.printReceipt();
+                                                                receipt.add();
+
                                                                 back = true;
+
+                                                                confirmStr = "N";
+                                                            } else {
+                                                                confirmStr = "Y";
                                                             }
                                                         }
+
                                                     } while (!confirmStr.equals("N"));
-                                                }
+
+                                                } while (error);
                                             }
                                         }
                                     } else {
@@ -3757,7 +3775,7 @@ public class SystemClass {
             do {
                 try {
                     System.out.println("\nSelect the report you want to view: ");
-                    System.out.println("1. Monthly Sales Report");
+                    System.out.println("1. Sales Report");
                     System.out.println("2. Movie Box Office Report");
                     System.out.print("\nEnter your selection (0 - Back): ");
                     choice = sc.nextInt();
@@ -3773,17 +3791,85 @@ public class SystemClass {
                 }
             } while (error);
 
+            int selection = 0;
+            error = true;
+            LocalDate currentDate = LocalDate.now();
+            Report report = null;
+            SalesReport salesReport = new SalesReport();
+
             switch (choice) {
                 case 0:
                     back = true;
                     break;
                 case 1:
+                    do {
+                        do {
+                            try {
+                                System.out.println("\nPlease select a sales report from the list below: ");
+                                System.out.println("1. Daily");
+                                System.out.println("2. Monthly");
+                                System.out.print("\nEnter your selection (0 - Back): ");
+                                selection = sc.nextInt();
+                                sc.nextLine();
+
+                                if (selection >= 0 && selection <= 4) {
+                                    error = false;
+                                } else {
+                                    System.out.println("Your choice is not among the available options! PLease try again.");
+                                }
+                            } catch (InputMismatchException e) {
+                                System.out.println("Please enter a valid choice!");
+                                sc.nextLine();
+                            }
+                        } while (error);
+
+                        switch (selection) {
+                            case 0:
+                                continues = false;
+                                back = false;
+                                break;
+                            case 1:
+                                salesReport.setTitle("Daily Sales Report");
+                                report = viewSalesReport(sc, salesReport);
+                                break;
+                            case 2:
+                                salesReport.setTitle("Monthly Sales Report");
+                                report = viewSalesReport(sc, salesReport);
+                                break;
+                            default:
+                                System.out.println("Your choice is not among the available options! PLease try again.");
+                        }
+
+                        if (selection != 0) {
+                            if (!(report == null)) {
+                                System.out.println(report);
+
+                                String confirmation;
+
+                                do {
+                                    System.out.println("\nDo you want to view another report? (Y / N)");
+                                    System.out.print("Answer: ");
+                                    String answer = sc.nextLine();
+
+                                    confirmation = SystemClass.askForContinue(answer);
+                                } while (confirmation.equals("Invalid"));
+
+                                if (confirmation.equals("Y")) {
+                                    continues = true;
+                                } else {
+                                    back = false;
+                                    continues = false;
+                                }
+                            } else {
+                                continues = true;
+                                System.out.println("Sorry, no record found. Report can't be generated!");
+                            }
+                        }
+                    } while (continues);
+
                     break;
                 case 2:
                     do {
-                        int selection = 0;
-                        error = true;
-                        LocalDate currentDate = LocalDate.now();
                         ArrayList<Report> reports = new ArrayList<>();
 
                         do {
@@ -3810,7 +3896,7 @@ public class SystemClass {
 
                         ArrayList<Movie> movies = MovieUtils.getMovieListAfterFiltered(null, null, 1);
                         Report reportAfterRanking = new TopMovieReport();
-                        Report report = new TopMovieReport();
+                        report = new TopMovieReport();
                         String title = null;
 
                         switch (selection) {
@@ -3873,71 +3959,79 @@ public class SystemClass {
         } while (back == false);
     }
 
-    public static SalesReport viewDailySalesReport(Scanner sc) {
-        SalesReport salesReport = new SalesReport();
-        ArrayList<Payment> allPayments;
+    public static SalesReport viewSalesReport(Scanner sc, SalesReport salesReport) {
+        String viewDate;
+        DateTime searchDate = null;
+        boolean error;
 
-        System.out.print("\nEnter the date (yyyy-mm-dd): ");
-        String viewDate = sc.nextLine().trim();
-        DateTime searchDate;
+        do {
+            error = true;
 
-        int[] dateParts = DateTime.dateFormatValidator(viewDate);
+            if (salesReport.getTitle().contains("Daily")) {
+                System.out.print("\nEnter the date (yyyy-mm-dd): ");
+                viewDate = sc.nextLine().trim();
 
-        if (!(dateParts == null)) {
-            searchDate = new DateTime(dateParts[0], dateParts[1], dateParts[2]);
+                int[] dateParts = DateTime.dateFormatValidator(viewDate, "^\\d{4}-\\d{2}-\\d{2}$");
 
-            if (searchDate.isValidDate()) {
-                if (!(searchDate.getDate().equals(LocalDate.now()) || searchDate.getDate().isAfter(LocalDate.now()))) {
-                    // Check the report generated is before today
-                    allPayments = SalesReport.allPayments();
-                    double totalSales = 0;
-                    int totalOrders = 0;
-                    int countCard = 0;
-                    int countTNG = 0;
+                if (dateParts == null) {
+                    continue;
+                }
 
-                    for (Payment payment : allPayments) {
-                        if (payment.getPaymentDate().equals(viewDate)) {
-                            totalSales += payment.getPaymentAmount();
-                            totalOrders++;
+                searchDate = new DateTime(dateParts[0], dateParts[1], dateParts[2]);
 
-                            if (payment.getPaymentMethod().equals("CARD")) {
-                                countCard++;
-                            }
+                if (searchDate.isValidDate()) {
+                    if (!(searchDate.getDate().equals(LocalDate.now()) || searchDate.getDate().isAfter(LocalDate.now()))) {
+                        // Check the report generated is before today
+                        salesReport.setReportDate(searchDate);
 
-                            else {
-                                countTNG++;
-                            }
-
-                        }
+                        return salesReport.calcSalesReportInfo();
                     }
 
-                    salesReport.setSalesDate(searchDate);
-                    salesReport.setTotalSales(totalSales);
-                    salesReport.setTotalOrders(totalOrders);
-
-                    if (countCard == countTNG) {
-                        salesReport.setMostPaymentMtd("Credit/Debit Card & Touch 'n Go");
-                    } else if (countCard > countTNG) {
-                        salesReport.setMostPaymentMtd("Credit/Debit Card");
-                    } else {
-                        salesReport.setMostPaymentMtd("Touch 'n Go");
+                    else {
+                        System.out.println("The date you enter must be at least before today.\n");
                     }
-
-                    return salesReport;
                 }
 
                 else {
-                    System.out.println("Your new start date must before the end date.\n");
+                    System.out.println("Please enter valid date range.\n");
                 }
             }
 
             else {
-                System.out.println("Please enter valid date range.\n");
+                System.out.print("\nEnter the year and month (yyyy-mm): ");
+                viewDate = sc.nextLine().trim();
+
+                int[] dateParts = DateTime.dateFormatValidator(viewDate, "^\\d{4}-\\d{2}$");
+
+                if (dateParts == null) {
+                    continue;
+                }
+
+                searchDate = new DateTime(dateParts[0], dateParts[1], 1);
+
+                if (searchDate.isValidDate()) {
+                    if (searchDate.getDate().isBefore(LocalDate.now().minusMonths(1))) {
+                        // Check the report generated is before today
+                        salesReport.setReportDate(searchDate);
+
+                        return salesReport.calcSalesReportInfo();
+                    }
+
+                    else {
+                        System.out.println("The year and month you enter must ne at least before this month.\n");
+                    }
+                }
+
+                else {
+                    System.out.println("Please enter valid date range.\n");
+                }
             }
-        }
+        } while (error);
+
 
         return null;
     }
+
 
 //    private static Report generateReport(Report report, Scanner sc) {
 //        System.out.print("\n Please write the report purpose (0 - Use default purpose): ");
@@ -4653,7 +4747,7 @@ public class SystemClass {
         return false;
     }
 
-    private static boolean makePayment(Scanner sc, Booking booking) {
+    private static Payment makePayment(Scanner sc, Booking booking) {
         // Remain original amount
         double remainAmount = booking.getTotalPrice();
 
@@ -4687,7 +4781,7 @@ public class SystemClass {
 
                 switch (paymentMethod) {
                     case "0":
-                        return false;
+                        return null;
 
                     case "1":
                         // Process Credit/Debit Card Payment
@@ -4748,7 +4842,7 @@ public class SystemClass {
         String cancelPayment;
 
         do {
-            validPayment.printPaymentDetail(remainAmount);
+            validPayment.printPaymentDetail();
 
             do {
                 System.out.println("\nContinue to make payment? (Y / N)");
@@ -4780,7 +4874,7 @@ public class SystemClass {
 
                 System.out.println("\nPayment Successfully! Thanks for your payment.");
 
-                return true;
+                return validPayment;
             }
 
             else {
@@ -4808,7 +4902,7 @@ public class SystemClass {
             }
         } while (cancelPayment.equals("N"));
 
-        return false;
+        return null;
     }
 
     private static Payment validPayment(Payment payment, Booking booking) {
@@ -4819,13 +4913,13 @@ public class SystemClass {
             card.setPaymentAmount(booking.getTotalPrice());
 
             if(CardValidator.stripeValidator(card.createPaymentIntent())) {
-                return new Card(booking, "CREDIT/DEBIT CARD", booking.getTotalPrice(), "MYR", dateTime.getCurrentDate(), dateTime.getCurrentTime(), "PAID", card.getCardNo(), card.getExpiredDate(), card.getCvc(), card.getEmail());
+                return new Card(booking, "CREDIT/DEBIT CARD", booking.getTotalPrice(), "MYR", "PAID", card.getCardNo(), card.getExpiredDate(), card.getCvc(), card.getEmail());
             }
 
         } else {
             TNG tng = (TNG) payment;
 
-            return new TNG(booking, "TNG", booking.getTotalPrice(), "MYR", dateTime.getCurrentDate(), dateTime.getCurrentTime(), "PAID", tng.getPhoneNo(), tng.getPinNo());
+            return new TNG(booking, "TNG", booking.getTotalPrice(), "MYR", "PAID", tng.getPhoneNo(), tng.getPinNo());
         }
 
         return null;

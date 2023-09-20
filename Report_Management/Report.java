@@ -4,40 +4,38 @@ import Driver.DateTime;
 
 import java.time.LocalDate;
 
-public abstract class Report {
+public class Report {
+    private LocalDate dateGenerated;
     private String title;
-    private LocalDate reportDate;
-    private String purpose;
+    private DateTime reportDate;
     private String conclusion;
 
     // Constructor
     public Report() {
-        reportDate = LocalDate.now();
+        dateGenerated = LocalDate.now();
     }
 
-    public Report(String title, String purpose, String conclusion) {
+    public Report(String title, DateTime reportDate, String conclusion) {
+        this();
         this.title = title;
-        this.purpose = purpose;
+        this.reportDate = reportDate;
         this.conclusion = conclusion;
-        reportDate = LocalDate.now();
     }
-
 
     //public abstract double calculate();
     @Override
     public String toString() {
-        return String.format("\nTitle: %s\t\t\t\tReport Date: %s\n\nPurpose: \n%s\n\n", title, reportDate, purpose);
+        return String.format("\n\nReport Generated Date: %s\n\n", dateGenerated);
     }
 
-    public abstract String getDefaultPurpose();
 
     // Setter
     public void setTitle(String title) {
         this.title = title;
     }
 
-    public void setPurpose(String purpose) {
-        this.purpose = purpose;
+    public void setReportDate(DateTime reportDate) {
+        this.reportDate = reportDate;
     }
 
     public void setConclusion(String conclusion) {
@@ -49,12 +47,8 @@ public abstract class Report {
         return title;
     }
 
-    public LocalDate getReportDate() {
+    public DateTime getReportDate() {
         return reportDate;
-    }
-
-    public String getPurpose() {
-        return purpose;
     }
 
     public String getConclusion() {

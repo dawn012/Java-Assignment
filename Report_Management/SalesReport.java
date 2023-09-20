@@ -10,11 +10,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class SalesReport extends Report {
-    private DateTime salesDate;
     private double totalSales;
     private int totalOrders;
     private String mostPaymentMtd;
@@ -22,20 +23,17 @@ public class SalesReport extends Report {
     public SalesReport() {
     }
 
-    public SalesReport(String title, String purpose, String conclusion, DateTime salesDate, double totalSales, int totalOrders, String mostPaymentMtd) {
-        super(title, purpose, conclusion);
-        this.salesDate = salesDate;
+    public SalesReport(double totalSales, int totalOrders, String mostPaymentMtd) {
         this.totalSales = totalSales;
         this.totalOrders = totalOrders;
         this.mostPaymentMtd = mostPaymentMtd;
     }
 
-    public DateTime getSalesDate() {
-        return salesDate;
-    }
-
-    public void setSalesDate(DateTime salesDate) {
-        this.salesDate = salesDate;
+    public SalesReport(String title, DateTime reportDate, String conclusion, double totalSales, int totalOrders, String mostPaymentMtd) {
+        super(title, reportDate, conclusion);
+        this.totalSales = totalSales;
+        this.totalOrders = totalOrders;
+        this.mostPaymentMtd = mostPaymentMtd;
     }
 
     public double getTotalSales() {
@@ -62,16 +60,16 @@ public class SalesReport extends Report {
         this.mostPaymentMtd = mostPaymentMtd;
     }
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-
-        SalesReport salesReport = new SalesReport();
-        SalesReport salesReport1;
-
-        salesReport1 = salesReport.viewSalesReport(sc);
-
-        System.out.println(salesReport1);
-    }
+//    public static void main(String[] args) {
+//        Scanner sc = new Scanner(System.in);
+//
+//        SalesReport salesReport = new SalesReport();
+//        SalesReport salesReport1;
+//
+//        salesReport1 = salesReport.viewSalesReport(sc);
+//
+//        System.out.println(salesReport1);
+//    }
 
     public static ArrayList<Payment> allPayments() {
         ArrayList<Payment> payments = new ArrayList<>();
@@ -92,8 +90,8 @@ public class SalesReport extends Report {
                 String paymentMtd = rs.getString("PAYMENT_METHOD");
                 double paymentAmount = rs.getDouble("PAYMENT_AMOUNT");
                 String currency = rs.getString("CURRENCY");
-                String paymentDate = rs.getString("PAYMENT_DATE");
-                String paymentTime = rs.getString("PAYMENT_TIME");
+                LocalDate paymentDate = LocalDate.parse(rs.getString("PAYMENT_DATE"));
+                LocalTime paymentTime = LocalTime.parse(rs.getString("PAYMENT_TIME"));
                 String paymentStatus = rs.getString("PAYMENT_STATUS");
 
                 Payment payment;
@@ -122,102 +120,170 @@ public class SalesReport extends Report {
         }
     }
 
-    public SalesReport viewSalesReport(Scanner sc) {
-        System.out.println("\nSelect the type of sales report: ");
-        System.out.println("1. Daily Sales Report");
-        System.out.println("2. Monthly Sales Report");
-        System.out.print("\nEnter your selection (0 - Back): ");
-        String salesReportSelection = sc.nextLine().trim();
+//    public SalesReport viewSalesReport(Scanner sc) {
+//        System.out.println("\nSelect the type of sales report: ");
+//        System.out.println("1. Daily Sales Report");
+//        System.out.println("2. Monthly Sales Report");
+//        System.out.print("\nEnter your selection (0 - Back): ");
+//        String salesReportSelection = sc.nextLine().trim();
+//
+//        switch (salesReportSelection) {
+//            case "0":
+//                break;
+//            case "1":
+//                super.setTitle("Daily Sales Report");
+//                return viewDailySalesReport(sc);
+//            default:
+//                System.out.println("Invalid input.");
+//        }
+//
+//        return null;
+//    }
 
-        switch (salesReportSelection) {
-            case "0":
-                break;
-            case "1":
-                super.setTitle("Daily Sales Report");
-                return viewDailySalesReport(sc);
-            default:
-                System.out.println("Invalid input.");
+//    public SalesReport viewDailySalesReport(Scanner sc) {
+//        SalesReport salesReport = new SalesReport();
+//        ArrayList<Payment> allPayments;
+//
+//        System.out.print("\nEnter the date (yyyy-mm-dd): ");
+//        String viewDate = sc.nextLine().trim();
+//        DateTime searchDate = new DateTime();
+//
+//        int[] dateParts = DateTime.dateFormatValidator(viewDate, "^\\d{4}-\\d{2}-\\d{2}$");
+//
+//        if (!(dateParts == null)) {
+//            searchDate = new DateTime(dateParts[0], dateParts[1], dateParts[2]);
+//
+//            if (searchDate.isValidDate()) {
+//                if (!(searchDate.getDate().equals(LocalDate.now()) || searchDate.getDate().isAfter(LocalDate.now()))) {
+//                    // Check the report generated is before today
+//                    allPayments = SalesReport.allPayments();
+//                    double totalSales = 0;
+//                    int totalOrders = 0;
+//
+//                    for (Payment payment : allPayments) {
+//                        if (payment.getPaymentDate().equals(viewDate)) {
+//                            totalSales += payment.getPaymentAmount();
+//                            totalOrders++;
+//                        }
+//                    }
+//
+//                    salesReport.setTotalSales(totalSales);
+//                    salesReport.setTotalOrders(totalOrders);
+//                }
+//
+//                else {
+//                    System.out.println("Your new start date must before the end date.\n");
+//                }
+//            }
+//
+//            else {
+//                System.out.println("Please enter valid date range.\n");
+//            }
+//        }
+//
+//        return salesReport;
+//    }
+
+    public SalesReport calcSalesReportInfo() {
+        totalSales = 0;
+        totalOrders = 0;
+        int countCard = 0;
+        int countTNG = 0;
+
+        if (getTitle().contains("Daily")) {
+            for (Payment payment : SalesReport.allPayments()) {
+                if (payment.getPaymentDate().equals(getReportDate().getDate())) {
+                    totalSales += payment.getPaymentAmount();
+                    totalOrders++;
+
+                    if (payment.getPaymentMethod().equals("CARD")) {
+                        countCard++;
+                    }
+
+                    else {
+                        countTNG++;
+                    }
+
+                }
+            }
+
+            setConclusion("From this report we can know in " + getReportDate().getDay() + " " + getReportDate().getDate().getMonth() + " " + getReportDate().getYear() + " the total sales is RM " + totalSales + ", total orders is " + totalOrders + " and the average sales per order is RM " + (totalSales/totalOrders) + ".");
+        }
+
+        else {
+            LocalDate reportDate = getReportDate().getDate();
+            YearMonth reportYearMonth = YearMonth.of(reportDate.getYear(), reportDate.getMonth());
+
+            for (Payment payment : SalesReport.allPayments()) {
+                LocalDate paymentDate = payment.getPaymentDate();
+                YearMonth paymentYearMonth = YearMonth.of(paymentDate.getYear(), paymentDate.getMonth());
+
+                if (paymentYearMonth.equals(reportYearMonth)) {
+                    totalSales += payment.getPaymentAmount();
+                    totalOrders++;
+
+                    if (payment.getPaymentMethod().equals("CARD")) {
+                        countCard++;
+                    }
+
+                    else {
+                        countTNG++;
+                    }
+
+                }
+            }
+
+            setConclusion("From this report we can know in " + getReportDate().getDate().getMonth() + " " + getReportDate().getYear() + " the total sales is RM " + totalSales + ", total orders is " + totalOrders + " and the average sales per day is RM " + (totalSales/getReportDate().getDay()) + ".");
+        }
+
+        if (countCard == countTNG) {
+            mostPaymentMtd = "Credit/Debit Card & Touch 'n Go";
+        } else if (countCard > countTNG) {
+            mostPaymentMtd = "Credit/Debit Card";
+        } else {
+            mostPaymentMtd = "Touch 'n Go";
+        }
+
+        if (totalSales > 0) {
+            return new SalesReport(getTitle(), getReportDate(), getConclusion(), totalSales, totalOrders, mostPaymentMtd);
         }
 
         return null;
     }
 
-    public SalesReport viewDailySalesReport(Scanner sc) {
-        SalesReport salesReport = new SalesReport();
-        ArrayList<Payment> allPayments;
-
-        System.out.print("\nEnter the date (yyyy-mm-dd): ");
-        String viewDate = sc.nextLine().trim();
-        DateTime searchDate = new DateTime();
-
-        int[] dateParts = DateTime.dateFormatValidator(viewDate);
-
-        if (!(dateParts == null)) {
-            searchDate = new DateTime(dateParts[0], dateParts[1], dateParts[2]);
-
-            if (searchDate.isValidDate()) {
-                if (!(searchDate.getDate().equals(LocalDate.now()) || searchDate.getDate().isAfter(LocalDate.now()))) {
-                    // Check the report generated is before today
-                    allPayments = SalesReport.allPayments();
-                    double totalSales = 0;
-                    int totalOrders = 0;
-
-                    for (Payment payment : allPayments) {
-                        if (payment.getPaymentDate().equals(viewDate)) {
-                            totalSales += payment.getPaymentAmount();
-                            totalOrders++;
-                        }
-                    }
-
-                    salesReport.setTotalSales(totalSales);
-                    salesReport.setTotalOrders(totalOrders);
-                }
-
-                else {
-                    System.out.println("Your new start date must before the end date.\n");
-                }
-            }
-
-            else {
-                System.out.println("Please enter valid date range.\n");
-            }
-        }
-
-        return salesReport;
-    }
-
     @Override
     public String toString() {
-        if (super.getPurpose() == null || super.getPurpose().trim().isEmpty()) {
-            super.setPurpose(getDefaultPurpose());
-        }
-
-        super.setConclusion("From this report we can know that the best selling movie of the");
-
-
         DecimalFormat decimalFormat = new DecimalFormat("RM 0.00");
         StringBuilder reportBuilder = new StringBuilder();
 
         reportBuilder.append("-------------------------------------------------\n");
-        reportBuilder.append("           Daily Sales Report - ").append(super.getReportDate()).append("\n");
-        reportBuilder.append("-------------------------------------------------\n");
+        reportBuilder.append(super.getTitle()).append(" - ");
+
+        if (super.getTitle().contains("Daily")) {
+            reportBuilder.append(getReportDate().getDay()).append(" ").append(getReportDate().getDate().getMonth()).append(" ").append(getReportDate().getYear());
+        } else {
+            reportBuilder.append(getReportDate().getDate().getMonth()).append(" ").append(getReportDate().getDate().getYear());
+        }
+
+        reportBuilder.append("\n-------------------------------------------------");
         reportBuilder.append("\nTotal Sales: ").append(decimalFormat.format(totalSales));
         reportBuilder.append("\nTotal Orders: ").append(totalOrders);
         reportBuilder.append("\n-------------------------------------------------");
-        reportBuilder.append("\nAverage Sales: ").append(decimalFormat.format(totalSales / totalOrders));
-        reportBuilder.append("\nMost Payment Method: ").append("");
+
+        if (super.getTitle().contains("Daily")) {
+            reportBuilder.append("\nAverage Sales (per order): ").append(decimalFormat.format(totalSales / totalOrders));
+        } else {
+            reportBuilder.append("\nAverage Sales (per day): ").append(decimalFormat.format(totalSales / getReportDate().getDay()));
+            reportBuilder.append("\nAverage Order (per day): ").append(decimalFormat.format(totalOrders / getReportDate().getDay()));
+        }
+
+        reportBuilder.append("\nMost Payment Method: ").append(mostPaymentMtd);
         // Add code here to find and display the most active customers
 
-        reportBuilder.append("-------------------------------------------------\n");
+        reportBuilder.append("\n-------------------------------------------------\n");
 
         reportBuilder.append(String.format("\nConclusion: \n%s\n", super.getConclusion()));
 
         return super.toString() + reportBuilder; // 返回完整的字符串
     }
-
-    @Override
-    public String getDefaultPurpose() {
-        return "To list movies in descending order of their box office earnings, allowing readers to quickly identify the most financially successful films.";
-    }
-
 }

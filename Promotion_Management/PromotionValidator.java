@@ -101,7 +101,7 @@ public class PromotionValidator {
             System.out.print("Start Date (yyyy-mm-dd): ");
             String newStartDate = sc.nextLine().trim();
 
-            int[] dateParts = DateTime.dateFormatValidator(newStartDate);
+            int[] dateParts = DateTime.dateFormatValidator(newStartDate, "^\\d{4}-\\d{2}-\\d{2}$");
 
             if (!(dateParts == null)) {
                 startDateTime = new DateTime(dateParts[0], dateParts[1], dateParts[2]);
@@ -138,7 +138,7 @@ public class PromotionValidator {
             System.out.print("End Date (yyyy-mm-dd): ");
             String newEndDate = sc.nextLine().trim();
 
-            int[] dateParts = DateTime.dateFormatValidator(newEndDate);
+            int[] dateParts = DateTime.dateFormatValidator(newEndDate, "^\\d{4}-\\d{2}-\\d{2}$");
 
             if (!(dateParts == null)) {
                 DateTime endDateTime = new DateTime(dateParts[0], dateParts[1], dateParts[2]);

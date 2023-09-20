@@ -25,8 +25,8 @@ public class TopMovieReport extends Report {
         averageBoxOffices = new ArrayList<>();
     }
 
-    public TopMovieReport(String title, String purpose, String conclusion, ArrayList<Movie> movies, ArrayList<Double> totalBoxOffices, ArrayList<Integer> numOfScreenings, ArrayList<Double> averageBoxOffices) {
-        super(title, purpose, conclusion);
+    public TopMovieReport(String title, DateTime reportDate, String conclusion, ArrayList<Movie> movies, ArrayList<Double> totalBoxOffices, ArrayList<Integer> numOfScreenings, ArrayList<Double> averageBoxOffices) {
+        super(title, reportDate, conclusion);
         this.movies = movies;
         this.totalBoxOffices = totalBoxOffices;
         this.numOfScreenings = numOfScreenings;
@@ -35,10 +35,6 @@ public class TopMovieReport extends Report {
 
     @Override
     public String toString() {
-        if (super.getPurpose() == null || super.getPurpose().trim().isEmpty()) {
-            super.setPurpose(getDefaultPurpose());
-        }
-
         String duration;
         if (super.getTitle().contains("Daily")) {
             duration = "day";
