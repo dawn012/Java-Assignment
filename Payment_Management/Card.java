@@ -19,25 +19,22 @@ public class Card extends Payment {
     private String cardNo;
     private String expiredDate;
     private String cvc;
-    private String email;
 
     public Card() {
         super();
     }
 
-    public Card(String cardNo, String expiredDate, String cvc, String email) {
+    public Card(String cardNo, String expiredDate, String cvc) {
         this.cardNo = cardNo;
         this.expiredDate = expiredDate;
         this.cvc = cvc;
-        this.email = email;
     }
 
-    public Card(Booking booking, String paymentMethod, double paymentAmount, String currency, String paymentStatus, String cardNo, String expiredDate, String cvc, String email) {
+    public Card(Booking booking, String paymentMethod, double paymentAmount, String currency, String paymentStatus, String cardNo, String expiredDate, String cvc) {
         super(booking, paymentMethod, paymentAmount, currency, paymentStatus);
         this.cardNo = cardNo;
         this.expiredDate = expiredDate;
         this.cvc = cvc;
-        this.email = email;
     }
 
     public Card(int paymentId, String paymentMethod, double paymentAmount, String currency, LocalDate paymentDate, LocalTime paymentTime, String paymentStatus, String cardNo, String expiredDate, String cvc) {
@@ -78,14 +75,6 @@ public class Card extends Payment {
         this.cvc = cvc;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     @Override
     public void pay() {
         String sql = "INSERT INTO CARD (PAYMENT_ID, CARD_NO, EXPIRED_DATE, CVC) VALUES (?,?,?,?)";
@@ -99,19 +88,6 @@ public class Card extends Payment {
             throw new RuntimeException(e);
         }
     }
-
-//    public boolean stripeValidator() {
-//        // Set Secret Key
-//        StripeAPIKey.init();
-//
-//        PaymentIntent paymentIntent = createPaymentIntent();
-//
-//        if (paymentIntent != null) {
-//            return true;
-//        }
-//
-//        return false;
-//    }
 
     private int getExpiredMonth(){
         // Date user entered
@@ -149,7 +125,7 @@ public class Card extends Payment {
     private Customer createCustomer() {
         try {
             CustomerCreateParams customerParams = CustomerCreateParams.builder()
-                    .setEmail(email)
+                    .setEmail(booking.getCustomer().getEmail())
                     .build();
 
             return Customer.create(customerParams);

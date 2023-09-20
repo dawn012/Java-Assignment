@@ -4820,7 +4820,6 @@ public class SystemClass {
         Promotion promotion = new Promotion();
         promotion.setCustomer(cust);
 
-
         do {
             System.out.println("\n\nSelect the operation: ");
             System.out.print("---------------------\n");
@@ -5292,9 +5291,10 @@ public class SystemClass {
         if (payment instanceof Card) {
             Card card = (Card) payment;
             card.setPaymentAmount(booking.getTotalPrice());
+            card.setBooking(booking);
 
             if(CardValidator.stripeValidator(card.createPaymentIntent())) {
-                return new Card(booking, "CREDIT/DEBIT CARD", booking.getTotalPrice(), "MYR", "PAID", card.getCardNo(), card.getExpiredDate(), card.getCvc(), card.getEmail());
+                return new Card(booking, "CREDIT/DEBIT CARD", booking.getTotalPrice(), "MYR", "PAID", card.getCardNo(), card.getExpiredDate(), card.getCvc());
             }
 
         } else {
@@ -5350,11 +5350,6 @@ public class SystemClass {
         }
 
         card.setCvc(cvc);
-
-        System.out.print("\nEnter email: ");
-        String email = input.nextLine().trim();
-
-        card.setEmail(email);
 
         return card;
     }
