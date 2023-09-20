@@ -45,6 +45,7 @@ public class Login {
             String username = scanner.nextLine();
 
             User foundUser = findUserByUsername(username);
+
             String userStatus = getUserStatusByUsername(username);
 
             if (foundUser == null) {
@@ -55,7 +56,9 @@ public class Login {
             } else {
                 int result = handlePasswordInput(foundUser, passwordAttempts);
                 if (result == 0) {
+
                     return foundUser;
+
                 } else if (result == -1) {
                     return null;
                 } else {
@@ -69,7 +72,7 @@ public class Login {
         }
     }
 
-    private static int handlePasswordInput(User foundUser, int passwordAttempts) throws SQLException {
+    public static int handlePasswordInput(User foundUser, int passwordAttempts) throws SQLException {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
@@ -77,7 +80,7 @@ public class Login {
             String password = scanner.nextLine();
 
             if (validatePassword(foundUser, password)) {
-                performPostLoginActions(foundUser);
+                //performPostLoginActions(foundUser);
                 return 0;
             } else {
                 passwordAttempts++;
@@ -87,7 +90,7 @@ public class Login {
                         String retryPassword = scanner.nextLine();
 
                         if (validatePassword(foundUser, retryPassword)) {
-                            performPostLoginActions(foundUser);
+                            //performPostLoginActions(foundUser);
                             return 0;
                         } else {
                             System.out.println("Password Incorrect. Your Account Has Been Frozen, Please Contact Support.");
@@ -112,12 +115,11 @@ public class Login {
         return continueChoice.equalsIgnoreCase("Y");
     }
 
-    private static void performPostLoginActions(User foundUser) throws SQLException {
+   /* private static void performPostLoginActions(User foundUser) throws SQLException {
         ArrayList<User> userList = Admin.getAllUsers();
         Scanner input = new Scanner(System.in);
         System.out.println("Login Successful!\nWelcome " + foundUser.getLogin().getUsername() + " !");
         User user = Customer.findUserByUsername(foundUser.getLogin().getUsername());
-
 
         if (user != null) {
             if (user instanceof Customer) {
@@ -299,14 +301,14 @@ public class Login {
             System.out.println("User with username " + foundUser.getLogin().getUsername() + " not found.");
         }
 
-        /*if ("admin".equals(foundUser.getUserType())) {
+        *//*if ("admin".equals(foundUser.getUserType())) {
             // admin method
 
         } else if ("cust".equals(foundUser.getUserType())) {
             // customer method
 
-        }*/
-    }
+        }*//*
+    }*/
     public static boolean resetCustPassword(ArrayList<User> customerList, String username, String email, boolean generateRandom) throws SQLException {
         User customer = null;
         for (User cust : customerList) {

@@ -147,28 +147,6 @@ public class RegisterValidator {
         String digitsOnly = phone.replaceAll("-", "");
         return digitsOnly.length() == 10 || digitsOnly.length() == 11;
     }
-    public static String validateStatus(Scanner scanner) {
-        String status;
-        do {
-            System.out.print("Enter status (1 for active, 2 for inactive): ");
-            int choice = scanner.nextInt();
-            scanner.nextLine();
-
-            switch (choice) {
-                case 1:
-                    status = "active";
-                    break;
-                case 2:
-                    status = "inactive";
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please select a valid status option.");
-                    status = null;
-            }
-        } while (status == null);
-
-        return status;
-    }
 
     private static boolean isValidEmail(String email) {
         return email.contains("@") && email.endsWith(".com");
