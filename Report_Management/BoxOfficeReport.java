@@ -5,27 +5,36 @@ import Database.DatabaseUtils;
 import Driver.DateTime;
 import Movie_Management.Movie;
 import Schedule_Management.Schedule;
-import Ticket_Managemnet.Ticket;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.*;
 
-public class TopMovieReport extends Report {
+public class BoxOfficeReport extends Report {
     private ArrayList<Movie> movies;
     private ArrayList<Double> totalBoxOffices;
     private ArrayList<Integer> numOfScreenings;
     private ArrayList<Double> averageBoxOffices;
 
     // Constructor
-    public TopMovieReport() {
+    public BoxOfficeReport() {
         movies = new ArrayList<>();
         totalBoxOffices = new ArrayList<>();
         numOfScreenings = new ArrayList<>();
         averageBoxOffices = new ArrayList<>();
     }
 
-    public TopMovieReport(String title, DateTime reportDate, String conclusion, ArrayList<Movie> movies, ArrayList<Double> totalBoxOffices, ArrayList<Integer> numOfScreenings, ArrayList<Double> averageBoxOffices) {
+    public BoxOfficeReport(String title, DateTime reportDate, ArrayList<Movie> movies, ArrayList<Double> totalBoxOffices, ArrayList<Integer> numOfScreenings, ArrayList<Double> averageBoxOffices) {
+        super(title, reportDate);
+        this.movies = movies;
+        this.totalBoxOffices = totalBoxOffices;
+        this.numOfScreenings = numOfScreenings;
+        this.averageBoxOffices = averageBoxOffices;
+    }
+
+    public BoxOfficeReport(String title, DateTime reportDate, String conclusion, ArrayList<Movie> movies, ArrayList<Double> totalBoxOffices, ArrayList<Integer> numOfScreenings, ArrayList<Double> averageBoxOffices) {
         super(title, reportDate, conclusion);
         this.movies = movies;
         this.totalBoxOffices = totalBoxOffices;
@@ -36,25 +45,37 @@ public class TopMovieReport extends Report {
     @Override
     public String toString() {
         String duration;
-        if (super.getTitle().contains("Daily")) {
+
+        if (getTitle().contains("Daily")) {
             duration = "day";
         }
-        else if (super.getTitle().contains("Weekly")) {
-            duration = "week";
-        }
-        else if (super.getTitle().contains("Monthly")) {
-            duration = "month";
-        }
         else {
-            duration = "year";
+            duration = "month";
         }
 
         super.setConclusion("From this report we can know that the best selling movie of the " + duration + " is " + movies.get(0).getMvName().getName() + " and the least popular movie is " + movies.get(movies.size() - 1).getMvName().getName() + ".");
 
-        StringBuilder result = new StringBuilder(super.toString()); // 获取父类 toString() 的结果
+        StringBuilder result = new StringBuilder("\n---------------------------------------------------------------------------------------------------------------------------------");
+
+        result.append(super.toString());// 获取父类 toString() 的结果
+
+        result.append("|          -----------------------------------------------------------------------------------------------------------          |\n");
+        result.append(String.format("%-38c %s", '|', super.getTitle())).append(" - ");
+
+        if (super.getTitle().contains("Daily")) {
+            result.append(getReportDate().getDay()).append(" ").append(getReportDate().getDate().getMonth()).append(" ").append(getReportDate().getYear());
+            result.append(String.format("%39c", '|'));
+        } else {
+            result.append(getReportDate().getDate().getMonth()).append(" ").append(getReportDate().getDate().getYear());
+            result.append(String.format("%44c", '|'));
+        }
+
+        result.append("\n|          -----------------------------------------------------------------------------------------------------------          |\n");
+
         int looping;
 
-        result.append(String.format("%-10s %-30s %-20s %-25s %s\n", "Ranking", "Movie Name", "Total Box Office", "Number of Screenings", "Average Box Office"));
+        result.append(String.format("%-10c %-10s %-30s %-20s %-25s %-27s %c", '|', "Ranking", "Movie Name", "Total Box Office", "Number of Screenings", "Average Box Office", '|'));
+        result.append("\n|          -----------------------------------------------------------------------------------------------------------          |\n");
 
         // 遍历电影列表，将电影信息添加到结果中
         if (movies.size() > 10) {
@@ -65,17 +86,46 @@ public class TopMovieReport extends Report {
         }
 
         for (int i = 0; i < looping; i++) {
-            result.append(String.format("%-10d %-30s %-20.2f %-25d %.2f\n", (i + 1), movies.get(i).getMvName().getName(), totalBoxOffices.get(i), numOfScreenings.get(i), averageBoxOffices.get(i)));
+            result.append(String.format("%-13c %-7d %-36s %-24.2f %-21d %-21.2f %c\n", '|', (i + 1), movies.get(i).getMvName().getName(), totalBoxOffices.get(i), numOfScreenings.get(i), averageBoxOffices.get(i), '|'));
         }
 
-        result.append(String.format("\nConclusion: \n%s\n", super.getConclusion()));
+        result.append("|          -----------------------------------------------------------------------------------------------------------          |\n");
+
+        result.append(String.format("%-127c %c\n%-10c %-116s %c\n| %127c\n", '|', '|', '|', "Conclusion", '|', '|'));
+
+        // 添加 Conclusion 时处理自动换行
+        String conclusion = super.getConclusion();
+        int maxLineLength = 115; // 适合你的报告宽度的最大行长度
+
+        StringBuilder conclusionBuilder = new StringBuilder("|          ");
+        int currentLineLength = 12; // 当前行长度，包括前导空格
+
+        for (char c : conclusion.toCharArray()) {
+            if (currentLineLength >= maxLineLength && c == ' ') {
+                // 如果当前行已满且下一个字符是空格，就在这里换行
+                conclusionBuilder.append(String.format(" %10c\n|          ", '|'));
+                currentLineLength = 12; // 重新计算行长度
+            } else {
+                conclusionBuilder.append(c);
+                currentLineLength++;
+            }
+        }
+
+        result.append(conclusionBuilder.toString());
+        result.append(String.format(" %93c\n| %127c\n", '|', '|'));
+
+        result.append("---------------------------------------------------------------------------------------------------------------------------------\n");
 
         return result.toString(); // 返回完整的字符串
     }
 
-    public void setReportValue(LocalDate expectedDate, ArrayList<Movie> moviesList) {
+    public BoxOfficeReport generateBoxOfficeReport(ArrayList<Movie> moviesList) {
+        ArrayList<Schedule> schedules;
+        LocalDate reportDate = getReportDate().getDate();
+        YearMonth reportYearMonth = YearMonth.of(reportDate.getYear(), reportDate.getMonth());
+
         for (int i = 0; i < moviesList.size(); i++) {
-            ArrayList<Schedule> schedules = new ArrayList<>();
+            schedules = new ArrayList<>();
 
             try {
                 Object[] params = {moviesList.get(i).getMovieID()};
@@ -86,16 +136,28 @@ public class TopMovieReport extends Report {
 
                     schedule.setShowDate(new DateTime(result.getDate("movie_showDate").toLocalDate()));
 
-                    if (schedule.getShowDate().getDate().equals(expectedDate) || (schedule.getShowDate().getDate().isAfter(expectedDate) && schedule.getShowDate().getDate().isBefore(LocalDate.now().plusDays(1)))) {
-                        schedule.setScheduleID(result.getInt("schedule_id"));
+                    if (getTitle().contains("Daily")) {
+                        if (schedule.getShowDate().getDate().isEqual(getReportDate().getDate())) {
+                            schedule.setScheduleID(result.getInt("schedule_id"));
 
-                        schedules.add(schedule);
+                            schedules.add(schedule);
+                        }
+                    }
+                    else {
+                        LocalDate scheduleDate = schedule.getShowDate().getDate();
+                        YearMonth scheduleYearMonth = YearMonth.of(scheduleDate.getYear(), scheduleDate.getMonth());
+
+                        if (scheduleYearMonth.equals(reportYearMonth)) {
+                            schedule.setScheduleID(result.getInt("schedule_id"));
+
+                            schedules.add(schedule);
+                        }
                     }
                 }
 
                 result.close();
-            }
-            catch (SQLException e) {
+
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
 
@@ -106,6 +168,11 @@ public class TopMovieReport extends Report {
                 calculateTotalRevenue(schedules);
             }
         }
+
+        if (!movies.isEmpty()) {
+            return new BoxOfficeReport(getTitle(), getReportDate(), movies, totalBoxOffices, numOfScreenings, averageBoxOffices);
+        }
+        return null;
     }
 
     /*public static ArrayList<Report> getRanking(Report report) {
@@ -113,8 +180,8 @@ public class TopMovieReport extends Report {
 
         for (int i = 0; i < reports.size(); i++) {
             for (int j = i + 1; j < reports.size(); j++) {
-                TopMovieReport report1 = (TopMovieReport) reports.get(i);
-                TopMovieReport report2 = (TopMovieReport) reports.get(j);
+                BoxOfficeReport report1 = (BoxOfficeReport) reports.get(i);
+                BoxOfficeReport report2 = (BoxOfficeReport) reports.get(j);
 
                 if (report1.getTotalBoxOffices() < report2.getTotalBoxOffices()) {
                     // 交换位置
@@ -175,13 +242,13 @@ public class TopMovieReport extends Report {
         averageBoxOffices.add(averageBoxOffice);
     }
 
-    public static Report getRanking(Report report) {
+    public static BoxOfficeReport getRanking(Report report) {
         // 创建一个包含 Movie 和总票房的 Map
         Map<Movie, Double> movieBoxOffices = new HashMap<>();
 
-        for (int i = 0; i < ((TopMovieReport)report).movies.size(); i++) {
-            Movie movie = ((TopMovieReport)report).movies.get(i);
-            double totalBoxOffice = ((TopMovieReport)report).totalBoxOffices.get(i);
+        for (int i = 0; i < ((BoxOfficeReport)report).movies.size(); i++) {
+            Movie movie = ((BoxOfficeReport)report).movies.get(i);
+            double totalBoxOffice = ((BoxOfficeReport)report).totalBoxOffices.get(i);
             movieBoxOffices.put(movie, totalBoxOffice);
         }
 
@@ -197,24 +264,23 @@ public class TopMovieReport extends Report {
         });
 
         // 创建一个新的报告对象
-        Report reportAfterRanking = new TopMovieReport();
+        BoxOfficeReport reportAfterRanking = new BoxOfficeReport();
 
         // 找到票房最高的电影
         for (int i = 0; i < sortedList.size(); i++) {
             Movie rank = sortedList.get(i).getKey();
 
             // 将最高票房电影添加到新报告中
-            ((TopMovieReport)reportAfterRanking).getMovie().add(rank);
-            ((TopMovieReport)reportAfterRanking).getTotalBoxOffices().add(movieBoxOffices.get(rank));
-            ((TopMovieReport)reportAfterRanking).getNumOfScreenings().add(((TopMovieReport)report).numOfScreenings.get(((TopMovieReport)report).movies.indexOf(rank)));
-            ((TopMovieReport)reportAfterRanking).getAverageBoxOffices().add(((TopMovieReport)report).averageBoxOffices.get(((TopMovieReport)report).movies.indexOf(rank)));
+            reportAfterRanking.getMovie().add(rank);
+            reportAfterRanking.getTotalBoxOffices().add(movieBoxOffices.get(rank));
+            reportAfterRanking.getNumOfScreenings().add(((BoxOfficeReport)report).numOfScreenings.get(((BoxOfficeReport)report).movies.indexOf(rank)));
+            reportAfterRanking.getAverageBoxOffices().add(((BoxOfficeReport)report).averageBoxOffices.get(((BoxOfficeReport)report).movies.indexOf(rank)));
         }
 
-        return reportAfterRanking;
-    }
+        reportAfterRanking.setTitle(report.getTitle());
+        reportAfterRanking.setReportDate(report.getReportDate());
 
-    public String getDefaultPurpose() {
-        return "To list movies in descending order of their box office earnings, allowing readers to quickly identify the most financially successful films.";
+        return reportAfterRanking;
     }
 
     public void setMovie(ArrayList<Movie> movies) {

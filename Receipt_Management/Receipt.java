@@ -81,7 +81,7 @@ public class Receipt {
 
     public void printReceipt(){
         System.out.println("\n\t\t-------------------------------------------");
-        System.out.println("|\t\t\t\t\t\tReceipt\t\t\t\t\t\t|");
+        System.out.println("\t\t|\t\t\t\tReceipt\t\t\t\t\t  |");
         System.out.println("\t\t-------------------------------------------");
         System.out.printf("\t\t Receipt ID   : %04d\n", receiptId);
         System.out.printf("\t\t Payment ID   : %04d\n", payment.getPaymentId());
@@ -111,19 +111,19 @@ public class Receipt {
 
         if (payment.getBooking().getPromotion() != null) {
             // Get original Price
-            System.out.printf("\t\t\tTotal \t\t\t\t\t   RM%6.2f\n", payment.getPaymentAmount() + payment.getBooking().getPromotion().getDiscountValue());
-            System.out.printf("\t\t\tDiscount\t\t\t\t\t- RM%6.2f\n", payment.getBooking().getPromotion().getDiscountValue());
+            System.out.printf("\t\t Total   \t\t\t\t\t\t  RM%6.2f\n", payment.getPaymentAmount() + payment.getBooking().getPromotion().getDiscountValue());
+            System.out.printf("\t\t Discount\t\t\t\t\t\t- RM%6.2f\n", payment.getBooking().getPromotion().getDiscountValue());
         }
 
         else {
-            System.out.printf("\t\t\tTotal \t\t\t\t\t   RM%6.2f\n", payment.getPaymentAmount());
+            System.out.printf("\t\t Total   \t\t\t\t\t\t  RM%6.2f\n", payment.getPaymentAmount());
         }
 
         System.out.println("\t\t-------------------------------------------");
-        System.out.printf("\t\t\tTotal Amount : \t\t\t\tRM%6.2f\n", payment.getBooking().getTotalPrice());
+        System.out.printf("\t\t Total Amount\t\t\t\t\t  RM%6.2f\n", payment.getBooking().getTotalPrice());
         System.out.println("\t\t-------------------------------------------");
-        System.out.printf("\t\t\tPayment Method  : \t\t\t\t%s\n", payment.getPaymentMethod());
-        System.out.printf("\t\t\tAmount Paid  : \t\t\t\tRM%6.2f\n", payment.getPaymentAmount());
+        System.out.printf("\t\t Payment Method  \t\t%18s\n", payment.getPaymentMethod());
+        System.out.printf("\t\t Amount Paid \t\t\t\t\t  RM%6.2f\n", payment.getPaymentAmount());
         System.out.println("\t\t-------------------------------------------");
     }
 
