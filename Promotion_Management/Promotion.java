@@ -4,6 +4,7 @@ import Booking_Management.Booking;
 import Database.DatabaseUtils;
 import Driver.DatabaseOperations;
 import Driver.DateTime;
+import Driver.SystemClass;
 import Security_Management.Customer;
 
 import java.sql.ResultSet;
@@ -202,16 +203,12 @@ public class Promotion implements DatabaseOperations {
 
         try {
             delete = DatabaseUtils.deleteQueryById("PROMOTION", "PROMOTION_STATUS", "PROMOTION_ID", params);
+
+            if (delete == 1) {
+                return true;
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
-
-        if (delete == 1) {
-            System.out.println("\nThe promotion has been deleted.");
-
-            return true;
-        } else {
-            System.out.println("\nSomething went wrong...");
         }
 
         return false;
@@ -377,27 +374,59 @@ public class Promotion implements DatabaseOperations {
                 + "\n5. Left : " + remainQty() + " time(s)";
     }
 
+    public String printModify() {
+        int totalWidth = 36; // 总宽度，根据你的输出需求调整
+        String centeredDescription = SystemClass.centerText(description, totalWidth);
+
+        return String.format(
+                "\n\n----------------------------------------\n" +
+                        "| %s |\n" +
+                        "----------------------------------------\n" +
+                        "| 1 | Description    | %-16s|\n" +
+                        "----------------------------------------\n" +
+                        "| 2 | Discount value | RM %-13.2f|\n" +
+                        "----------------------------------------\n" +
+                        "| 3 | Minimum Spend  | RM %-13.2f|\n" +
+                        "----------------------------------------\n" +
+                        "| 4 | Per Limit      | %-16d|\n" +
+                        "----------------------------------------\n" +
+                        "| 5 | Start date     | %-16s|\n" +
+                        "----------------------------------------\n" +
+                        "| 6 | End date       | %-16s|\n" +
+                        "----------------------------------------\n" +
+                        "| 7 | Publish count  | %-16d|\n" +
+                        "----------------------------------------\n" +
+                        "| X | Receive count  | %-16d|\n" +
+                        "----------------------------------------",
+                centeredDescription, description, discountValue, minSpend, perLimit,
+                startDate.getDate(), endDate.getDate(), publishCount, receiveCount
+        );
+    }
+
     @Override
     public String toString() {
+        int totalWidth = 30; // 总宽度，根据你的输出需求调整
+        String centeredDescription = SystemClass.centerText(description, totalWidth);
+
         return String.format(
-                "\n----------------------------------\n" +
-                        "| %8s (ID - %d)             |\n" +
+                "\n\n----------------------------------\n" +
+                        "| %s |\n" +
                         "----------------------------------\n" +
-                        "| Discount value |   %-6.2f|\n" +
+                        "| Discount value | RM %-11.2f|\n" +
                         "----------------------------------\n" +
-                        "| Minimum Spend  |   %-6.2f|\n" +
+                        "| Minimum Spend  | RM %-11.2f|\n" +
                         "----------------------------------\n" +
-                        "| Per Limit      |   %-6d|\n" +
+                        "| Per Limit      | %-14d|\n" +
                         "----------------------------------\n" +
-                        "| Start date     |   %-6s|\n" +
+                        "| Start date     | %-14s|\n" +
                         "----------------------------------\n" +
-                        "| End date       |   %-6s|\n" +
+                        "| End date       | %-14s|\n" +
                         "----------------------------------\n" +
-                        "| Publish count  |   %-6d|\n" +
+                        "| Publish count  | %-14d|\n" +
                         "----------------------------------\n" +
-                        "| Receive count  |   %-6d|\n" +
-                        "----------------------------------\n",
-                description, promotionId, discountValue, minSpend, perLimit,
+                        "| Receive count  | %-14d|\n" +
+                        "----------------------------------",
+                centeredDescription, discountValue, minSpend, perLimit,
                 startDate.getDate(), endDate.getDate(), publishCount, receiveCount
         );
     }

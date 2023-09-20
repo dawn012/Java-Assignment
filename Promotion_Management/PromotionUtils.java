@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class PromotionUtils {
-    public static ArrayList<Promotion> filteredPromotionList(LocalDate startDate, LocalDate endDate, int status) {
+    public static ArrayList<Promotion> filteredPromotionList(LocalDate startDate, LocalDate endDate, int status, String action) {
         ArrayList<Promotion> promotions = new ArrayList<>(); // 创建一个列表来存储 Promotion 对象
 
         ResultSet rs;
@@ -44,12 +44,16 @@ public class PromotionUtils {
 
         ArrayList<Promotion> filteredPromotions = new ArrayList<>();
         int count = 0;
+        boolean headerPrint = true;
 
-        System.out.print("\nSelect the promotion you want to view: ");
 
         for (Promotion eachPromotion : promotions) {
             // All promotions
             if (startDate == null && endDate == null) {
+                if (headerPrint) {
+                    System.out.printf("\n\nSelect the promotion you want to %s: ", action);
+                    headerPrint = false;
+                }
                 filteredPromotions.add(eachPromotion);
                 count++;
                 System.out.print("\n-----------------------------------------------------\n");
@@ -60,13 +64,21 @@ public class PromotionUtils {
                 if ((eachPromotion.getStartDate().getDate().isAfter(startDate) || eachPromotion.getStartDate().getDate().equals(startDate)) && (eachPromotion.getEndDate().getDate().isBefore(endDate) || eachPromotion.getEndDate().getDate().equals(endDate))){
                     filteredPromotions.add(eachPromotion);
                     count++;
+
+                    if (headerPrint) {
+                        System.out.printf("\n\nSelect the promotion you want to %s: ", action);
+                        headerPrint = false;
+                    }
+
                     System.out.print("\n-----------------------------------------------------\n");
                     System.out.printf("| %d | %-45s |", count, eachPromotion.getDescription());
                 }
             }
         }
 
-        System.out.print("\n-----------------------------------------------------\n");
+        if (count > 0) {
+            System.out.print("\n-----------------------------------------------------\n");
+        }
 
         return filteredPromotions;
     }
