@@ -379,15 +379,39 @@ public class Promotion implements DatabaseOperations {
 
     @Override
     public String toString() {
-        return  "\nPromotion ID : " + promotionId
-                + "\n1. Description : " + description
-                + "\n2. Discount value : " + discountValue
-                + "\n3. Minimum Spend : " + minSpend
-                + "\n4. Per Limit : " + perLimit
-                + "\n5. Start date : " + startDate.getDate()
-                + "\n6. End date : " + endDate.getDate()
-                + "\n7. Publish count : " + publishCount
-                + "\n8. Receive count : " + receiveCount;
+        return String.format(
+                "\n----------------------------------\n" +
+                        "| %8s (ID - %d)             |\n" +
+                        "----------------------------------\n" +
+                        "| Discount value |   %-6.2f|\n" +
+                        "----------------------------------\n" +
+                        "| Minimum Spend  |   %-6.2f|\n" +
+                        "----------------------------------\n" +
+                        "| Per Limit      |   %-6d|\n" +
+                        "----------------------------------\n" +
+                        "| Start date     |   %-6s|\n" +
+                        "----------------------------------\n" +
+                        "| End date       |   %-6s|\n" +
+                        "----------------------------------\n" +
+                        "| Publish count  |   %-6d|\n" +
+                        "----------------------------------\n" +
+                        "| Receive count  |   %-6d|\n" +
+                        "----------------------------------\n",
+                description, promotionId, discountValue, minSpend, perLimit,
+                startDate.getDate(), endDate.getDate(), publishCount, receiveCount
+        );
     }
+
+//    public String toString() {
+//        return  "\nPromotion ID : " + promotionId
+//                + "\n1. Description : " + description
+//                + "\n2. Discount value : " + discountValue
+//                + "\n3. Minimum Spend : " + minSpend
+//                + "\n4. Per Limit : " + perLimit
+//                + "\n5. Start date : " + startDate.getDate()
+//                + "\n6. End date : " + endDate.getDate()
+//                + "\n7. Publish count : " + publishCount
+//                + "\n8. Receive count : " + receiveCount;
+//    }
 }
 

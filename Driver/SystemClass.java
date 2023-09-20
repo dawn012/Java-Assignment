@@ -4076,9 +4076,12 @@ public class SystemClass {
                         error = false;
 
                         System.out.println("\nSelect the operation: ");
-                        System.out.println("1. All Promotion");
-                        System.out.println("2. Custom\n");
-                        System.out.print("Enter your selection (0 - Back): ");
+                        System.out.print("---------------------\n");
+                        System.out.println("| 1 | All Promotion\t|");
+                        System.out.print("---------------------\n");
+                        System.out.println("| 2 | Custom       \t|");
+                        System.out.print("---------------------\n");
+                        System.out.print("\nEnter your selection (0 - Back): ");
 
                         int filterChoice = sc.nextInt();
                         sc.nextLine();
@@ -4100,7 +4103,7 @@ public class SystemClass {
 
                                         break; // 日期有效，退出循环
                                     } catch (DateTimeParseException e) {
-                                        System.out.println("Invalid date format. Please enter a valid date (yyyy-MM-dd).\n");
+                                        System.out.println("\nInvalid date format. Please enter a valid date (yyyy-MM-dd).\n");
                                     }
                                 }
 
@@ -4114,16 +4117,16 @@ public class SystemClass {
                                         if (endDate.isAfter(startDate)) {
                                             break; // 日期有效，退出循环
                                         } else {
-                                            System.out.println("End date must be after start date. Please enter a valid date (yyyy-MM-dd).\n");
+                                            System.out.println("\nEnd date must be after start date. Please enter a valid date (yyyy-MM-dd).\n");
                                         }
                                     } catch (DateTimeParseException e) {
-                                        System.out.println("Invalid date format. Please enter a valid date (yyyy-MM-dd).\n");
+                                        System.out.println("\nInvalid date format. Please enter a valid date (yyyy-MM-dd).\n");
                                     }
                                 }
 
                                 break;
                             default:
-                                System.out.println("Invalid input. Please retry.");
+                                System.out.println("\nInvalid input. Please retry.");
                                 error = true;
                         }
 
@@ -4142,7 +4145,7 @@ public class SystemClass {
 
                                     do {
                                         try {
-                                            System.out.print("\nEnter the promotion no. to view the details (0 - Back): ");
+                                            System.out.print("\nEnter the promotion no. (0 - Back): ");
                                             detailsChoice = sc.nextInt();
                                             sc.nextLine();
 
@@ -4157,12 +4160,12 @@ public class SystemClass {
                                             }
 
                                             else {
-                                                System.out.println("Your choice is not among the available options! PLease try again.");
+                                                System.out.println("\nYour choice is not among the available options! PLease try again.");
                                                 error = true;
                                             }
                                         }
                                         catch (InputMismatchException e) {
-                                            System.out.println("Please enter a valid choice!");
+                                            System.out.println("\nPlease enter a valid choice!");
                                             sc.nextLine();
                                             error = true;
                                         }
@@ -4895,6 +4898,7 @@ public class SystemClass {
                     try {
                         // Cancel booking
                         booking.cancelBooking();
+                        Payment.setNextPaymentId(validPayment.getPaymentId() - 1);
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }

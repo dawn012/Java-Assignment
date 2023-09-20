@@ -4,11 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dbnavigator.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
+    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="debug">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database/DatabaseUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/Database/DatabaseUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Driver/SystemClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/Driver/SystemClass.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Payment_Management/Payment.java" beforeDir="false" afterPath="$PROJECT_DIR$/Payment_Management/Payment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Promotion_Management/Promotion.java" beforeDir="false" afterPath="$PROJECT_DIR$/Promotion_Management/Promotion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Promotion_Management/PromotionUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/Promotion_Management/PromotionUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report_Management/SalesReport.java" beforeDir="false" afterPath="$PROJECT_DIR$/Report_Management/SalesReport.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -130,7 +132,6 @@
         <item itemvalue="Application.AdminDriver" />
         <item itemvalue="Application.LoginDriver" />
         <item itemvalue="Application.LoginDriver" />
-        <item itemvalue="Application.AdminDriver" />
       </list>
     </recent_temporary>
   </component>
@@ -406,12 +407,13 @@
       <option name="project" value="LOCAL" />
       <updated>1695157850895</updated>
     </task>
-    <task id="LOCAL-00034" summary="fix file">
-      <created>1695007374768</created>
+    <task id="LOCAL-00034" summary="debug">
+      <option name="closed" value="true" />
+      <created>1695169723390</created>
       <option name="number" value="00034" />
       <option name="presentableId" value="LOCAL-00034" />
       <option name="project" value="LOCAL" />
-      <updated>1695007374768</updated>
+      <updated>1695169723390</updated>
     </task>
     <task id="LOCAL-00035" summary="fix bug">
       <created>1695007847122</created>
@@ -484,7 +486,7 @@
       <option name="project" value="LOCAL" />
       <updated>1695121680217</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -533,7 +535,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="add the sql" />
     <MESSAGE value="add the yong package" />
     <MESSAGE value="change the hall package" />
     <MESSAGE value="change the SystemClass.java" />

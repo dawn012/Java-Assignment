@@ -65,6 +65,14 @@ public abstract class Payment {
         this.booking = booking;
     }
 
+    public static int getNextPaymentId() {
+        return nextPaymentId;
+    }
+
+    public static void setNextPaymentId(int nextPaymentId) {
+        Payment.nextPaymentId = nextPaymentId;
+    }
+
     public int getPaymentId() {
         return paymentId;
     }

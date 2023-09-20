@@ -42,26 +42,31 @@ public class PromotionUtils {
             throw new RuntimeException(e);
         }
 
-
         ArrayList<Promotion> filteredPromotions = new ArrayList<>();
         int count = 0;
+
+        System.out.print("\nSelect the promotion you want to view: ");
 
         for (Promotion eachPromotion : promotions) {
             // All promotions
             if (startDate == null && endDate == null) {
                 filteredPromotions.add(eachPromotion);
                 count++;
-                System.out.printf("%d.     %s\n", count, eachPromotion.getDescription());
+                System.out.print("\n-----------------------------------------------------\n");
+                System.out.printf("| %d | %-45s |", count, eachPromotion.getDescription());
             }
 
             else {
                 if ((eachPromotion.getStartDate().getDate().isAfter(startDate) || eachPromotion.getStartDate().getDate().equals(startDate)) && (eachPromotion.getEndDate().getDate().isBefore(endDate) || eachPromotion.getEndDate().getDate().equals(endDate))){
                     filteredPromotions.add(eachPromotion);
                     count++;
-                    System.out.printf("%d.     %s\n", count, eachPromotion.getDescription());
+                    System.out.print("\n-----------------------------------------------------\n");
+                    System.out.printf("| %d | %-45s |", count, eachPromotion.getDescription());
                 }
             }
         }
+
+        System.out.print("\n-----------------------------------------------------\n");
 
         return filteredPromotions;
     }
