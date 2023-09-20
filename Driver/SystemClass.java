@@ -547,7 +547,7 @@ public class SystemClass {
                         int no = 0;
                         do {
                             try {
-                                System.out.print("\nEnter No. Booking to Show Detail (0=Back) : ");
+                                System.out.print("\nEnter No. Booking to Show Detail (0 = Back) : ");
                                 no = sc.nextInt();
                                 if (no == 0)
                                     break;
