@@ -49,6 +49,8 @@ public class Movie implements DatabaseOperations {
     }
 
     // Method
+
+    // To view the specific movie details
     public void viewMovieDetails() throws SQLException {
         ResultSet result = null;
 
@@ -91,6 +93,8 @@ public class Movie implements DatabaseOperations {
         System.out.println("----------------------------------------------------------------------------------");
     }
 
+
+    // To add the new movie into the database
     public boolean add() throws SQLException {
         int rowAffected = 0;
 
@@ -113,6 +117,8 @@ public class Movie implements DatabaseOperations {
         }
     }
 
+
+    // To show the specific movie details (for edit purpose which will have the number beside the movie details)
     public int modifyMovieDetail(Scanner sc) throws SQLException {
         boolean error = true;
 
@@ -187,6 +193,8 @@ public class Movie implements DatabaseOperations {
         return 0;
     }
 
+
+    // To update the movie in the database
     public boolean modify() throws SQLException {
         int rowAffected = 0;
 
@@ -212,6 +220,8 @@ public class Movie implements DatabaseOperations {
         }
     }
 
+
+    // Used to set the movie_status to become 0 (0 means this movie is deleted)
     public boolean delete() throws SQLException {
         int rowAffected = 0;
 
@@ -232,6 +242,8 @@ public class Movie implements DatabaseOperations {
         }
     }
 
+
+    // Setter
     public void setMovieID(int movieID) {
         this.movieID = movieID;
     }
@@ -284,6 +296,8 @@ public class Movie implements DatabaseOperations {
         this.basicTicketPrice = basicTicketPrice;
     }
 
+
+    // Getter
     public int getMovieID() {
         return movieID;
     }

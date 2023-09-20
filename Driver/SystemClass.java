@@ -522,6 +522,7 @@ public class SystemClass {
                 case 4:
                     //View Booking History
                     boolean skip=false;
+                    customer = new Customer();
                     customer.setCustId(1);
                     int periodSelected = 0;
                     error = true;
@@ -1065,7 +1066,8 @@ public class SystemClass {
             }
         } while (back == false);
     }
-    private static void manageCinema(Scanner sc) throws Exception {
+
+    public static void manageCinema(Scanner sc) throws Exception {
         boolean back = false;
 
         do {
@@ -1133,224 +1135,235 @@ public class SystemClass {
                         Cinema newCinema = new Cinema();
                         // Cinema Name
                         Name name = null;
+                        String cinemaName = null;
+
                         do {
                             System.out.print("\nEnter cinema name (0 - Back): ");
-                            String cinemaName = sc.nextLine();
+                            cinemaName = sc.nextLine();
 
-                            name = new Name(cinemaName);
-                            name.capitalizeWords();
+                            if (!cinemaName.equals("0")) {
+                                name = new Name(cinemaName);
+                                name.capitalizeWords();
 
-                            ResultSet result = null;
-                            try {
-                                result = DatabaseUtils.selectQuery("cinema_name", "cinema", null, null);
-                            } catch (SQLException e) {
-                                throw new RuntimeException(e);
-                            }
-
-                            String errorMessage = name.checkName("cinema", result, "cinema_name");
-
-                            if (errorMessage == null) {
-                                newCinema.setCinemaName(name);
-                                error = false;
-                            } else {
-                                System.out.println(errorMessage);
-                                error = true;
-                            }
-                        } while (error);
-
-                        boolean duplicatedAddress = false;
-                        do {
-                            // Cinema Address
-                            int stateSelected = 0;
-                            do {
+                                ResultSet result = null;
                                 try {
-                                    System.out.println("\nSelect the state: ");
-                                    System.out.printf("------------------------------------------------------");
-                                    System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "State", '|');
-                                    System.out.println("------------------------------------------------------");
-                                    AddressUtils.viewStateList();
-                                    System.out.print("\nEnter your selection: ");
-                                    stateSelected = sc.nextInt();
-                                    sc.nextLine();
-
-                                    if (stateSelected > 0 && stateSelected <= Address.getStateToCities().size()) {
-                                        error = false;
-                                    } else {
-                                        System.out.println("Your choice is not among the available options! PLease try again.");
-                                        error = true;
-                                    }
-                                } catch (InputMismatchException e) {
-                                    System.out.println("Please enter a valid state no!");
-                                    sc.nextLine();
+                                    result = DatabaseUtils.selectQuery("cinema_name", "cinema", null, null);
+                                } catch (SQLException e) {
+                                    throw new RuntimeException(e);
                                 }
-                            } while (error);
 
-                            String stateName = AddressUtils.getStateName(stateSelected - 1);
+                                String errorMessage = name.checkName("cinema", result, "cinema_name");
 
-                            int citySelected = 0;
-                            do {
-                                try {
-                                    System.out.println("\nSelect the city: ");
-                                    System.out.printf("------------------------------------------------------");
-                                    System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "City", '|');
-                                    System.out.println("------------------------------------------------------");
-                                    int count = AddressUtils.viewCityList(stateSelected - 1);
-                                    System.out.print("\nEnter your selection: ");
-                                    citySelected = sc.nextInt();
-                                    sc.nextLine();
-
-                                    if (citySelected > 0 && citySelected <= count) {
-                                        error = false;
-                                    } else {
-                                        System.out.println("Your choice is not among the available options! PLease try again.");
-                                        error = true;
-                                    }
-                                } catch (InputMismatchException e) {
-                                    System.out.println("Please enter a valid city no!");
-                                    sc.nextLine();
-                                }
-                            } while (error);
-
-                            String cityName = AddressUtils.getCityName(stateName, citySelected - 1);
-
-                            int postcodeSelected = 0;
-                            do {
-                                try {
-                                    System.out.println("\nSelect the postcode: ");
-                                    System.out.printf("------------------------------------------------------");
-                                    System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Postcode", '|');
-                                    System.out.println("------------------------------------------------------");
-                                    int count = AddressUtils.viewPostcodeList(cityName);
-                                    System.out.print("\nEnter your selection: ");
-                                    postcodeSelected = sc.nextInt();
-                                    sc.nextLine();
-
-                                    if (postcodeSelected > 0 && postcodeSelected <= count) {
-                                        error = false;
-                                    } else {
-                                        System.out.println("Your choice is not among the available options! PLease try again.");
-                                        error = true;
-                                    }
-                                } catch (InputMismatchException e) {
-                                    System.out.println("Please enter a valid postcode no!");
-                                    sc.nextLine();
-                                }
-                            } while (error);
-
-                            String postcode = AddressUtils.getPostcodeSelected(cityName, postcodeSelected - 1);
-
-                            String streetName;
-                            do {
-                                System.out.print("\nEnter the street name: ");
-                                streetName = sc.nextLine();
-
-                                if (streetName.trim().isEmpty()) {
-                                    System.out.println("Please enter the street name.");
-                                    error = true;
-                                } else {
-                                    streetName = streetName.toUpperCase();
+                                if (errorMessage == null) {
+                                    newCinema.setCinemaName(name);
                                     error = false;
-                                }
-                            } while (error);
-
-                            Address cinemaAddress = new Address(streetName.trim(), postcode, cityName, stateName);
-                            newCinema.setCinemaAddress(cinemaAddress);
-
-                            ResultSet result = null;
-                            try {
-                                result = DatabaseUtils.selectQuery("cinema_address", "cinema", null, null);
-                            } catch (SQLException e) {
-                                throw new RuntimeException(e);
-                            }
-
-                            duplicatedAddress = cinemaAddress.checkAddressDuplicate(result, "cinema_address");
-
-                            if (duplicatedAddress == true) {
-                                System.out.println("Same cinema address detected.");
-                            }
-                        } while (duplicatedAddress);
-
-                        // Cinema Phone
-                        do {
-                            System.out.print("\nEnter the cinema phone number: ");
-                            String phoneNumber = sc.nextLine();
-
-                            if (phoneNumber.trim().isEmpty()) {
-                                System.out.println("Please enter the phone number.");
-                                error = true;
-                            } else {
-                                newCinema.setCinemaPhone(phoneNumber.trim());
-
-                                if (newCinema.isValidOfficePhoneNumber()) {
-                                    if (newCinema.isPhoneNumberUnique()) {
-                                        error = false;
-                                    }
-                                    else {
-                                        System.out.println("The phone number is same as other cinema phone number.");
-                                        error = true;
-                                    }
                                 } else {
-                                    System.out.println("The phone number is invalid.");
+                                    System.out.println(errorMessage);
                                     error = true;
                                 }
-                            }
-                        } while (error);
-
-                        // Add Cinema
-                        String confirmation;
-                        do {
-                            System.out.println("\nDo you want add the new cinema? (Y / N)");
-                            System.out.print("Answer: ");
-                            String answer = sc.next();
-                            sc.nextLine();
-
-                            confirmation = SystemClass.askForContinue(answer);
-                        } while (confirmation.equals("Invalid"));
-
-                        // Confirm that the cinema is successfully added
-                        boolean success = false;
-                        do {
-                            if (confirmation.equals("Y")) {
-                                success = newCinema.add();
-                            } else {
-                                success = true;
-                                System.out.println("This cinema will not be added.");
-                            }
-
-                            if (success == false) {
-                                do {
-                                    System.out.println("\nDo you want to retry to add the new cinema? (Y / N)");
-                                    System.out.print("Answer: ");
-                                    String answer = sc.next();
-                                    sc.nextLine();
-
-                                    confirmation = SystemClass.askForContinue(answer);
-
-                                    if (confirmation.equals("Y")) {
-                                        continues = true;
-                                    } else {
-                                        continues = false;
-                                    }
-                                } while (confirmation.equals("Invalid"));
                             }
                             else {
-                                continues = false;
+                                error = false;
                             }
-                        } while (continues);
+                        } while (error);
 
-                        String continueAddCinema;
-                        do {
-                            System.out.println("\nDo you want add another new cinema? (Y / N)");
-                            System.out.print("Answer: ");
-                            String answer = sc.next();
-                            sc.nextLine();
+                        if (!cinemaName.equals("0")) {
+                            boolean duplicatedAddress = false;
+                            do {
+                                // Cinema Address
+                                int stateSelected = 0;
+                                do {
+                                    try {
+                                        System.out.println("\nSelect the state: ");
+                                        System.out.printf("------------------------------------------------------");
+                                        System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "State", '|');
+                                        System.out.println("------------------------------------------------------");
+                                        AddressUtils.viewStateList();
+                                        System.out.print("\nEnter your selection: ");
+                                        stateSelected = sc.nextInt();
+                                        sc.nextLine();
 
-                            continueAddCinema = SystemClass.askForContinue(answer);
-                        } while (continueAddCinema.equals("Invalid"));
+                                        if (stateSelected > 0 && stateSelected <= Address.getStateToCities().size()) {
+                                            error = false;
+                                        } else {
+                                            System.out.println("Your choice is not among the available options! PLease try again.");
+                                            error = true;
+                                        }
+                                    } catch (InputMismatchException e) {
+                                        System.out.println("Please enter a valid state no!");
+                                        sc.nextLine();
+                                    }
+                                } while (error);
 
-                        if (continueAddCinema.equals("Y")) {
-                            continues = true;
-                        } else {
+                                String stateName = AddressUtils.getStateName(stateSelected - 1);
+
+                                int citySelected = 0;
+                                do {
+                                    try {
+                                        System.out.println("\nSelect the city: ");
+                                        System.out.printf("------------------------------------------------------");
+                                        System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "City", '|');
+                                        System.out.println("------------------------------------------------------");
+                                        int count = AddressUtils.viewCityList(stateSelected - 1);
+                                        System.out.print("\nEnter your selection: ");
+                                        citySelected = sc.nextInt();
+                                        sc.nextLine();
+
+                                        if (citySelected > 0 && citySelected <= count) {
+                                            error = false;
+                                        } else {
+                                            System.out.println("Your choice is not among the available options! PLease try again.");
+                                            error = true;
+                                        }
+                                    } catch (InputMismatchException e) {
+                                        System.out.println("Please enter a valid city no!");
+                                        sc.nextLine();
+                                    }
+                                } while (error);
+
+                                String cityName = AddressUtils.getCityName(stateName, citySelected - 1);
+
+                                int postcodeSelected = 0;
+                                do {
+                                    try {
+                                        System.out.println("\nSelect the postcode: ");
+                                        System.out.printf("------------------------------------------------------");
+                                        System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Postcode", '|');
+                                        System.out.println("------------------------------------------------------");
+                                        int count = AddressUtils.viewPostcodeList(cityName);
+                                        System.out.print("\nEnter your selection: ");
+                                        postcodeSelected = sc.nextInt();
+                                        sc.nextLine();
+
+                                        if (postcodeSelected > 0 && postcodeSelected <= count) {
+                                            error = false;
+                                        } else {
+                                            System.out.println("Your choice is not among the available options! PLease try again.");
+                                            error = true;
+                                        }
+                                    } catch (InputMismatchException e) {
+                                        System.out.println("Please enter a valid postcode no!");
+                                        sc.nextLine();
+                                    }
+                                } while (error);
+
+                                String postcode = AddressUtils.getPostcodeSelected(cityName, postcodeSelected - 1);
+
+                                String streetName;
+                                do {
+                                    System.out.print("\nEnter the street name: ");
+                                    streetName = sc.nextLine();
+
+                                    if (streetName.trim().isEmpty()) {
+                                        System.out.println("Please enter the street name.");
+                                        error = true;
+                                    } else {
+                                        streetName = streetName.toUpperCase();
+                                        error = false;
+                                    }
+                                } while (error);
+
+                                Address cinemaAddress = new Address(streetName.trim(), postcode, cityName, stateName);
+                                newCinema.setCinemaAddress(cinemaAddress);
+
+                                ResultSet result = null;
+                                try {
+                                    result = DatabaseUtils.selectQuery("cinema_address", "cinema", null, null);
+                                } catch (SQLException e) {
+                                    throw new RuntimeException(e);
+                                }
+
+                                duplicatedAddress = cinemaAddress.checkAddressDuplicate(result, "cinema_address");
+
+                                if (duplicatedAddress == true) {
+                                    System.out.println("Same cinema address detected.");
+                                }
+                            } while (duplicatedAddress);
+
+                            // Cinema Phone
+                            do {
+                                System.out.print("\nEnter the cinema phone number: ");
+                                String phoneNumber = sc.nextLine();
+
+                                if (phoneNumber.trim().isEmpty()) {
+                                    System.out.println("Please enter the phone number.");
+                                    error = true;
+                                } else {
+                                    newCinema.setCinemaPhone(phoneNumber.trim());
+
+                                    if (newCinema.isValidOfficePhoneNumber()) {
+                                        if (newCinema.isPhoneNumberUnique()) {
+                                            error = false;
+                                        } else {
+                                            System.out.println("The phone number is same as other cinema phone number.");
+                                            error = true;
+                                        }
+                                    } else {
+                                        System.out.println("The phone number is invalid.");
+                                        error = true;
+                                    }
+                                }
+                            } while (error);
+
+                            // Add Cinema
+                            String confirmation;
+                            do {
+                                System.out.println("\nDo you want add the new cinema? (Y / N)");
+                                System.out.print("Answer: ");
+                                String answer = sc.next();
+                                sc.nextLine();
+
+                                confirmation = SystemClass.askForContinue(answer);
+                            } while (confirmation.equals("Invalid"));
+
+                            // Confirm that the cinema is successfully added
+                            boolean success = false;
+                            do {
+                                if (confirmation.equals("Y")) {
+                                    success = newCinema.add();
+                                } else {
+                                    success = true;
+                                    System.out.println("This cinema will not be added.");
+                                }
+
+                                if (success == false) {
+                                    do {
+                                        System.out.println("\nDo you want to retry to add the new cinema? (Y / N)");
+                                        System.out.print("Answer: ");
+                                        String answer = sc.next();
+                                        sc.nextLine();
+
+                                        confirmation = SystemClass.askForContinue(answer);
+
+                                        if (confirmation.equals("Y")) {
+                                            continues = true;
+                                        } else {
+                                            continues = false;
+                                        }
+                                    } while (confirmation.equals("Invalid"));
+                                } else {
+                                    continues = false;
+                                }
+                            } while (continues);
+
+                            String continueAddCinema;
+                            do {
+                                System.out.println("\nDo you want add another new cinema? (Y / N)");
+                                System.out.print("Answer: ");
+                                String answer = sc.next();
+                                sc.nextLine();
+
+                                continueAddCinema = SystemClass.askForContinue(answer);
+                            } while (continueAddCinema.equals("Invalid"));
+
+                            if (continueAddCinema.equals("Y")) {
+                                continues = true;
+                            } else {
+                                continues = false;
+                                back = false;
+                            }
+                        }
+                        else {
                             continues = false;
                             back = false;
                         }
@@ -1837,8 +1850,7 @@ public class SystemClass {
 
                                         ResultSet result = null;
                                         try {
-                                            Object[] params = {cinema.getCinemaID()};
-                                            result = DatabaseUtils.selectQuery("hall_name", "hall", "cinema_id = ?", params);
+                                            result = DatabaseUtils.selectQuery("hall_name", "hall", null, null);
                                         } catch (SQLException e) {
                                             throw new RuntimeException(e);
                                         }
@@ -1904,7 +1916,7 @@ public class SystemClass {
                                             success = cinema.addHall(hall);
                                         } else {
                                             success = true;
-                                            System.out.println("This hall will not be added for the cinema.");
+                                            System.out.println("\nThis hall will not be added for the cinema.");
                                         }
 
                                         if (success == false) {
@@ -1929,7 +1941,7 @@ public class SystemClass {
 
                                     String continueAddHall;
                                     do {
-                                        System.out.println("\nDo you want add another new cinema? (Y / N)");
+                                        System.out.println("\nDo you want add another new hall? (Y / N)");
                                         System.out.print("Answer: ");
                                         String answer = sc.next();
                                         sc.nextLine();
@@ -2062,8 +2074,7 @@ public class SystemClass {
 
                                                     ResultSet result = null;
                                                     try {
-                                                        Object[] params = {cinema.getCinemaID()};
-                                                        result = DatabaseUtils.selectQuery("hall_name", "hall", "cinema_id = ?", params);
+                                                        result = DatabaseUtils.selectQuery("hall_name", "hall", null, null);
                                                     } catch (SQLException e) {
                                                         throw new RuntimeException(e);
                                                     }
@@ -2272,7 +2283,7 @@ public class SystemClass {
         } while (exit == false);
     }
 
-    private static void manageMovie(Scanner sc) throws Exception {
+    public static void manageMovie(Scanner sc) throws Exception {
         boolean back = false;
 
         do {
@@ -2302,7 +2313,6 @@ public class SystemClass {
                             }
                         }
                         else {
-                            System.out.println("-----------------------------------------------------");
                             System.out.printf("%-15c %-35s %c\n", '|', "Sorry, no movie found!", '|');
                             System.out.println("-----------------------------------------------------");
                         }
@@ -2393,27 +2403,29 @@ public class SystemClass {
 
                                 try {
                                     int i = 1;
-                                    ArrayList<Integer> genreID = new ArrayList<>();
+                                    ArrayList<Genre> genres = new ArrayList<>();
 
                                     System.out.println("\nAvailable Genres");
+
                                     while (result.next()) {
                                         System.out.println(i + ". " + result.getString("genre_name"));
-                                        genreID.add(result.getInt("genre_id"));  // Store the genre ID
+
+                                        Genre genre = new Genre(result.getInt("genre_id"), new Name(result.getString("genre_name")));
+                                        genres.add(genre);
+
                                         i++;
                                     }
+
                                     System.out.print("\nEnter your selection: ");
                                     int genreSelected = sc.nextInt();
                                     sc.nextLine();
 
-                                    String errorMessage = MovieValidator.checkGenreID(genreID.size(), genreSelected);
-
-                                    if (errorMessage == null) {
-                                        Genre genre = new Genre(genreID.get(genreSelected - 1));
-                                        newMovie.setGenre(genre);  // ArrayList starts from index 0
+                                    if (genreSelected > 0 && genreSelected <= genres.size()) {
+                                        newMovie.setGenre(genres.get(genreSelected - 1));  // ArrayList starts from index 0
                                         error = false;
                                     }
                                     else {
-                                        System.out.println(errorMessage);
+                                        System.out.println("Your choice is not among the available options! PLease try again.");
                                         error = true;
                                     }
                                 }
@@ -2607,14 +2619,19 @@ public class SystemClass {
                         System.out.println("\nSelect the movie you want to modify: ");
                         moviesAfterFiltered = MovieUtils.getMovieListAfterFiltered(null, null, 1);
 
+                        System.out.print("-----------------------------------------------------");
+                        System.out.printf("\n%-3c %-4s %c %-40s %c\n", '|', "No", '|', "Movie Name", '|');
+                        System.out.println("-----------------------------------------------------");
+
                         if (!moviesAfterFiltered.isEmpty()) {
-                            System.out.printf("\n%-5s %s\n", "No", "Movie Name");
                             for (int i = 0; i < moviesAfterFiltered.size(); i++) {
-                                System.out.printf("%-5d %s\n", (i + 1), moviesAfterFiltered.get(i).getMvName().getName());
+                                System.out.printf("%-3c %-4d %c %-40s %c\n", '|', (i + 1), '|', moviesAfterFiltered.get(i).getMvName().getName(), '|');
+                                System.out.println("-----------------------------------------------------");
                             }
                         }
                         else {
-                            System.out.println("Sorry, no movie found!");
+                            System.out.printf("%-15c %-35s %c\n", '|', "Sorry, no movie found!", '|');
+                            System.out.println("-----------------------------------------------------");
                         }
 
                         do {
@@ -2743,26 +2760,29 @@ public class SystemClass {
 
                                                 try {
                                                     int i = 1;
-                                                    ArrayList<Integer> genreID = new ArrayList<>();
+                                                    ArrayList<Genre> genres = new ArrayList<>();
 
                                                     System.out.println("\nAvailable Genres");
+
                                                     while (result.next()) {
                                                         System.out.println(i + ". " + result.getString("genre_name"));
-                                                        genreID.add(result.getInt("genre_id"));  // Store the genre ID
+
+                                                        Genre genre = new Genre(result.getInt("genre_id"), new Name(result.getString("genre_name")));
+                                                        genres.add(genre);
+
                                                         i++;
                                                     }
+
                                                     System.out.print("\nEnter your selection: ");
-                                                    int newGenre = sc.nextInt();
+                                                    int genreSelected = sc.nextInt();
                                                     sc.nextLine();
 
-                                                    String errorMessage = MovieValidator.checkGenreID(genreID.size(), newGenre);
-
-                                                    if (errorMessage == null) {
-                                                        Genre genre = new Genre(genreID.get(newGenre - 1));
-                                                        movie.setGenre(genre);  // ArrayList starts from index 0
+                                                    if (genreSelected > 0 && genreSelected <= genres.size()) {
+                                                        movie.setGenre(genres.get(genreSelected - 1));  // ArrayList starts from index 0
                                                         error = false;
-                                                    } else {
-                                                        System.out.println(errorMessage);
+                                                    }
+                                                    else {
+                                                        System.out.println("Your choice is not among the available options! PLease try again.");
                                                         error = true;
                                                     }
                                                 } catch (Exception e) {
@@ -2914,14 +2934,19 @@ public class SystemClass {
                         System.out.println("\nSelect the movie you want to delete: ");
                         moviesAfterFiltered = MovieUtils.getMovieListAfterFiltered(null, null, 1);
 
+                        System.out.print("-----------------------------------------------------");
+                        System.out.printf("\n%-3c %-4s %c %-40s %c\n", '|', "No", '|', "Movie Name", '|');
+                        System.out.println("-----------------------------------------------------");
+
                         if (!moviesAfterFiltered.isEmpty()) {
-                            System.out.printf("\n%-5s %s\n", "No", "Movie Name");
                             for (int i = 0; i < moviesAfterFiltered.size(); i++) {
-                                System.out.printf("%-5d %s\n", (i + 1), moviesAfterFiltered.get(i).getMvName().getName());
+                                System.out.printf("%-3c %-4d %c %-40s %c\n", '|', (i + 1), '|', moviesAfterFiltered.get(i).getMvName().getName(), '|');
+                                System.out.println("-----------------------------------------------------");
                             }
                         }
                         else {
-                            System.out.println("Sorry, no movie found!");
+                            System.out.printf("%-15c %-35s %c\n", '|', "Sorry, no movie found!", '|');
+                            System.out.println("-----------------------------------------------------");
                         }
 
                         do {
@@ -3013,7 +3038,7 @@ public class SystemClass {
         } while (back == false);
     }
 
-    private static void manageGenre(Scanner sc) throws Exception {
+    public static void manageGenre(Scanner sc) throws Exception {
         boolean back = false;
 
         do {
@@ -3054,6 +3079,8 @@ public class SystemClass {
                     if (genreSelected != 0) {
                         Genre viewGenre = genres.get(genreSelected - 1);
                         viewGenre.viewGenreDetails();
+                        System.out.println("\n");
+                        pressEnterToBack();
                     }
                     back = false;
                     break;
@@ -3370,7 +3397,7 @@ public class SystemClass {
         } while (back == false);
     }
 
-    private static void manageSchedule(Scanner sc) throws Exception {
+    public static void manageSchedule(Scanner sc) throws Exception {
         boolean back = false;
 
         do {
@@ -3390,9 +3417,9 @@ public class SystemClass {
                         ArrayList<Cinema> cinemas = new ArrayList<>();
                         do {
                             try {
-                                System.out.print("\nSelect the cinema you want to view the schedule (0 - Back): ");
+                                System.out.println("\nSelect the cinema you want to view the schedule: ");
                                 cinemas = Cinema.viewCinemaList(1);
-                                System.out.print("\nEnter the cinema no: ");
+                                System.out.print("\nEnter the cinema no (0 - Back): ");
                                 cinemaNo = sc.nextInt();
                                 sc.nextLine();
 
@@ -3410,7 +3437,7 @@ public class SystemClass {
                         if (cinemaNo != 0) {
                             Schedule schedule = Schedule.acceptViewScheduleListInput(sc, cinemas.get(cinemaNo - 1));
 
-                            ArrayList<Schedule> schedules = schedule.viewSchedule();
+                            ArrayList<Schedule> schedules = schedule.getSchedule();
 
                             Schedule.printing(schedules);
 
@@ -3483,7 +3510,7 @@ public class SystemClass {
 
                             do {
                                 try {
-                                    System.out.print("\nSelect the cinema you want to view the schedule: ");
+                                    System.out.println("\nSelect the cinema you want to view the schedule: ");
                                     cinemas = Cinema.viewCinemaList(1);
                                     System.out.print("\nEnter the cinema no: ");
                                     cinemaNo = sc.nextInt();
@@ -3682,7 +3709,7 @@ public class SystemClass {
                     if (cinemaNo != 0) {
                         Schedule schedule = Schedule.acceptViewScheduleListInput(sc, cinemas.get(cinemaNo - 1));
 
-                        ArrayList<Schedule> schedules = schedule.viewSchedule();
+                        ArrayList<Schedule> schedules = schedule.getSchedule();
 
                         Schedule.printing(schedules);
 
@@ -3999,7 +4026,7 @@ public class SystemClass {
                         Schedule schedule = Schedule.acceptViewScheduleListInput(sc, cinemas.get(cinemaNo - 1));
 
                         do {
-                            ArrayList<Schedule> schedules = schedule.viewSchedule();
+                            ArrayList<Schedule> schedules = schedule.getSchedule();
 
                             Schedule.printing(schedules);
 
@@ -4368,30 +4395,7 @@ public class SystemClass {
         return null;
     }
 
-
-//    private static Report generateReport(Report report, Scanner sc) {
-//        System.out.print("\n Please write the report purpose (0 - Use default purpose): ");
-//        String purpose = sc.nextLine().trim();
-//
-//        if (purpose.equals("0")) {
-//            purpose = report.getDefaultPurpose();
-//        }
-//
-//        if (report instanceof SalesReport) {
-//            SalesReport salesReport = (SalesReport) report;
-//            salesReport.setPurpose(purpose);
-//
-//            return new SalesReport(salesReport.getTitle(), salesReport.getDefaultPurpose(), salesReport.getConclusion(), salesReport.getSalesDate(), salesReport.getTotalSales(), salesReport.getTotalOrders(), salesReport.getMostPaymentMtd());
-//        } else {
-//            BoxOfficeReport topMovieReport = (BoxOfficeReport) report;
-//
-//            return new BoxOfficeReport();
-//        }
-//
-//        return null;
-//    }
-
-    private static void managePromotion(Scanner sc) {
+    public static void managePromotion(Scanner sc) {
         boolean back = false;
         boolean error = false;
 
@@ -4810,7 +4814,7 @@ public class SystemClass {
         } while (!back);
     }
 
-    private static boolean customerPromotion(Scanner sc, Customer cust) {
+    public static boolean customerPromotion(Scanner sc, Customer cust) {
         boolean back = false;
         boolean error = false;
 
@@ -5010,7 +5014,7 @@ public class SystemClass {
         return true;
     }
 
-    private static boolean applyPromotion(Scanner sc, Booking booking) {
+    public static boolean applyPromotion(Scanner sc, Booking booking) {
         Promotion promotion = new Promotion();
         promotion.setCustomer(booking.getCustomer());
         String apply;
@@ -5118,7 +5122,7 @@ public class SystemClass {
         return false;
     }
 
-    private static Payment makePayment(Scanner sc, Booking booking) {
+    public static Payment makePayment(Scanner sc, Booking booking) {
         // Remain original amount
         double remainAmount = booking.getTotalPrice();
 
@@ -5284,7 +5288,7 @@ public class SystemClass {
         return null;
     }
 
-    private static Payment validPayment(Payment payment, Booking booking) {
+    public static Payment validPayment(Payment payment, Booking booking) {
         DateTime dateTime = new DateTime();
 
         if (payment instanceof Card) {
@@ -5304,7 +5308,7 @@ public class SystemClass {
         return null;
     }
 
-    private static Card cardPaymentInfo(Scanner input) {
+    public static Card cardPaymentInfo(Scanner input) {
         Card card = new Card();
 
         // Card Number
@@ -5357,7 +5361,7 @@ public class SystemClass {
         return card;
     }
 
-    private static TNG tngPaymentInfo(Scanner input) {
+    public static TNG tngPaymentInfo(Scanner input) {
         TNG tng = new TNG();
 
         while (true) {
@@ -5386,7 +5390,7 @@ public class SystemClass {
         return tng;
     }
 
-    private static int displayMenu(String propertyName, Scanner sc){
+    public static int displayMenu(String propertyName, Scanner sc){
         boolean error = true;
         int choice = 0;
 

@@ -14,9 +14,14 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class MovieUtils {
+
+    // Not allowed the programmers to create object for the MovieUtils class
     private MovieUtils(){
     }
 
+    // Method
+
+    // To find the movie by using movie name or genre
     public static ArrayList<Movie> queryMovies(String mvName, Genre genre) throws SQLException {
         ArrayList<Movie> searchResults = new ArrayList<>();
         ResultSet result = null;
@@ -63,6 +68,8 @@ public class MovieUtils {
         return searchResults;
     }
 
+
+    // To show the movie filtering list for selection
     public static ArrayList<Movie> viewMovieListByFilter(Scanner sc) throws Exception {
         LocalDate currentDate = LocalDate.now();
         ArrayList<Movie> moviesAfterFiltered = new ArrayList<>();
@@ -148,7 +155,6 @@ public class MovieUtils {
                 }
             }
             else {
-                System.out.println("-----------------------------------------------------");
                 System.out.printf("%-15c %-35s %c\n", '|', "Sorry, no movie found!", '|');
                 System.out.println("-----------------------------------------------------");
             }
@@ -157,6 +163,8 @@ public class MovieUtils {
         return moviesAfterFiltered;
     }
 
+
+    // Filtered to get a list of movies, the user can get a list of movies within the desired date
     public static ArrayList<Movie> getMovieListAfterFiltered(LocalDate expectedDate, LocalDate currentDate, int status){
         ArrayList<Movie> movies = new ArrayList<>();
 
@@ -212,12 +220,14 @@ public class MovieUtils {
         return moviesAfterFiltered;
     }
 
+
     // Format double data type value to two decimal point
     public static double formatDouble(double value){
         return Math.round(value * 100.0) / 100.0;
     }
 
-    // Method for add movie
+
+    // To allow the user to enter multiple directors / writters or others
     public static String getMultipleValues(Scanner sc, String propertyName, String propertyPluralName) throws Exception {
         StringBuilder result = new StringBuilder();
         String continues = "N";
@@ -259,6 +269,8 @@ public class MovieUtils {
         return result.toString();
     }
 
+
+    // To limit the chosen for users
     public static String getMultipleChosens(Scanner sc, String[] array, String propertyName){
         boolean error;
 
@@ -291,6 +303,8 @@ public class MovieUtils {
         return null;
     }
 
+
+    // To receive the ticket price from users (input purpose)
     public static double getTicketPrice(Scanner sc, String propertyName){
         boolean error;
 
@@ -321,6 +335,7 @@ public class MovieUtils {
         return 0;
     }
 
+
     // For designing the output
     public static void printWrappedTextForSynopsis(String header, String text, int lineLength) {
         String[] lines = text.split("\\s+");
@@ -346,6 +361,7 @@ public class MovieUtils {
             System.out.printf("\n| %-20s | %-55s |\n", "", currentLine.toString());
         }
     }
+
 
     // For designing the output
     public static void printEditWrappedTextForSynopsis(String header, String text, int lineLength, int num) {

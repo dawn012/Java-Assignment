@@ -1,15 +1,12 @@
 package Movie_Management;
 
 public class MovieValidator {
+
+    // Not allowed the programmers to create object for the MovieValidator class
     private MovieValidator(){
     }
 
-    public static String checkGenreID(int range, int choice){
-        if (choice <= 0 || choice > range) {
-            return "Please enter a valid choice!";
-        }
-        return null;
-    }
+    // Method
 
     // Check whether the release date later than the current date
     public static String checkDuration(int minutes){
