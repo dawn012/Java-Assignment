@@ -522,8 +522,6 @@ public class SystemClass {
                 case 4:
                     //View Booking History
                     boolean skip=false;
-                    customer = new Customer();
-                    customer.setCustId(1);
                     int periodSelected = 0;
                     error = true;
                     ArrayList<Booking> bookingsAfterFiltered = new ArrayList<>();
