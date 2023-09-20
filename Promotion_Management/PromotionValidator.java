@@ -7,6 +7,9 @@ import java.util.Scanner;
 import Driver.DateTime;
 
 public class PromotionValidator {
+    private PromotionValidator() {
+    }
+
     // Validate promotion description
     public static void checkDescription(Scanner sc, Promotion promotion) {
         while (true) {

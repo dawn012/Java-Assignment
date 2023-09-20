@@ -60,13 +60,13 @@ public class BoxOfficeReport extends Report {
         result.append(super.toString());// 获取父类 toString() 的结果
 
         result.append("|          -----------------------------------------------------------------------------------------------------------          |\n");
-        result.append(String.format("%-38c %s", '|', super.getTitle())).append(" - ");
+        result.append(String.format("%-38c %s", '|', title)).append(" - ");
 
         if (super.getTitle().contains("Daily")) {
-            result.append(getReportDate().getDay()).append(" ").append(getReportDate().getDate().getMonth()).append(" ").append(getReportDate().getYear());
+            result.append(reportDate.getDay()).append(" ").append(reportDate.getDate().getMonth()).append(" ").append(reportDate.getYear());
             result.append(String.format("%39c", '|'));
         } else {
-            result.append(getReportDate().getDate().getMonth()).append(" ").append(getReportDate().getDate().getYear());
+            result.append(reportDate.getDate().getMonth()).append(" ").append(reportDate.getDate().getYear());
             result.append(String.format("%44c", '|'));
         }
 
@@ -94,7 +94,6 @@ public class BoxOfficeReport extends Report {
         result.append(String.format("%-127c %c\n%-10c %-116s %c\n| %127c\n", '|', '|', '|', "Conclusion", '|', '|'));
 
         // 添加 Conclusion 时处理自动换行
-        String conclusion = super.getConclusion();
         int maxLineLength = 115; // 适合你的报告宽度的最大行长度
 
         StringBuilder conclusionBuilder = new StringBuilder("|          ");
@@ -174,25 +173,6 @@ public class BoxOfficeReport extends Report {
         }
         return null;
     }
-
-    /*public static ArrayList<Report> getRanking(Report report) {
-        ArrayList<Report> reportAfterRanking = new ArrayList<>(reports);
-
-        for (int i = 0; i < reports.size(); i++) {
-            for (int j = i + 1; j < reports.size(); j++) {
-                BoxOfficeReport report1 = (BoxOfficeReport) reports.get(i);
-                BoxOfficeReport report2 = (BoxOfficeReport) reports.get(j);
-
-                if (report1.getTotalBoxOffices() < report2.getTotalBoxOffices()) {
-                    // 交换位置
-                    reportAfterRanking.set(i, report2);
-                    reportAfterRanking.set(j, report1);
-                }
-            }
-        }
-
-        return reportAfterRanking;
-    }*/
 
     private void calculateTotalRevenue(ArrayList<Schedule> schedules) {
         ArrayList<Booking> bookings = new ArrayList<>();
@@ -283,7 +263,7 @@ public class BoxOfficeReport extends Report {
         return reportAfterRanking;
     }
 
-    public void setMovie(ArrayList<Movie> movies) {
+    public void setMovies(ArrayList<Movie> movies) {
         this.movies = movies;
     }
 

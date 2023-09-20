@@ -4,6 +4,9 @@ import com.stripe.model.PaymentIntent;
 import com.stripe.model.PaymentMethod;
 
 public class CardValidator {
+    private CardValidator() {
+    }
+
     public static boolean stripeValidator(PaymentIntent createPaymentIntent) {
         // Set Secret Key
         StripeAPIKey.init();
