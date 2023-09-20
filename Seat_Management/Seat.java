@@ -27,9 +27,7 @@ public class Seat {
 
 
     //Getter
-//    public Hall getHall() {
-//            return hall;
-//        }
+
     public String getSeatId() {
         return seatId;
     }
@@ -42,11 +40,8 @@ public class Seat {
     public int getSeatStatus() {
         return seatStatus;
     }
-    //Setter
-//    public void setHall(Hall hall) {
-//        this.hall = hall;
-//    }
 
+    //Setter
     public void setSeatId(String seatId) {
         this.seatId = seatId;
     }

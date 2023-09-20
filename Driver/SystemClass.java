@@ -27,7 +27,9 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -441,9 +443,49 @@ public class SystemClass {
                     back = customerPromotion(sc, c1);
                     break;
                 case 4:
+                    //View Booking History
                     Customer c =new Customer();////暂时用
-                    c.setCustId(2);//暂时用
-                    Booking.viewBookingHistory(c);
+                    c.setCustId(1);//暂时用
+                    //Booking.viewBookingHistory(c);
+
+                    ArrayList<Booking> bookingList=Booking.getBookingList(c.getCustId());
+                    Collections.reverse(bookingList);
+                    int count=1;
+                    System.out.println("Booking History : ");
+                    for(Booking b:bookingList){
+                        b.loadingTicketList();
+                        System.out.printf("%2d. Booking id:%2d\t",count,b.getBookingId());
+                        System.out.print("Date:"+b.getBookingDateTime().getDate().toString());
+                        System.out.print("\t\tTime : "+b.getBookingTime().truncatedTo(ChronoUnit.SECONDS)+"\n");
+                        if(count%5==0){
+                            String answer=" ";
+                            do{
+                                System.out.print("Continue Show More History? (Y=YES N=NO) : ");
+                                answer=sc.next().toUpperCase();
+
+                            } while (SystemClass.askForContinue(answer).equals("Invalid"));
+                            if(SystemClass.askForContinue(answer).equals("N"))
+                                break;
+                        }
+                        count++;
+                    }
+                    int no=0;
+                    do {
+                        try {
+                            System.out.print("\nEnter No. Booking to Show Detail (0=Back) : ");
+                            no = sc.nextInt();
+                            if (no == 0)
+                                break;
+                            else if (no <= bookingList.size() && no >0) {
+                                bookingList.get(no - 1).printBookingDetail();
+                            }
+                        }catch (Exception e){
+                            sc.nextLine();
+                            System.out.println("Invalid Input...");
+                        }
+                    }while(no!=0);
+
+
                     break;
                 case 5:
                     do {
