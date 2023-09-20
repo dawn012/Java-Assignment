@@ -6,9 +6,9 @@ import java.time.LocalDate;
 
 public class Report {
     private LocalDate dateGenerated;
-    private String title;
-    private DateTime reportDate;
-    private String conclusion;
+    protected String title;
+    protected DateTime reportDate;
+    protected String conclusion;
 
     // Constructor
     public Report() {

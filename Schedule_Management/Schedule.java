@@ -45,7 +45,9 @@ public class Schedule implements DatabaseOperations {
     }
 
     // Method
-    public ArrayList<Schedule> viewSchedule() throws Exception {
+
+    // Used to select the schedule from the database
+    public ArrayList<Schedule> getSchedule() throws Exception {
         ResultSet result = null;
         try {
             Object[] params = {hall.getHallID(), String.valueOf(showDate.getDate()), 1};
@@ -96,6 +98,8 @@ public class Schedule implements DatabaseOperations {
         return schedules;
     }
 
+
+    // Used to print the schedule
     public static void printing(ArrayList<Schedule> schedules) {
         if (!schedules.isEmpty()) {
             System.out.println("\nMovie Schedule List for " + schedules.get(0).showDate.getDate() + " at Hall " + schedules.get(0).hall.getHallID() + ":");
@@ -114,6 +118,8 @@ public class Schedule implements DatabaseOperations {
         }
     }
 
+
+    // Used to receive the input (to know which hall and which date the user want to view the schedule)
     public static Schedule acceptViewScheduleListInput(Scanner sc, Cinema cinemaSelected) {
         // Hall
         int hallNo = 0;
@@ -189,6 +195,8 @@ public class Schedule implements DatabaseOperations {
         return schedule;
     }
 
+
+    // Used to insert the new schedule into the database
     public boolean add() throws SQLException {
         int rowAffected = 0;
         try {
@@ -210,6 +218,8 @@ public class Schedule implements DatabaseOperations {
         }
     }
 
+
+    // Used to update the schedule in the database
     public boolean modify() throws SQLException {
         int rowAffected = 0;
 
@@ -230,6 +240,8 @@ public class Schedule implements DatabaseOperations {
         }
     }
 
+
+    // Used to set the schedule_status to become 0 (0 means this schedule is deleted)
     public boolean delete() throws SQLException {
         int rowAffected = 0;
 
@@ -250,6 +262,9 @@ public class Schedule implements DatabaseOperations {
         }
     }
 
+
+    // Generates a list of dates for one week starting from the current date.
+    // The list contains dates for the next 7 days.
     public static ArrayList<LocalDate> generateOneWeekDateList() {
         ArrayList<LocalDate> dateList = new ArrayList<>();
         LocalDate currentDate = LocalDate.now(); // 获取当前日期
@@ -266,6 +281,8 @@ public class Schedule implements DatabaseOperations {
         return dateList;
     }
 
+
+    // Displays the hall and movie schedules based on specified criteria
     public int showHallAndTime(int count, ArrayList<Schedule> schedules) throws SQLException {
         boolean validSchedule = false;
 
@@ -311,6 +328,8 @@ public class Schedule implements DatabaseOperations {
         return count;
     }
 
+
+    // Used to calculate the movie end time (movie startTime + duration)
     public void calculateEndTime(Movie movie, LocalTime startTime){
         // Change the duration's data type from int to Duration (in minutes)
         Duration duration = Duration.ofMinutes(movie.getDuration());
@@ -318,6 +337,9 @@ public class Schedule implements DatabaseOperations {
         endTime = startTime.plusMinutes(duration.toMinutes());
     }
 
+
+    // Round up the duration of movie, for example, if the duration is 122 minutes, it will round up it to 125 minutes,
+    // this is to make it easier to calculate available timeslots for schedule
     public static Duration roundUpToNearestFiveMinutes(int duration) {
         int hours = duration / 60;
         int minutes = duration % 60;
@@ -334,12 +356,14 @@ public class Schedule implements DatabaseOperations {
         return Duration.ofMinutes((hours * 60) + roundUpMinute);
     }
 
+
+    // To get the available timeslots for schedule
     public LocalTime[] availableTimeSlots(Scanner sc) throws SQLException {
         ResultSet result = null;
         String showDate = String.valueOf(getShowDate().getDate());
 
         try {
-            Object[] params2 = {getHall().getHallID(), showDate};
+            Object[] params2 = {hall.getHallID(), showDate};
             result = DatabaseUtils.selectQuery("movie_startTime, movie_endTime", "timeTable", "hall_id = ? AND movie_showDate = ?", params2);
         }
         catch (SQLException e) {
@@ -395,9 +419,15 @@ public class Schedule implements DatabaseOperations {
         do {
             try {
                 System.out.println("\nSelect the available time slot: ");
+
+                System.out.println("\nSelect the operation: ");
+                System.out.printf("--------------------------------------------");
+                System.out.printf("\n%-3c %-4s %-3c %-12s %-4c %-11s %c\n", '|', "No", '|', "Start Time", '|', "End Time", '|');
+                System.out.println("--------------------------------------------");
                 for (int i = 0; i < availableTimeSlots.size(); i++) {
                     LocalTime[] availableTimeSlot = availableTimeSlots.get(i);
-                    System.out.println((i + 1) + ". Start Time: " + availableTimeSlot[0] + " | End Time: " + availableTimeSlot[1]);
+                    System.out.printf("%-3c %-4d %-5c %-10s %-5c %-10s %c\n", '|', (i + 1), '|', availableTimeSlot[0], '|', availableTimeSlot[1], '|');
+                    System.out.println("--------------------------------------------");
                 }
 
                 System.out.print("\nEnter your selection: ");
@@ -418,6 +448,8 @@ public class Schedule implements DatabaseOperations {
         return availableTimeSlots.get(choice - 1);
     }
 
+
+    // Check whether the show date is earlier than the release date
     public String checkShowDate(){
         int comparison = showDate.getDate().compareTo(movie.getReleaseDate().getDate()); // Compare dates
 
@@ -428,6 +460,7 @@ public class Schedule implements DatabaseOperations {
             return null;
         }
     }
+
 
     // Setter
     public void setScheduleID(int scheduleID) {
@@ -453,6 +486,7 @@ public class Schedule implements DatabaseOperations {
     public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
     }
+
 
     // Getter
     public int getScheduleID() {

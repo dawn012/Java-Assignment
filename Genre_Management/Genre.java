@@ -22,6 +22,11 @@ public class Genre implements DatabaseOperations {
         this.genreID = genreID;
     }
 
+    public Genre(int genreID, Name genreName) {
+        this.genreID = genreID;
+        this.genreName = genreName;
+    }
+
     public Genre(int genreID, Name genreName, int post){
         this.genreID = genreID;
         this.genreName = genreName;

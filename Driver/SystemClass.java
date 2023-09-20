@@ -564,9 +564,9 @@ public class SystemClass {
                         } while (no != 0);
                     }
 
-
                     break;
                 case 5:
+                    // Search movie
                     do {
                         error = true;
                         int searchingMethod = 0;
@@ -2182,27 +2182,29 @@ public class SystemClass {
 
                                 try {
                                     int i = 1;
-                                    ArrayList<Integer> genreID = new ArrayList<>();
+                                    ArrayList<Genre> genres = new ArrayList<>();
 
                                     System.out.println("\nAvailable Genres");
+
                                     while (result.next()) {
                                         System.out.println(i + ". " + result.getString("genre_name"));
-                                        genreID.add(result.getInt("genre_id"));  // Store the genre ID
+
+                                        Genre genre = new Genre(result.getInt("genre_id"), new Name(result.getString("genre_name")));
+                                        genres.add(genre);
+
                                         i++;
                                     }
+
                                     System.out.print("\nEnter your selection: ");
                                     int genreSelected = sc.nextInt();
                                     sc.nextLine();
 
-                                    String errorMessage = MovieValidator.checkGenreID(genreID.size(), genreSelected);
-
-                                    if (errorMessage == null) {
-                                        Genre genre = new Genre(genreID.get(genreSelected - 1));
-                                        newMovie.setGenre(genre);  // ArrayList starts from index 0
+                                    if (genreSelected > 0 && genreSelected <= genres.size()) {
+                                        newMovie.setGenre(genres.get(genreSelected - 1));  // ArrayList starts from index 0
                                         error = false;
                                     }
                                     else {
-                                        System.out.println(errorMessage);
+                                        System.out.println("Your choice is not among the available options! PLease try again.");
                                         error = true;
                                     }
                                 }
@@ -2532,26 +2534,29 @@ public class SystemClass {
 
                                                 try {
                                                     int i = 1;
-                                                    ArrayList<Integer> genreID = new ArrayList<>();
+                                                    ArrayList<Genre> genres = new ArrayList<>();
 
                                                     System.out.println("\nAvailable Genres");
+
                                                     while (result.next()) {
                                                         System.out.println(i + ". " + result.getString("genre_name"));
-                                                        genreID.add(result.getInt("genre_id"));  // Store the genre ID
+
+                                                        Genre genre = new Genre(result.getInt("genre_id"), new Name(result.getString("genre_name")));
+                                                        genres.add(genre);
+
                                                         i++;
                                                     }
+
                                                     System.out.print("\nEnter your selection: ");
-                                                    int newGenre = sc.nextInt();
+                                                    int genreSelected = sc.nextInt();
                                                     sc.nextLine();
 
-                                                    String errorMessage = MovieValidator.checkGenreID(genreID.size(), newGenre);
-
-                                                    if (errorMessage == null) {
-                                                        Genre genre = new Genre(genreID.get(newGenre - 1));
-                                                        movie.setGenre(genre);  // ArrayList starts from index 0
+                                                    if (genreSelected > 0 && genreSelected <= genres.size()) {
+                                                        movie.setGenre(genres.get(genreSelected - 1));  // ArrayList starts from index 0
                                                         error = false;
-                                                    } else {
-                                                        System.out.println(errorMessage);
+                                                    }
+                                                    else {
+                                                        System.out.println("Your choice is not among the available options! PLease try again.");
                                                         error = true;
                                                     }
                                                 } catch (Exception e) {
@@ -3179,9 +3184,9 @@ public class SystemClass {
                         ArrayList<Cinema> cinemas = new ArrayList<>();
                         do {
                             try {
-                                System.out.print("\nSelect the cinema you want to view the schedule (0 - Back): ");
+                                System.out.println("\nSelect the cinema you want to view the schedule: ");
                                 cinemas = Cinema.viewCinemaList(1);
-                                System.out.print("\nEnter the cinema no: ");
+                                System.out.print("\nEnter the cinema no (0 - Back): ");
                                 cinemaNo = sc.nextInt();
                                 sc.nextLine();
 
@@ -3199,7 +3204,7 @@ public class SystemClass {
                         if (cinemaNo != 0) {
                             Schedule schedule = Schedule.acceptViewScheduleListInput(sc, cinemas.get(cinemaNo - 1));
 
-                            ArrayList<Schedule> schedules = schedule.viewSchedule();
+                            ArrayList<Schedule> schedules = schedule.getSchedule();
 
                             Schedule.printing(schedules);
 
@@ -3272,7 +3277,7 @@ public class SystemClass {
 
                             do {
                                 try {
-                                    System.out.print("\nSelect the cinema you want to view the schedule: ");
+                                    System.out.println("\nSelect the cinema you want to view the schedule: ");
                                     cinemas = Cinema.viewCinemaList(1);
                                     System.out.print("\nEnter the cinema no: ");
                                     cinemaNo = sc.nextInt();
@@ -3471,7 +3476,7 @@ public class SystemClass {
                     if (cinemaNo != 0) {
                         Schedule schedule = Schedule.acceptViewScheduleListInput(sc, cinemas.get(cinemaNo - 1));
 
-                        ArrayList<Schedule> schedules = schedule.viewSchedule();
+                        ArrayList<Schedule> schedules = schedule.getSchedule();
 
                         Schedule.printing(schedules);
 
@@ -3788,7 +3793,7 @@ public class SystemClass {
                         Schedule schedule = Schedule.acceptViewScheduleListInput(sc, cinemas.get(cinemaNo - 1));
 
                         do {
-                            ArrayList<Schedule> schedules = schedule.viewSchedule();
+                            ArrayList<Schedule> schedules = schedule.getSchedule();
 
                             Schedule.printing(schedules);
 
