@@ -4682,7 +4682,7 @@ public class SystemClass {
         String cancelPayment;
 
         do {
-            validPayment.printPaymentDetail(remainAmount);
+            validPayment.printPaymentDetail();
 
             do {
                 System.out.println("\nContinue to make payment? (Y / N)");
