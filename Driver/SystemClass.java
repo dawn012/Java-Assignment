@@ -856,7 +856,7 @@ public class SystemClass {
         } while (back == false);
     }
 
-    private static void manageCinema(Scanner sc) throws Exception {
+    public static void manageCinema(Scanner sc) throws Exception {
         boolean back = false;
 
         do {
@@ -1528,7 +1528,7 @@ public class SystemClass {
         } while (back == false);
     }
 
-    private static void manageHall(Scanner sc) throws Exception {
+    public static void manageHall(Scanner sc) throws Exception {
         boolean back = false, exit = false, error = true, continues = true;
         ArrayList<Cinema> cinemas = new ArrayList<>();
         int cinemaSelected = 0;
@@ -2072,7 +2072,7 @@ public class SystemClass {
         } while (exit == false);
     }
 
-    private static void manageMovie(Scanner sc) throws Exception {
+    public static void manageMovie(Scanner sc) throws Exception {
         boolean back = false;
 
         do {
@@ -2827,7 +2827,7 @@ public class SystemClass {
         } while (back == false);
     }
 
-    private static void manageGenre(Scanner sc) throws Exception {
+    public static void manageGenre(Scanner sc) throws Exception {
         boolean back = false;
 
         do {
@@ -3186,7 +3186,7 @@ public class SystemClass {
         } while (back == false);
     }
 
-    private static void manageSchedule(Scanner sc) throws Exception {
+    public static void manageSchedule(Scanner sc) throws Exception {
         boolean back = false;
 
         do {
@@ -4184,30 +4184,7 @@ public class SystemClass {
         return null;
     }
 
-
-//    private static Report generateReport(Report report, Scanner sc) {
-//        System.out.print("\n Please write the report purpose (0 - Use default purpose): ");
-//        String purpose = sc.nextLine().trim();
-//
-//        if (purpose.equals("0")) {
-//            purpose = report.getDefaultPurpose();
-//        }
-//
-//        if (report instanceof SalesReport) {
-//            SalesReport salesReport = (SalesReport) report;
-//            salesReport.setPurpose(purpose);
-//
-//            return new SalesReport(salesReport.getTitle(), salesReport.getDefaultPurpose(), salesReport.getConclusion(), salesReport.getSalesDate(), salesReport.getTotalSales(), salesReport.getTotalOrders(), salesReport.getMostPaymentMtd());
-//        } else {
-//            BoxOfficeReport topMovieReport = (BoxOfficeReport) report;
-//
-//            return new BoxOfficeReport();
-//        }
-//
-//        return null;
-//    }
-
-    private static void managePromotion(Scanner sc) {
+    public static void managePromotion(Scanner sc) {
         boolean back = false;
         boolean error = false;
 
@@ -4626,7 +4603,7 @@ public class SystemClass {
         } while (!back);
     }
 
-    private static boolean customerPromotion(Scanner sc, Customer cust) {
+    public static boolean customerPromotion(Scanner sc, Customer cust) {
         boolean back = false;
         boolean error = false;
 
@@ -4826,7 +4803,7 @@ public class SystemClass {
         return true;
     }
 
-    private static boolean applyPromotion(Scanner sc, Booking booking) {
+    public static boolean applyPromotion(Scanner sc, Booking booking) {
         Promotion promotion = new Promotion();
         promotion.setCustomer(booking.getCustomer());
         String apply;
@@ -4934,7 +4911,7 @@ public class SystemClass {
         return false;
     }
 
-    private static Payment makePayment(Scanner sc, Booking booking) {
+    public static Payment makePayment(Scanner sc, Booking booking) {
         // Remain original amount
         double remainAmount = booking.getTotalPrice();
 
@@ -5100,7 +5077,7 @@ public class SystemClass {
         return null;
     }
 
-    private static Payment validPayment(Payment payment, Booking booking) {
+    public static Payment validPayment(Payment payment, Booking booking) {
         DateTime dateTime = new DateTime();
 
         if (payment instanceof Card) {
@@ -5120,7 +5097,7 @@ public class SystemClass {
         return null;
     }
 
-    private static Card cardPaymentInfo(Scanner input) {
+    public static Card cardPaymentInfo(Scanner input) {
         Card card = new Card();
 
         // Card Number
@@ -5173,7 +5150,7 @@ public class SystemClass {
         return card;
     }
 
-    private static TNG tngPaymentInfo(Scanner input) {
+    public static TNG tngPaymentInfo(Scanner input) {
         TNG tng = new TNG();
 
         while (true) {
@@ -5202,7 +5179,7 @@ public class SystemClass {
         return tng;
     }
 
-    private static int displayMenu(String propertyName, Scanner sc){
+    public static int displayMenu(String propertyName, Scanner sc){
         boolean error = true;
         int choice = 0;
 

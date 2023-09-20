@@ -174,25 +174,6 @@ public class BoxOfficeReport extends Report {
         return null;
     }
 
-    /*public static ArrayList<Report> getRanking(Report report) {
-        ArrayList<Report> reportAfterRanking = new ArrayList<>(reports);
-
-        for (int i = 0; i < reports.size(); i++) {
-            for (int j = i + 1; j < reports.size(); j++) {
-                BoxOfficeReport report1 = (BoxOfficeReport) reports.get(i);
-                BoxOfficeReport report2 = (BoxOfficeReport) reports.get(j);
-
-                if (report1.getTotalBoxOffices() < report2.getTotalBoxOffices()) {
-                    // 交换位置
-                    reportAfterRanking.set(i, report2);
-                    reportAfterRanking.set(j, report1);
-                }
-            }
-        }
-
-        return reportAfterRanking;
-    }*/
-
     private void calculateTotalRevenue(ArrayList<Schedule> schedules) {
         ArrayList<Booking> bookings = new ArrayList<>();
         double totalBoxOffice = 0;
@@ -282,7 +263,7 @@ public class BoxOfficeReport extends Report {
         return reportAfterRanking;
     }
 
-    public void setMovie(ArrayList<Movie> movies) {
+    public void setMovies(ArrayList<Movie> movies) {
         this.movies = movies;
     }
 

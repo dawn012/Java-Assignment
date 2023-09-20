@@ -1,6 +1,9 @@
 package Payment_Management;
 
 public class TNGValidator {
+    private TNGValidator(){
+    }
+
     public static boolean phoneNoValidator(String phoneNo) {
         // 定义一个正则表达式，表示只包含字母和空格的名字
         String regex = "^(01\\d{8,10})";
