@@ -18,7 +18,9 @@ import Report_Management.TopMovieReport;
 import Schedule_Management.Schedule;
 import Booking_Management.Booking;
 import Seat_Management.Seat;
+import Security_Management.Admin;
 import Security_Management.Customer;
+import Security_Management.User;
 import Ticket_Managemnet.Ticket;
 
 import java.io.IOException;
@@ -33,15 +35,79 @@ import java.util.Collections;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import static Security_Management.Login.loginMenu;
+import static Security_Management.Login.resetCustPassword;
+import static Security_Management.User.findUserById;
+
+
 public class SystemClass {
     private SystemClass(){
     }
 
     public static void run(Scanner sc) throws Exception {
         SystemClass system = new SystemClass();
+        Scanner input = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
+        int choicee = -1;
+        while (choicee != 0) {
+            System.out.println("Menu:");
+            System.out.println("1. Register");
+            System.out.println("2. Login");
+            System.out.println("3. Forgot Password");
+            System.out.println("0. Exit");
+            try {
+                System.out.print("Enter your choice: ");
+                choicee = input.nextInt();
+                input.nextLine();
+
+                switch (choicee) {
+
+                    case 1:
+                        System.out.println("You selected Option 1.");
+                        Customer.registerUser(input);
+                        pressEnterToContinue();
+                        break;
+                    case 2:
+                        System.out.println("You selected Option 2.");
+                        User user = loginMenu();
+
+                        if (user != null) {
+                            if (user instanceof Customer) {
+                                Customer customer = (Customer) user;
+                                custMenu(customer);
+                            } else if (user instanceof Admin) {
+                                Admin admin = (Admin) user;
+                                adminMenu(admin);
+                            }
+                        } else {
+                            System.out.println("Login failed. Exiting...");
+                            break;
+                        }
+
+                        return;
+                    case 3:
+                        System.out.println("You selected Option 3.");
+                        Customer.forgetPassword();
+                        break;
+                    case 0:
+                        System.out.println("Exiting the program.");
+                        return;
+                    default:
+                        System.out.println("Invalid choice. Please select a valid option.");
+                        break;
+                }
+            } catch (java.util.InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                input.nextLine();
+            }
+        }
 
 
+    }
+
+    public static void custMenu(Customer customer) throws Exception {
         int choice = 0;
+        Scanner sc = new Scanner(System.in);
         boolean error = true, continues = true, back = false;
 
         do {
@@ -61,15 +127,18 @@ public class SystemClass {
                     System.out.println("------------------------------------------------------");
                     System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 5, '|', "Search Movie", '|');
                     System.out.println("------------------------------------------------------");
-                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 6, '|', "Log out", '|');
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 6, '|', "Edit Profile", '|');
                     System.out.println("------------------------------------------------------");
-
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 7, '|', "Reset Password", '|');
+                    System.out.println("------------------------------------------------------");
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 8, '|', "Log out", '|');
+                    System.out.println("------------------------------------------------------");
                     System.out.print("\nEnter your selection: ");
 
                     choice = sc.nextInt();
                     sc.nextLine();
 
-                    if (choice > 0 && choice <= 6) {
+                    if (choice > 0 && choice <= 8) {
                         error = false;
                     } else {
                         System.out.println("Your choice is not among the available options! PLease try again.");
@@ -82,6 +151,8 @@ public class SystemClass {
 
             switch (choice) {
                 case 1:
+                    System.out.println(customer.toString());
+                    pressEnterToContinue();
                     break;
                 case 2:
                     do {
@@ -699,15 +770,24 @@ public class SystemClass {
                     back = false;
                     break;
                 case 6:
+                    customer.modifyUserInfo(sc, customer);
+                    break;
+                case 7:
+                    ArrayList<User> userList = Admin.getAllUsers();
+                    resetCustPassword(userList,customer.getLogin().getUsername(), customer.getEmail(), false);
+                    break;
+                case 8:
                     back = true;
                     break;
+
             }
         } while (back == false);
-
-        // Admin
-        back = false;
-        error = true;
-
+    }
+    public static void adminMenu(Admin admin) throws Exception {
+        boolean back = false;
+        boolean error = true;
+        int choice = 0;
+        Scanner sc = new Scanner(System.in);
         do {
             do {
                 try {
@@ -715,21 +795,27 @@ public class SystemClass {
                     System.out.printf("------------------------------------------------------");
                     System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Operation", '|');
                     System.out.println("------------------------------------------------------");
-                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 1, '|', "Manage Cinema", '|');
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 1, '|', "View Profile", '|');
                     System.out.println("------------------------------------------------------");
-                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 2, '|', "Manage Hall", '|');
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 2, '|', "Edit Profile", '|');
                     System.out.println("------------------------------------------------------");
-                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 3, '|', "Manage Movie", '|');
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 3, '|', "Manage Cinema", '|');
                     System.out.println("------------------------------------------------------");
-                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 4, '|', "Manage Genre", '|');
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 4, '|', "Manage Hall", '|');
                     System.out.println("------------------------------------------------------");
-                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 5, '|', "Manage Schedule", '|');
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 5, '|', "Manage Movie", '|');
                     System.out.println("------------------------------------------------------");
-                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 6, '|', "Manage Promotion", '|');
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 6, '|', "Manage Genre", '|');
                     System.out.println("------------------------------------------------------");
-                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 7, '|', "View Report", '|');
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 7, '|', "Manage Schedule", '|');
                     System.out.println("------------------------------------------------------");
-                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 8, '|', "Log Out", '|');
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 8, '|', "Manage Promotion", '|');
+                    System.out.println("------------------------------------------------------");
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 9, '|', "Manage User", '|');
+                    System.out.println("------------------------------------------------------");
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 10, '|', "View Report", '|');
+                    System.out.println("------------------------------------------------------");
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 0, '|', "Log Out", '|');
                     System.out.println("------------------------------------------------------");
 
                     System.out.print("\nEnter your selection: ");
@@ -746,27 +832,148 @@ public class SystemClass {
 
             switch (choice) {
                 case 1:
-                    manageCinema(sc);
+                    System.out.println(admin.toString());
+                    pressEnterToContinue();
                     break;
                 case 2:
-                    manageHall(sc);
+                    admin.modifyUserInfo(sc, admin);
+                    pressEnterToContinue();
                     break;
                 case 3:
-                    manageMovie(sc);
+                    manageCinema(sc);
                     break;
                 case 4:
-                    manageGenre(sc);
+                    manageHall(sc);
                     break;
                 case 5:
-                    manageSchedule(sc);
+                    manageMovie(sc);
                     break;
                 case 6:
-                    back = managePromotion(sc);
+                    manageGenre(sc);
                     break;
                 case 7:
+                    manageSchedule(sc);
+                case 8:
+                    back = managePromotion(sc);
+                    break;
+                case 9:
+                    Customer cust = new Customer();
+
+                    do {
+                        try {
+                            System.out.println("\nMenu:");
+                            System.out.println("1. Administrator Registration");
+                            System.out.println("2. Manage Account Status");
+                            System.out.println("3. View Users Information");
+                            System.out.println("4. Modify Users Information");
+                            System.out.println("5. Remove User");
+                            System.out.println("0. Exit");
+                            System.out.print("Enter your choice: ");
+                            choice = sc.nextInt();
+                            sc.nextLine();
+
+                            switch (choice) {
+                                case 1:
+                                    System.out.println("You selected Option 1.");
+                                    admin.createAdmin(sc);
+                                    pressEnterToContinue();
+                                    break;
+                                case 2:
+                                    System.out.println("You selected Option 2.");
+                                    cust.viewAllCustomers();
+                                    admin.manageAccountStatus();
+                                    pressEnterToContinue();
+                                    break;
+                                case 3:
+                                    System.out.println("You selected Option 3.");
+                                    boolean submenuActive = true;
+                                    while (submenuActive) {
+                                        System.out.println("\n\nSubmenu Options:");
+                                        System.out.println("1. View All Customer");
+                                        System.out.println("2. View All Admin");
+                                        System.out.println("0. Back to Main Menu");
+                                        System.out.print("Choose an option: ");
+
+                                        try {
+                                            int submenuChoice = sc.nextInt();
+                                            switch (submenuChoice) {
+                                                case 1:
+                                                    System.out.println("You selected Option 1.");
+                                                    cust.viewAllCustomers();
+                                                    pressEnterToContinue();
+                                                    break;
+                                                case 2:
+                                                    System.out.println("You selected Option 2.");
+                                                    admin.viewAllAdmins();
+                                                    pressEnterToContinue();
+                                                    break;
+                                                case 0:
+                                                    System.out.println("Returning to Main Menu.");
+                                                    submenuActive = false;
+                                                    break;
+                                                default:
+                                                    System.out.println("Invalid option. Please choose again.");
+                                            }
+                                        } catch (java.util.InputMismatchException e) {
+                                            System.out.println("Invalid input. Please enter a valid number.");
+                                            sc.nextLine();
+                                        }
+                                    }
+                                    break;
+                                case 4:
+                                    System.out.println("You selected Option 4.");
+                                    cust.viewAllCustomers();
+                                    admin.viewAllAdmins();
+                                    User userToModify = null;
+                                    int id = 0;
+
+                                    while (userToModify == null) {
+                                        try {
+                                            System.out.print("\n\nPlease enter the user ID you want to modify (0 - Back): ");
+                                            id = sc.nextInt();
+                                            sc.nextLine();
+                                            if (id == 0) {
+                                                break;
+                                            }
+
+                                            userToModify = findUserById(id);
+
+                                            if (userToModify == null) {
+                                                System.out.println("User not found, please re-enter a valid user ID.");
+                                            }
+                                        } catch (InputMismatchException e) {
+                                            System.out.println("Invalid input, please enter a valid integer.");
+                                            sc.nextLine();
+                                        }
+                                    }
+
+                                    if (id != 0 && userToModify != null) {
+                                        admin.modifyUserInfo(sc, findUserById(id));
+                                    }
+                                    break;
+                                case 5:
+                                    System.out.println("You selected Option 5.");
+                                    cust.viewAllCustomers();
+                                    admin.viewAllAdmins();
+                                    admin.deleteUserById(sc);
+                                    pressEnterToContinue();
+                                    break;
+                                case 0:
+                                    System.out.println("Exiting the program.");
+                                    break;
+                                default:
+                                    System.out.println("Invalid choice. Please select a valid option.");
+                            }
+                        } catch (InputMismatchException e) {
+                            System.out.println("Invalid input. Please enter a valid choice.");
+                            sc.nextLine();
+                        }
+                    } while (choice != 0);
+                    break;
+                case 10:
                     viewReport(sc);
                     break;
-                case 8:
+                case 0:
                     back = true;
                     break;
                 default:
@@ -774,7 +981,6 @@ public class SystemClass {
             }
         } while (back == false);
     }
-
     private static void manageCinema(Scanner sc) throws Exception {
         boolean back = false;
 
