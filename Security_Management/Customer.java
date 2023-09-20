@@ -24,14 +24,16 @@ public class Customer extends User {
         this.accStatus = accStatus;
     }
 
-    public static User getUserByUsername(ArrayList<User> userList, String username) {
+    public static User findUserByUsername(String username) {
+        ArrayList<User> userList = getAllUsers();
+        User foundUser = null;
         for (User user : userList) {
             if (user.getLogin().getUsername().equals(username)) {
-                return user;
+                foundUser = user;
+                break;
             }
         }
-
-        return null;
+        return foundUser;
     }
 
     public void add() {

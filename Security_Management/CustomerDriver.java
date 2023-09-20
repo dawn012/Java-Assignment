@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import static Security_Management.Customer.registerUser;
+import static Security_Management.User.getAllUsers;
 
 public class CustomerDriver {
     public static void main(String[] args) throws SQLException {
@@ -31,7 +32,7 @@ public class CustomerDriver {
                     break;
                 case 2:
                     System.out.println("You selected Option 2.");
-                    LoginValidator.getUsersFromDatabase();
+                    getAllUsers();
                     Login.loginMenu();
                 case 3:
                     System.out.println("You selected Option 3.");

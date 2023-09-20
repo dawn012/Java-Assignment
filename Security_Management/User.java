@@ -2,7 +2,9 @@ package Security_Management;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -39,6 +41,76 @@ public abstract class User{
 
     public abstract void add();
 
+
+    public static String getUserStatusByUsername(String username) {
+        ArrayList<User> userList = getAllUsers();
+
+        for (User user : userList) {
+            if (user.getLogin().getUsername().equals(username)) {
+                if (user instanceof Customer) {
+                    Customer customer = (Customer) user;
+                    return customer.getAccStatus();
+                }
+            }
+        }
+        return null;
+    }
+
+    public static User findUserByUsername(String username) {
+        ArrayList<User> userList = getAllUsers();
+        User foundUser = null;
+        for (User user : userList) {
+            if (user.getLogin().getUsername().equals(username)) {
+                foundUser = user;
+                break;
+            }
+        }
+        return foundUser;
+    }
+
+    public static User findUserById(int userId) {
+        User foundUser = null;
+        ArrayList<User> userList = getAllUsers();
+        for (User user : userList) {
+            if (user.getUserId() == userId) {
+                foundUser = user;
+                break;
+            }
+        }
+        return foundUser;
+    }
+
+    public static ArrayList<User> getAllUsers() {
+        ArrayList<User> userList = new ArrayList<>();
+
+        try {
+            ResultSet resultSet = DatabaseUtils.selectQuery("*", "User", null,null);
+
+            while (resultSet.next()) {
+                int userId = resultSet.getInt("userID");
+                String username = resultSet.getString("username");
+                String gender = resultSet.getString("gender");
+                String password = resultSet.getString("password");
+                String email = resultSet.getString("email");
+                String userType = resultSet.getString("userType");
+                String DOB = resultSet.getString("DOB");
+                String phoneNo = resultSet.getString("phoneNo");
+                String accStatus = resultSet.getString("accStatus");
+
+                User user;
+                if ("cust".equals(userType)) {
+                    user = new Customer(userId, new Login(username, password), email, DOB, userType, accStatus);
+                } else {
+                    user = new Admin(new Login(username, password), email, DOB, userType, gender, phoneNo, userId);
+                }
+                userList.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return userList;
+    }
     public void updateUserInfo() throws SQLException {
         Connection conn = null;
         PreparedStatement updateStmt = null;
