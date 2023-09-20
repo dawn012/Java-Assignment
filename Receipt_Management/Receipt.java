@@ -66,7 +66,7 @@ public class Receipt {
         ResultSet rs;
 
         try {
-            rs = DatabaseUtils.selectQueryById("COUNT(*)", "RECEIPT", null, params);
+            rs = DatabaseUtils.selectQuery("COUNT(*)", "RECEIPT", null, params);
 
             // 获取整数结果
             if (rs.next()) {
