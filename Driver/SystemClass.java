@@ -28,7 +28,9 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -441,9 +443,128 @@ public class SystemClass {
                     back = customerPromotion(sc, c1);
                     break;
                 case 4:
+                    //View Booking History
                     Customer c =new Customer();////暂时用
-                    c.setCustId(2);//暂时用
-                    Booking.viewBookingHistory(c);
+                    c.setCustId(1);//暂时用
+                    //Booking.viewBookingHistory(c);
+                    boolean skip=false;
+                    Customer customer = new Customer();
+                    customer.setCustId(1);
+                    int periodSelected = 0;
+                    error = true;
+                    ArrayList<Booking> bookingsAfterFiltered = new ArrayList<>();
+                    int movieSelected = 0;
+                    LocalDate currentDate = LocalDate.now();
+                    do {
+                        try {
+                            System.out.println("\nSelect the time period: ");
+                            System.out.printf("------------------------------------------------------");
+                            System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Time Period", '|');
+                            System.out.println("------------------------------------------------------");
+                            System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 1, '|', "Booking History This Week", '|');
+                            System.out.println("------------------------------------------------------");
+                            System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 2, '|', "Booking History This Month", '|');
+                            System.out.println("------------------------------------------------------");
+                            System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 3, '|', "Booking History Within 3 Months", '|');
+                            System.out.println("------------------------------------------------------");
+                            System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 4, '|', "All The Booking History", '|');
+                            System.out.println("------------------------------------------------------");
+
+                            System.out.print("\nEnter your selection (0 - Back): ");
+
+                            periodSelected = sc.nextInt();
+                            sc.nextLine();
+
+                            if (periodSelected >= 0 && periodSelected <= 3) {
+                                error = false;
+                            } else {
+                                System.out.println("Your choice is not among the available options! PLease try again.");
+                            }
+                        } catch (InputMismatchException e) {
+                            System.out.println("Please enter a valid choice!");
+                            sc.nextLine();
+                        }
+                    } while (error);
+
+                    switch (periodSelected) {
+                        case 0:
+                            skip = true;
+                            break;
+                        case 1:
+                            LocalDate oneWeekAgo = currentDate.minusWeeks(1);
+                            System.out.printf("\n------------------------------\n");
+                            System.out.print("| Booking History This Week   |");
+                            System.out.printf("\n------------------------------\n");
+
+
+                            bookingsAfterFiltered = Booking.getBookingListAfterFiltered(oneWeekAgo, currentDate, customer.getCustId());
+                            break;
+                        case 2:
+                            LocalDate oneMonthAgo = currentDate.minusMonths(1);
+                            System.out.printf("\n------------------------------\n");
+                            System.out.print("| Booking History This months |");
+                            System.out.printf("\n------------------------------\n");
+
+                            bookingsAfterFiltered = Booking.getBookingListAfterFiltered(oneMonthAgo, currentDate, customer.getCustId());
+                            break;
+                        case 3:
+                            LocalDate threeMonthAgo = currentDate.minusMonths(3);
+
+                            System.out.printf("\n---------------------------------\n");
+                            System.out.print("| Booking History within 3 months |");
+                            System.out.printf("\n---------------------------------\n");
+                            bookingsAfterFiltered = Booking.getBookingListAfterFiltered(threeMonthAgo, currentDate, customer.getCustId());
+                            break;
+                        case 4:
+                            System.out.printf("\n---------------------------------\n");
+                            System.out.print("|        Booking History         |");
+                            System.out.printf("\n---------------------------------\n");
+                            bookingsAfterFiltered=Booking.getBookingList(customer.getCustId());
+                            break;
+                    }
+                    if(!skip) {
+                        ArrayList<Booking> bookingList = bookingsAfterFiltered;
+                        Collections.reverse(bookingList);
+                        int count = 1;
+                        System.out.println("Booking History : ");
+                        for (Booking b : bookingList) {
+                            b.loadingTicketList();
+                            System.out.printf("%2d. Booking id:%2d\t", count, b.getBookingId());
+                            System.out.print("Date:" + b.getBookingDateTime().getDate().toString());
+                            System.out.print("\t\tTime : " + b.getBookingTime().truncatedTo(ChronoUnit.SECONDS) + "\n");
+                            if (count % 5 == 0) {
+                                String answer = " ";
+                                do {
+                                    System.out.print("Continue Show More History? (Y=YES N=NO) : ");
+                                    answer = sc.next().toUpperCase();
+
+                                } while (SystemClass.askForContinue(answer).equals("Invalid"));
+                                if (SystemClass.askForContinue(answer).equals("N"))
+                                    break;
+                            }
+                            count++;
+                        }
+                        int no = 0;
+                        do {
+                            try {
+                                System.out.print("\nEnter No. Booking to Show Detail (0=Back) : ");
+                                no = sc.nextInt();
+                                if (no == 0)
+                                    break;
+                                else if (no <= count && no > 0) {
+                                    //System.out.println("Invalid Input...");
+                                    bookingList.get(no - 1).printBookingDetail();
+                                }else {
+                                    System.out.println("Invalid Input...");
+                                }
+                            } catch (Exception e) {
+                                System.out.println("Invalid Input...");
+                                sc.nextLine();
+                            }
+                        } while (no != 0);
+                    }
+
+
                     break;
                 case 5:
                     do {

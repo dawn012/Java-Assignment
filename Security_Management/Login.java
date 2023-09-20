@@ -9,6 +9,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 import static Security_Management.LoginValidator.*;
+import static Security_Management.User.*;
 
 public class Login {
 
@@ -115,7 +116,8 @@ public class Login {
         ArrayList<User> userList = Admin.getAllUsers();
         Scanner input = new Scanner(System.in);
         System.out.println("Login Successful!\nWelcome " + foundUser.getLogin().getUsername() + " !");
-        User user = Customer.getUserByUsername(userList, foundUser.getLogin().getUsername());
+        User user = Customer.findUserByUsername(foundUser.getLogin().getUsername());
+
 
         if (user != null) {
             if (user instanceof Customer) {
@@ -201,7 +203,7 @@ public class Login {
                             case 4:
                                 System.out.println("You selected Option 4.");
                                 customer.viewAllCustomers();
-                                admin.viewAllAdmins();
+
                                 admin.manageAccountStatus();
                                 break;
                             case 5:
