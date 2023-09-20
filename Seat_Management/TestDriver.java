@@ -149,8 +149,7 @@ public class TestDriver {
 
         Customer customer = new Customer();
         customer.setCustId(1);
-        /*
-        Booking.viewBookingHistory(customer);
-        */
+
+        //Booking.viewBookingHistory(customer);
     }
 }

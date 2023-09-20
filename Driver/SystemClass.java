@@ -12,15 +12,16 @@ import Movie_Management.MovieValidator;
 import Payment_Management.*;
 import Promotion_Management.*;
 import Receipt_Management.Receipt;
-import Report_Management.BoxOfficeReport;
 import Report_Management.Report;
 import Report_Management.SalesReport;
+import Report_Management.TopMovieReport;
 import Schedule_Management.Schedule;
 import Booking_Management.Booking;
 import Seat_Management.Seat;
+import Security_Management.Admin;
 import Security_Management.Customer;
+import Security_Management.User;
 import Ticket_Managemnet.Ticket;
-import com.stripe.model.tax.Registration;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -34,12 +35,79 @@ import java.util.Collections;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import static Security_Management.Login.loginMenu;
+import static Security_Management.Login.resetCustPassword;
+import static Security_Management.User.findUserById;
+
+
 public class SystemClass {
     private SystemClass(){
     }
 
     public static void run(Scanner sc) throws Exception {
+        SystemClass system = new SystemClass();
+        Scanner input = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
+        int choicee = -1;
+        while (choicee != 0) {
+            System.out.println("Menu:");
+            System.out.println("1. Register");
+            System.out.println("2. Login");
+            System.out.println("3. Forgot Password");
+            System.out.println("0. Exit");
+            try {
+                System.out.print("Enter your choice: ");
+                choicee = input.nextInt();
+                input.nextLine();
+
+                switch (choicee) {
+
+                    case 1:
+                        System.out.println("You selected Option 1.");
+                        Customer.registerUser(input);
+                        pressEnterToContinue();
+                        break;
+                    case 2:
+                        System.out.println("You selected Option 2.");
+                        User user = loginMenu();
+
+                        if (user != null) {
+                            if (user instanceof Customer) {
+                                Customer customer = (Customer) user;
+                                custMenu(customer);
+                            } else if (user instanceof Admin) {
+                                Admin admin = (Admin) user;
+                                adminMenu(admin);
+                            }
+                        } else {
+                            System.out.println("Login failed. Exiting...");
+                            break;
+                        }
+
+                        return;
+                    case 3:
+                        System.out.println("You selected Option 3.");
+                        Customer.forgetPassword();
+                        break;
+                    case 0:
+                        System.out.println("Exiting the program.");
+                        return;
+                    default:
+                        System.out.println("Invalid choice. Please select a valid option.");
+                        break;
+                }
+            } catch (java.util.InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                input.nextLine();
+            }
+        }
+
+
+    }
+
+    public static void custMenu(Customer customer) throws Exception {
         int choice = 0;
+        Scanner sc = new Scanner(System.in);
         boolean error = true, continues = true, back = false;
 
         do {
@@ -59,15 +127,18 @@ public class SystemClass {
                     System.out.println("------------------------------------------------------");
                     System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 5, '|', "Search Movie", '|');
                     System.out.println("------------------------------------------------------");
-                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 6, '|', "Log out", '|');
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 6, '|', "Edit Profile", '|');
                     System.out.println("------------------------------------------------------");
-
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 7, '|', "Reset Password", '|');
+                    System.out.println("------------------------------------------------------");
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 8, '|', "Log out", '|');
+                    System.out.println("------------------------------------------------------");
                     System.out.print("\nEnter your selection: ");
 
                     choice = sc.nextInt();
                     sc.nextLine();
 
-                    if (choice > 0 && choice <= 6) {
+                    if (choice > 0 && choice <= 8) {
                         error = false;
                     } else {
                         System.out.println("Your choice is not among the available options! PLease try again.");
@@ -80,6 +151,8 @@ public class SystemClass {
 
             switch (choice) {
                 case 1:
+                    System.out.println(customer.toString());
+                    pressEnterToContinue();
                     break;
                 case 2:
                     do {
@@ -406,10 +479,6 @@ public class SystemClass {
                                                                 receipt.printReceipt();
                                                                 receipt.add();
 
-                                                                System.out.println();
-
-                                                                pressEnterToContinue();
-
                                                                 back = true;
 
                                                                 confirmStr = "N";
@@ -449,122 +518,43 @@ public class SystemClass {
                     Customer c =new Customer();////暂时用
                     c.setCustId(1);//暂时用
                     //Booking.viewBookingHistory(c);
-                    boolean skip=false;
-                    Customer customer = new Customer();
-                    customer.setCustId(1);
-                    int periodSelected = 0;
-                    error = true;
-                    ArrayList<Booking> bookingsAfterFiltered = new ArrayList<>();
-                    int movieSelected = 0;
-                    LocalDate currentDate = LocalDate.now();
+
+                    ArrayList<Booking> bookingList=Booking.getBookingList(c.getCustId());
+                    Collections.reverse(bookingList);
+                    int count=1;
+                    System.out.println("Booking History : ");
+                    for(Booking b:bookingList){
+                        b.loadingTicketList();
+                        System.out.printf("%2d. Booking id:%2d\t",count,b.getBookingId());
+                        System.out.print("Date:"+b.getBookingDateTime().getDate().toString());
+                        System.out.print("\t\tTime : "+b.getBookingTime().truncatedTo(ChronoUnit.SECONDS)+"\n");
+                        if(count%5==0){
+                            String answer=" ";
+                            do{
+                                System.out.print("Continue Show More History? (Y=YES N=NO) : ");
+                                answer=sc.next().toUpperCase();
+
+                            } while (SystemClass.askForContinue(answer).equals("Invalid"));
+                            if(SystemClass.askForContinue(answer).equals("N"))
+                                break;
+                        }
+                        count++;
+                    }
+                    int no=0;
                     do {
                         try {
-                            System.out.println("\nSelect the time period: ");
-                            System.out.printf("------------------------------------------------------");
-                            System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Time Period", '|');
-                            System.out.println("------------------------------------------------------");
-                            System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 1, '|', "Booking History This Week", '|');
-                            System.out.println("------------------------------------------------------");
-                            System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 2, '|', "Booking History This Month", '|');
-                            System.out.println("------------------------------------------------------");
-                            System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 3, '|', "Booking History Within 3 Months", '|');
-                            System.out.println("------------------------------------------------------");
-                            System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 4, '|', "All The Booking History", '|');
-                            System.out.println("------------------------------------------------------");
-
-                            System.out.print("\nEnter your selection (0 - Back): ");
-
-                            periodSelected = sc.nextInt();
+                            System.out.print("\nEnter No. Booking to Show Detail (0=Back) : ");
+                            no = sc.nextInt();
+                            if (no == 0)
+                                break;
+                            else if (no <= bookingList.size() && no >0) {
+                                bookingList.get(no - 1).printBookingDetail();
+                            }
+                        }catch (Exception e){
                             sc.nextLine();
-
-                            if (periodSelected >= 0 && periodSelected <= 3) {
-                                error = false;
-                            } else {
-                                System.out.println("Your choice is not among the available options! PLease try again.");
-                            }
-                        } catch (InputMismatchException e) {
-                            System.out.println("Please enter a valid choice!");
-                            sc.nextLine();
+                            System.out.println("Invalid Input...");
                         }
-                    } while (error);
-
-                    switch (periodSelected) {
-                        case 0:
-                            skip = true;
-                            break;
-                        case 1:
-                            LocalDate oneWeekAgo = currentDate.minusWeeks(1);
-                            System.out.printf("\n------------------------------\n");
-                            System.out.print("| Booking History This Week   |");
-                            System.out.printf("\n------------------------------\n");
-
-
-                            bookingsAfterFiltered = Booking.getBookingListAfterFiltered(oneWeekAgo, currentDate, customer.getCustId());
-                            break;
-                        case 2:
-                            LocalDate oneMonthAgo = currentDate.minusMonths(1);
-                            System.out.printf("\n------------------------------\n");
-                            System.out.print("| Booking History This months |");
-                            System.out.printf("\n------------------------------\n");
-
-                            bookingsAfterFiltered = Booking.getBookingListAfterFiltered(oneMonthAgo, currentDate, customer.getCustId());
-                            break;
-                        case 3:
-                            LocalDate threeMonthAgo = currentDate.minusMonths(3);
-
-                            System.out.printf("\n---------------------------------\n");
-                            System.out.print("| Booking History within 3 months |");
-                            System.out.printf("\n---------------------------------\n");
-                            bookingsAfterFiltered = Booking.getBookingListAfterFiltered(threeMonthAgo, currentDate, customer.getCustId());
-                            break;
-                        case 4:
-                            System.out.printf("\n---------------------------------\n");
-                            System.out.print("|        Booking History         |");
-                            System.out.printf("\n---------------------------------\n");
-                            bookingsAfterFiltered=Booking.getBookingList(customer.getCustId());
-                            break;
-                    }
-                    if(!skip) {
-                        ArrayList<Booking> bookingList = bookingsAfterFiltered;
-                        Collections.reverse(bookingList);
-                        int count = 1;
-                        System.out.println("Booking History : ");
-                        for (Booking b : bookingList) {
-                            b.loadingTicketList();
-                            System.out.printf("%2d. Booking id:%2d\t", count, b.getBookingId());
-                            System.out.print("Date:" + b.getBookingDateTime().getDate().toString());
-                            System.out.print("\t\tTime : " + b.getBookingTime().truncatedTo(ChronoUnit.SECONDS) + "\n");
-                            if (count % 5 == 0) {
-                                String answer = " ";
-                                do {
-                                    System.out.print("Continue Show More History? (Y=YES N=NO) : ");
-                                    answer = sc.next().toUpperCase();
-
-                                } while (SystemClass.askForContinue(answer).equals("Invalid"));
-                                if (SystemClass.askForContinue(answer).equals("N"))
-                                    break;
-                            }
-                            count++;
-                        }
-                        int no = 0;
-                        do {
-                            try {
-                                System.out.print("\nEnter No. Booking to Show Detail (0 = Back) : ");
-                                no = sc.nextInt();
-                                if (no == 0)
-                                    break;
-                                else if (no <= count && no > 0) {
-                                    //System.out.println("Invalid Input...");
-                                    bookingList.get(no - 1).printBookingDetail();
-                                }else {
-                                    System.out.println("Invalid Input...");
-                                }
-                            } catch (Exception e) {
-                                System.out.println("Invalid Input...");
-                                sc.nextLine();
-                            }
-                        } while (no != 0);
-                    }
+                    }while(no!=0);
 
 
                     break;
@@ -780,15 +770,24 @@ public class SystemClass {
                     back = false;
                     break;
                 case 6:
+                    customer.modifyUserInfo(sc, customer);
+                    break;
+                case 7:
+                    ArrayList<User> userList = Admin.getAllUsers();
+                    resetCustPassword(userList,customer.getLogin().getUsername(), customer.getEmail(), false);
+                    break;
+                case 8:
                     back = true;
                     break;
+
             }
         } while (back == false);
-
-        // Admin
-        back = false;
-        error = true;
-
+    }
+    public static void adminMenu(Admin admin) throws Exception {
+        boolean back = false;
+        boolean error = true;
+        int choice = 0;
+        Scanner sc = new Scanner(System.in);
         do {
             do {
                 try {
@@ -796,21 +795,27 @@ public class SystemClass {
                     System.out.printf("------------------------------------------------------");
                     System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Operation", '|');
                     System.out.println("------------------------------------------------------");
-                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 1, '|', "Manage Cinema", '|');
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 1, '|', "View Profile", '|');
                     System.out.println("------------------------------------------------------");
-                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 2, '|', "Manage Hall", '|');
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 2, '|', "Edit Profile", '|');
                     System.out.println("------------------------------------------------------");
-                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 3, '|', "Manage Movie", '|');
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 3, '|', "Manage Cinema", '|');
                     System.out.println("------------------------------------------------------");
-                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 4, '|', "Manage Genre", '|');
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 4, '|', "Manage Hall", '|');
                     System.out.println("------------------------------------------------------");
-                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 5, '|', "Manage Schedule", '|');
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 5, '|', "Manage Movie", '|');
                     System.out.println("------------------------------------------------------");
-                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 6, '|', "Manage Promotion", '|');
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 6, '|', "Manage Genre", '|');
                     System.out.println("------------------------------------------------------");
-                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 7, '|', "View Report", '|');
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 7, '|', "Manage Schedule", '|');
                     System.out.println("------------------------------------------------------");
-                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 8, '|', "Log Out", '|');
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 8, '|', "Manage Promotion", '|');
+                    System.out.println("------------------------------------------------------");
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 9, '|', "Manage User", '|');
+                    System.out.println("------------------------------------------------------");
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 10, '|', "View Report", '|');
+                    System.out.println("------------------------------------------------------");
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 0, '|', "Log Out", '|');
                     System.out.println("------------------------------------------------------");
 
                     System.out.print("\nEnter your selection: ");
@@ -827,27 +832,148 @@ public class SystemClass {
 
             switch (choice) {
                 case 1:
-                    manageCinema(sc);
+                    System.out.println(admin.toString());
+                    pressEnterToContinue();
                     break;
                 case 2:
-                    manageHall(sc);
+                    admin.modifyUserInfo(sc, admin);
+                    pressEnterToContinue();
                     break;
                 case 3:
-                    manageMovie(sc);
+                    manageCinema(sc);
                     break;
                 case 4:
-                    manageGenre(sc);
+                    manageHall(sc);
                     break;
                 case 5:
-                    manageSchedule(sc);
+                    manageMovie(sc);
                     break;
                 case 6:
-                    managePromotion(sc);
+                    manageGenre(sc);
                     break;
                 case 7:
+                    manageSchedule(sc);
+                case 8:
+                    back = managePromotion(sc);
+                    break;
+                case 9:
+                    Customer cust = new Customer();
+
+                    do {
+                        try {
+                            System.out.println("\nMenu:");
+                            System.out.println("1. Administrator Registration");
+                            System.out.println("2. Manage Account Status");
+                            System.out.println("3. View Users Information");
+                            System.out.println("4. Modify Users Information");
+                            System.out.println("5. Remove User");
+                            System.out.println("0. Exit");
+                            System.out.print("Enter your choice: ");
+                            choice = sc.nextInt();
+                            sc.nextLine();
+
+                            switch (choice) {
+                                case 1:
+                                    System.out.println("You selected Option 1.");
+                                    admin.createAdmin(sc);
+                                    pressEnterToContinue();
+                                    break;
+                                case 2:
+                                    System.out.println("You selected Option 2.");
+                                    cust.viewAllCustomers();
+                                    admin.manageAccountStatus();
+                                    pressEnterToContinue();
+                                    break;
+                                case 3:
+                                    System.out.println("You selected Option 3.");
+                                    boolean submenuActive = true;
+                                    while (submenuActive) {
+                                        System.out.println("\n\nSubmenu Options:");
+                                        System.out.println("1. View All Customer");
+                                        System.out.println("2. View All Admin");
+                                        System.out.println("0. Back to Main Menu");
+                                        System.out.print("Choose an option: ");
+
+                                        try {
+                                            int submenuChoice = sc.nextInt();
+                                            switch (submenuChoice) {
+                                                case 1:
+                                                    System.out.println("You selected Option 1.");
+                                                    cust.viewAllCustomers();
+                                                    pressEnterToContinue();
+                                                    break;
+                                                case 2:
+                                                    System.out.println("You selected Option 2.");
+                                                    admin.viewAllAdmins();
+                                                    pressEnterToContinue();
+                                                    break;
+                                                case 0:
+                                                    System.out.println("Returning to Main Menu.");
+                                                    submenuActive = false;
+                                                    break;
+                                                default:
+                                                    System.out.println("Invalid option. Please choose again.");
+                                            }
+                                        } catch (java.util.InputMismatchException e) {
+                                            System.out.println("Invalid input. Please enter a valid number.");
+                                            sc.nextLine();
+                                        }
+                                    }
+                                    break;
+                                case 4:
+                                    System.out.println("You selected Option 4.");
+                                    cust.viewAllCustomers();
+                                    admin.viewAllAdmins();
+                                    User userToModify = null;
+                                    int id = 0;
+
+                                    while (userToModify == null) {
+                                        try {
+                                            System.out.print("\n\nPlease enter the user ID you want to modify (0 - Back): ");
+                                            id = sc.nextInt();
+                                            sc.nextLine();
+                                            if (id == 0) {
+                                                break;
+                                            }
+
+                                            userToModify = findUserById(id);
+
+                                            if (userToModify == null) {
+                                                System.out.println("User not found, please re-enter a valid user ID.");
+                                            }
+                                        } catch (InputMismatchException e) {
+                                            System.out.println("Invalid input, please enter a valid integer.");
+                                            sc.nextLine();
+                                        }
+                                    }
+
+                                    if (id != 0 && userToModify != null) {
+                                        admin.modifyUserInfo(sc, findUserById(id));
+                                    }
+                                    break;
+                                case 5:
+                                    System.out.println("You selected Option 5.");
+                                    cust.viewAllCustomers();
+                                    admin.viewAllAdmins();
+                                    admin.deleteUserById(sc);
+                                    pressEnterToContinue();
+                                    break;
+                                case 0:
+                                    System.out.println("Exiting the program.");
+                                    break;
+                                default:
+                                    System.out.println("Invalid choice. Please select a valid option.");
+                            }
+                        } catch (InputMismatchException e) {
+                            System.out.println("Invalid input. Please enter a valid choice.");
+                            sc.nextLine();
+                        }
+                    } while (choice != 0);
+                    break;
+                case 10:
                     viewReport(sc);
                     break;
-                case 8:
+                case 0:
                     back = true;
                     break;
                 default:
@@ -855,7 +981,6 @@ public class SystemClass {
             }
         } while (back == false);
     }
-
     private static void manageCinema(Scanner sc) throws Exception {
         boolean back = false;
 
@@ -1518,549 +1643,552 @@ public class SystemClass {
     }
 
     private static void manageHall(Scanner sc) throws Exception {
-        boolean back = false, exit = false, error = true, continues = true;
+        boolean back = false;
+        boolean error = true;
+        boolean continues = true;
         ArrayList<Cinema> cinemas = new ArrayList<>();
         int cinemaSelected = 0;
 
         do {
-            do {
-                try {
-                    System.out.println("\nSelect the cinema you want to manage it's hall: ");
-                    cinemas = Cinema.viewCinemaList(1);
-                    System.out.print("\nEnter your selection (0 - Back): ");
-                    cinemaSelected = sc.nextInt();
-                    sc.nextLine();
+            try {
+                System.out.println("\nSelect the cinema you want to manage it's hall: ");
+                cinemas = Cinema.viewCinemaList(1);
+                System.out.print("\nEnter your selection: ");
+                cinemaSelected = sc.nextInt();
+                sc.nextLine();
 
-                    if (cinemaSelected >= 0 && cinemaSelected <= cinemas.size()) {
-                        error = false;
-                    } else {
-                        System.out.println("Your choice is not among the available options! PLease try again.");
-                    }
-                } catch (InputMismatchException e) {
-                    System.out.println("Please enter a valid cinema no!");
-                    sc.nextLine();
+                if (cinemaSelected > 0 && cinemaSelected <= cinemas.size()) {
+                    error = false;
                 }
-            } while (error);
+                else {
+                    System.out.println("Your choice is not among the available options! PLease try again.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Please enter a valid cinema no!");
+                sc.nextLine();
+            }
+        } while (error);
 
-            if (cinemaSelected != 0) {
-                Cinema cinema = cinemas.get(cinemaSelected - 1);
+        Cinema cinema = cinemas.get(cinemaSelected - 1);
 
-                do {
-                    int choice = displayMenu("Hall", sc);
-                    error = true;
+        do {
+            int choice = displayMenu("Hall", sc);
+            error = true;
 
-                    switch (choice) {
-                        case 0:
-                            back = true;
-                            break;
-                        case 1:
-                            // Hall
-                            do {
-                                int hallNo = 0;
-                                error = true;
-                                ArrayList<Hall> halls = new ArrayList<>();
-                                do {
-                                    try {
-                                        System.out.println("\nSelect the hall: ");
-                                        halls = cinema.getHallList(1);
+            switch (choice) {
+                case 0:
+                    back = true;
+                    break;
+                case 1:
+                    // Hall
+                    do {
+                        int hallNo = 0;
+                        error = true;
+                        ArrayList<Hall> halls = new ArrayList<>();
+                        do {
+                            try {
+                                System.out.println("\nSelect the hall: ");
+                                halls = cinema.getHallList(1);
 
-                                        System.out.print("------------------------------------------------------");
-                                        System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Hall Name", '|');
-                                        System.out.println("------------------------------------------------------");
-                                        for (int i = 0; i < halls.size(); i++) {
-                                            System.out.printf("%-3c %-4d %c %-41s %c\n", '|', (i + 1), '|', halls.get(i).getHallName().getName(), '|');
-                                            System.out.println("------------------------------------------------------");
-                                        }
-
-                                        System.out.print("\nEnter the hall no (0 - Back): ");
-                                        hallNo = sc.nextInt();
-                                        sc.nextLine();
-
-                                        if (hallNo >= 0 && hallNo <= halls.size()) {
-                                            error = false;
-                                        } else {
-                                            System.out.println("Your choice is not among the available options! PLease try again.");
-                                        }
-                                    } catch (InputMismatchException e) {
-                                        System.out.println("Please enter a valid hall no!");
-                                        sc.nextLine();
-                                    }
-                                } while (error);
-
-                                if (hallNo != 0) {
-                                    halls.get(hallNo - 1).viewHallDetails();
-
-                                    String continueViewHall;
-                                    do {
-                                        System.out.println("\nDo you want view another hall? (Y / N)");
-                                        System.out.print("Answer: ");
-                                        String answer = sc.next();
-                                        sc.nextLine();
-
-                                        continueViewHall = SystemClass.askForContinue(answer);
-                                    } while (continueViewHall.equals("Invalid"));
-
-                                    if (continueViewHall.equals("Y")) {
-                                        continues = true;
-                                    } else {
-                                        continues = false;
-                                        back = false;
-                                    }
-                                } else {
-                                    continues = false;
-                                    back = false;
+                                System.out.print("------------------------------------------------------");
+                                System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Hall Name", '|');
+                                System.out.println("------------------------------------------------------");
+                                for (int i = 0; i < halls.size(); i++) {
+                                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', (i + 1), '|', halls.get(i).getHallName().getName(), '|');
+                                    System.out.println("------------------------------------------------------");
                                 }
-                            } while (continues);
-                            break;
-                        case 2:
+
+                                System.out.print("\nEnter the hall no (0 - Back): ");
+                                hallNo = sc.nextInt();
+                                sc.nextLine();
+
+                                if (hallNo >= 0 && hallNo <= halls.size()) {
+                                    error = false;
+                                } else {
+                                    System.out.println("Your choice is not among the available options! PLease try again.");
+                                }
+                            } catch (InputMismatchException e) {
+                                System.out.println("Please enter a valid hall no!");
+                                sc.nextLine();
+                            }
+                        } while (error);
+
+                        if (hallNo != 0) {
+                            halls.get(hallNo - 1).viewHallDetails();
+
+                            String continueViewHall;
                             do {
-                                Name name = null;
-                                String hallName;
+                                System.out.println("\nDo you want view another hall? (Y / N)");
+                                System.out.print("Answer: ");
+                                String answer = sc.next();
+                                sc.nextLine();
 
-                                do {
-                                    System.out.print("\nEnter the hall name (0 - Back): ");
-                                    hallName = sc.nextLine();
+                                continueViewHall = SystemClass.askForContinue(answer);
+                            } while (continueViewHall.equals("Invalid"));
 
-                                    if (!hallName.equals("0")) {
-                                        back = false;
-                                        name = new Name(hallName);
-                                        name.capitalizeWords();
+                            if (continueViewHall.equals("Y")) {
+                                continues = true;
+                            } else {
+                                continues = false;
+                                back = false;
+                            }
+                        }
+                        else {
+                            continues = false;
+                            back = false;
+                        }
+                    } while (continues);
+                    break;
+                case 2:
+                    do {
+                        Name name = null;
+                        String hallName;
 
-                                        ResultSet result = null;
-                                        try {
-                                            Object[] params = {cinema.getCinemaID()};
-                                            result = DatabaseUtils.selectQuery("hall_name", "hall", "cinema_id = ?", params);
-                                        } catch (SQLException e) {
-                                            throw new RuntimeException(e);
-                                        }
+                        do {
+                            System.out.print("\nEnter the hall name (0 - Back): ");
+                            hallName = sc.nextLine();
 
-                                        String errorMsg = name.checkName("hall", result, "hall_name");
+                            if (!hallName.equals("0")) {
+                                back = false;
+                                name = new Name(hallName);
+                                name.capitalizeWords();
 
-                                        if (errorMsg == null) {
-                                            error = false;
-                                        } else {
-                                            System.out.println(errorMsg);
-                                            error = true;
-                                        }
-                                    } else {
+                                ResultSet result = null;
+                                try {
+                                    Object[] params = {cinema.getCinemaID()};
+                                    result = DatabaseUtils.selectQuery("hall_name", "hall", "cinema_id = ?", params);
+                                } catch (SQLException e) {
+                                    throw new RuntimeException(e);
+                                }
+
+                                String errorMsg = name.checkName("hall", result, "hall_name");
+
+                                if (errorMsg == null) {
+                                    error = false;
+                                } else {
+                                    System.out.println(errorMsg);
+                                    error = true;
+                                }
+                            }
+                            else {
+                                error = false;
+                            }
+                        } while (error);
+
+                        if (!hallName.equals("0")) {
+                            String hallType = null;
+
+                            do {
+                                try {
+                                    System.out.println("\nSelect the hall type: ");
+                                    System.out.println("1. Standard Hall");
+                                    System.out.println("2. 3D Hall");
+                                    System.out.print("\nEnter your selection: ");
+                                    int hallTypeSelection = sc.nextInt();
+                                    sc.nextLine();
+
+                                    if (hallTypeSelection == 1) {
+                                        hallType = "STANDARD";
                                         error = false;
+                                    } else if (hallTypeSelection == 2) {
+                                        hallType = "3D";
+                                        error = false;
+                                    } else {
+                                        System.out.println("Your choice is not among the available options! PLease try again.");
+                                        error = true;
                                     }
-                                } while (error);
+                                } catch (InputMismatchException e) {
+                                    System.out.println("Please enter a valid hall type no!");
+                                    sc.nextLine();
+                                    error = true;
+                                }
+                            } while (error);
 
-                                if (!hallName.equals("0")) {
-                                    String hallType = null;
+                            Hall hall = new Hall(name, hallType);
 
+                            String confirmation;
+                            do {
+                                System.out.println("\nDo you want add the new hall for this cinema? (Y / N)");
+                                System.out.print("Answer: ");
+                                String answer = sc.next();
+                                sc.nextLine();
+
+                                confirmation = SystemClass.askForContinue(answer);
+                            } while (confirmation.equals("Invalid"));
+
+                            // Confirm that the hall is successfully added
+                            boolean success;
+                            do {
+                                if (confirmation.equals("Y")) {
+                                    success = cinema.addHall(hall);
+                                } else {
+                                    success = true;
+                                    System.out.println("This hall will not be added for the cinema.");
+                                }
+
+                                if (success == false) {
                                     do {
-                                        try {
-                                            System.out.println("\nSelect the hall type: ");
-                                            System.out.println("1. Standard Hall");
-                                            System.out.println("2. 3D Hall");
-                                            System.out.print("\nEnter your selection: ");
-                                            int hallTypeSelection = sc.nextInt();
-                                            sc.nextLine();
-
-                                            if (hallTypeSelection == 1) {
-                                                hallType = "STANDARD";
-                                                error = false;
-                                            } else if (hallTypeSelection == 2) {
-                                                hallType = "3D";
-                                                error = false;
-                                            } else {
-                                                System.out.println("Your choice is not among the available options! PLease try again.");
-                                                error = true;
-                                            }
-                                        } catch (InputMismatchException e) {
-                                            System.out.println("Please enter a valid hall type no!");
-                                            sc.nextLine();
-                                            error = true;
-                                        }
-                                    } while (error);
-
-                                    Hall hall = new Hall(name, hallType);
-
-                                    String confirmation;
-                                    do {
-                                        System.out.println("\nDo you want add the new hall for this cinema? (Y / N)");
+                                        System.out.println("\nDo you want to retry to add the new hall for this cinema? (Y / N)");
                                         System.out.print("Answer: ");
                                         String answer = sc.next();
                                         sc.nextLine();
 
                                         confirmation = SystemClass.askForContinue(answer);
-                                    } while (confirmation.equals("Invalid"));
 
-                                    // Confirm that the hall is successfully added
-                                    boolean success;
-                                    do {
                                         if (confirmation.equals("Y")) {
-                                            success = cinema.addHall(hall);
-                                        } else {
-                                            success = true;
-                                            System.out.println("This hall will not be added for the cinema.");
-                                        }
-
-                                        if (success == false) {
-                                            do {
-                                                System.out.println("\nDo you want to retry to add the new hall for this cinema? (Y / N)");
-                                                System.out.print("Answer: ");
-                                                String answer = sc.next();
-                                                sc.nextLine();
-
-                                                confirmation = SystemClass.askForContinue(answer);
-
-                                                if (confirmation.equals("Y")) {
-                                                    continues = true;
-                                                } else {
-                                                    continues = false;
-                                                }
-                                            } while (confirmation.equals("Invalid"));
+                                            continues = true;
                                         } else {
                                             continues = false;
                                         }
-                                    } while (continues);
-
-                                    String continueAddHall;
-                                    do {
-                                        System.out.println("\nDo you want add another new cinema? (Y / N)");
-                                        System.out.print("Answer: ");
-                                        String answer = sc.next();
-                                        sc.nextLine();
-
-                                        continueAddHall = SystemClass.askForContinue(answer);
-                                    } while (continueAddHall.equals("Invalid"));
-
-                                    if (continueAddHall.equals("Y")) {
-                                        continues = true;
-                                    } else {
-                                        continues = false;
-                                        back = false;
-                                    }
-                                } else {
+                                    } while (confirmation.equals("Invalid"));
+                                }
+                                else {
                                     continues = false;
-                                    back = false;
                                 }
                             } while (continues);
-                            break;
-                        case 3:
-                            // Modify Hall
+
+                            String continueAddHall;
                             do {
-                                error = true;
-                                boolean stop = true;
-                                ArrayList<Hall> hallsModified = new ArrayList<>();
-                                int hallModified = 0;
+                                System.out.println("\nDo you want add another new cinema? (Y / N)");
+                                System.out.print("Answer: ");
+                                String answer = sc.next();
+                                sc.nextLine();
 
-                                do {
-                                    try {
-                                        System.out.println("\nSelect the hall you want to modify: ");
-                                        hallsModified = cinema.getHallList(1);
+                                continueAddHall = SystemClass.askForContinue(answer);
+                            } while (continueAddHall.equals("Invalid"));
 
-                                        System.out.print("------------------------------------------------------");
-                                        System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Hall Name", '|');
-                                        System.out.println("------------------------------------------------------");
-                                        for (int i = 0; i < hallsModified.size(); i++) {
-                                            System.out.printf("%-3c %-4d %c %-41s %c\n", '|', (i + 1), '|', hallsModified.get(i).getHallName().getName(), '|');
-                                            System.out.println("------------------------------------------------------");
-                                        }
+                            if (continueAddHall.equals("Y")) {
+                                continues = true;
+                            } else {
+                                continues = false;
+                                back = false;
+                            }
+                        }
+                        else {
+                            continues = false;
+                            back = false;
+                        }
+                    } while (continues);
+                    break;
+                case 3:
+                    // Modify Hall
+                    do {
+                        error = true;
+                        boolean stop = true;
+                        ArrayList<Hall> hallsModified = new ArrayList<>();
+                        int hallModified = 0;
 
-                                        System.out.print("\nEnter the hall no (0 - Back): ");
-                                        hallModified = sc.nextInt();
-                                        sc.nextLine();
+                        do {
+                            try {
+                                System.out.println("\nSelect the hall you want to modify: ");
+                                hallsModified = cinema.getHallList(1);
 
-                                        if (hallModified >= 0 && hallModified <= hallsModified.size()) {
-                                            error = false;
-                                        } else {
-                                            System.out.println("Your choice is not among the available options! PLease try again.");
-                                        }
-                                    } catch (InputMismatchException e) {
-                                        System.out.println("Please enter a valid hall no!");
-                                        sc.nextLine();
-                                    }
-                                } while (error);
+                                System.out.print("------------------------------------------------------");
+                                System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Hall Name", '|');
+                                System.out.println("------------------------------------------------------");
+                                for (int i = 0; i < hallsModified.size(); i++) {
+                                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', (i + 1), '|', hallsModified.get(i).getHallName().getName(), '|');
+                                    System.out.println("------------------------------------------------------");
+                                }
 
-                                if (hallModified != 0) {
-                                    do {
-                                        cinema.setHall(hallsModified.get(hallModified - 1));
-                                        int serialNo = cinema.getHall().modifyHallDetails(sc);
+                                System.out.print("\nEnter the hall no (0 - Back): ");
+                                hallModified = sc.nextInt();
+                                sc.nextLine();
 
-                                        switch (serialNo) {
-                                            case 0:
-                                                String confirmation;
+                                if (hallModified >= 0 && hallModified <= hallsModified.size()) {
+                                    error = false;
+                                } else {
+                                    System.out.println("Your choice is not among the available options! PLease try again.");
+                                }
+                            } catch (InputMismatchException e) {
+                                System.out.println("Please enter a valid hall no!");
+                                sc.nextLine();
+                            }
+                        } while (error);
+
+                        if (hallModified != 0) {
+                            do {
+                                cinema.setHall(hallsModified.get(hallModified - 1));
+                                int serialNo = cinema.getHall().modifyHallDetails(sc);
+
+                                switch (serialNo) {
+                                    case 0:
+                                        String confirmation;
+                                        do {
+                                            System.out.println("\nDo you want to save the changes? (Y / N)");
+                                            System.out.print("Answer: ");
+                                            String answer = sc.next();
+                                            sc.nextLine();
+
+                                            confirmation = SystemClass.askForContinue(answer);
+                                        } while (confirmation.equals("Invalid"));
+
+                                        stop = false;
+
+                                        // Confirm that the hall is successfully modified
+                                        boolean success = false;
+                                        do {
+                                            if (confirmation.equals("Y")) {
+                                                success = cinema.getHall().modifyHall();
+                                            } else {
+                                                success = true;
+                                                System.out.println("\nThe changes have not been saved.");
+                                            }
+
+                                            if (success == false) {
                                                 do {
-                                                    System.out.println("\nDo you want to save the changes? (Y / N)");
+                                                    System.out.println("\nDo you want to retry to modify the hall? (Y / N)");
                                                     System.out.print("Answer: ");
                                                     String answer = sc.next();
                                                     sc.nextLine();
 
                                                     confirmation = SystemClass.askForContinue(answer);
-                                                } while (confirmation.equals("Invalid"));
 
-                                                stop = false;
-
-                                                // Confirm that the hall is successfully modified
-                                                boolean success = false;
-                                                do {
                                                     if (confirmation.equals("Y")) {
-                                                        success = cinema.getHall().modifyHall();
-                                                    } else {
-                                                        success = true;
-                                                        System.out.println("\nThe changes have not been saved.");
-                                                    }
-
-                                                    if (success == false) {
-                                                        do {
-                                                            System.out.println("\nDo you want to retry to modify the hall? (Y / N)");
-                                                            System.out.print("Answer: ");
-                                                            String answer = sc.next();
-                                                            sc.nextLine();
-
-                                                            confirmation = SystemClass.askForContinue(answer);
-
-                                                            if (confirmation.equals("Y")) {
-                                                                continues = true;
-                                                            } else {
-                                                                continues = false;
-                                                            }
-                                                        } while (confirmation.equals("Invalid"));
+                                                        continues = true;
                                                     } else {
                                                         continues = false;
                                                     }
-                                                } while (continues);
+                                                } while (confirmation.equals("Invalid"));
+                                            }
+                                            else {
+                                                continues = false;
+                                            }
+                                        } while (continues);
 
-                                                String continueModifyHall;
-                                                do {
-                                                    System.out.println("\nDo you want modify another hall? (Y / N)");
-                                                    System.out.print("Answer: ");
-                                                    String answer = sc.next();
-                                                    sc.nextLine();
+                                        String continueModifyHall;
+                                        do {
+                                            System.out.println("\nDo you want modify another hall? (Y / N)");
+                                            System.out.print("Answer: ");
+                                            String answer = sc.next();
+                                            sc.nextLine();
 
-                                                    continueModifyHall = SystemClass.askForContinue(answer);
-                                                } while (continueModifyHall.equals("Invalid"));
+                                            continueModifyHall = SystemClass.askForContinue(answer);
+                                        } while (continueModifyHall.equals("Invalid"));
 
-                                                if (continueModifyHall.equals("Y")) {
-                                                    continues = true;
-                                                } else {
-                                                    continues = false;
-                                                    back = false;
-                                                }
-                                                break;
-                                            case 1:
-                                                Name name = null;
-                                                do {
-                                                    System.out.print("\nEnter the new hall name: ");
-                                                    String hallName = sc.nextLine();
-
-                                                    name = new Name(hallName);
-                                                    name.capitalizeWords();
-
-                                                    ResultSet result = null;
-                                                    try {
-                                                        Object[] params = {cinema.getCinemaID()};
-                                                        result = DatabaseUtils.selectQuery("hall_name", "hall", "cinema_id = ?", params);
-                                                    } catch (SQLException e) {
-                                                        throw new RuntimeException(e);
-                                                    }
-
-                                                    String errorMsg = name.checkEditName("hall", result, "hall_name", cinema.getHall().getHallName().getName());
-
-                                                    if (errorMsg == null) {
-                                                        hallsModified.get(hallModified - 1).setHallName(name);
-                                                        error = false;
-                                                    } else {
-                                                        System.out.println(errorMsg);
-                                                        error = true;
-                                                    }
-                                                } while (error);
-                                                break;
-                                            case 2:
-                                                System.out.println("Hall type cannot be modified! Please retry.");
-                                                break;
-                                            case 3:
-                                                System.out.println("Hall capacity cannot be modified! Please retry.");
-                                                break;
-                                            case 4: //ChinYong Part
-                                                hallsModified.get(hallModified - 1).initSeatList();
-                                                String strRow = " ";
-                                                int col = 0;
-                                                String row = " ";
-                                                Scanner scanner = new Scanner(System.in);
-                                                boolean validInput = false;
-                                                String strCon = "Y";
-                                                char chCon = strCon.charAt(0);
-                                                while (chCon == 'Y') {
-                                                    hallsModified.get(hallModified - 1).viewSeatStatus();
-                                                    while (!validInput) {
-                                                        try {
-                                                            System.out.print("\nSelect Row    : ");
-
-                                                            row = scanner.next().toUpperCase();
-
-                                                            System.out.print("Select Column : ");
-                                                            col = scanner.nextInt();
-
-                                                            if (!Seat.checkSeatValidation(row, col)) {
-                                                                System.out.println("Invalid Input");
-                                                                continue;
-                                                            } else {
-                                                                validInput = true;
-                                                            }
-                                                        } catch (Exception e) {
-                                                            System.out.println("Something wrong...");
-                                                            scanner.nextLine();
-                                                        }
-                                                    }
-                                                    validInput = false;
-                                                    String letter2 = Integer.toString(hallsModified.get(hallModified - 1).getHallID());
-                                                    //char letter = (char) ('A' + row - 1);
-                                                    String combineSeatId = letter2 + row.charAt(0) + Integer.toString(col);
-
-                                                    int seatStatus = 1;
-                                                    do {
-                                                        System.out.print("Enter Status (1=Available 0=Unavailable) : ");
-                                                        try {
-                                                            seatStatus = sc.nextInt();
-                                                            if (seatStatus != 1 && seatStatus != 0) {
-                                                                System.out.println("Invalid Input");
-                                                            }
-                                                        } catch (Exception e) {
-                                                            System.out.println("Something wrong...");
-                                                            scanner.nextLine();
-                                                        }
-                                                    } while (seatStatus != 1 && seatStatus != 0);
-                                                    String str = " ";
-                                                    char ch = str.charAt(0);
-                                                    do {
-                                                        System.out.print("Confirm ? (Y=Yes N=No) : ");
-                                                        str = scanner.next().toUpperCase();
-                                                        ch = str.charAt(0);
-                                                    } while (ch != 'Y' && ch != 'N');
-                                                    if (ch == 'Y') {
-                                                        for (Seat seats : hallsModified.get(hallModified - 1).getSeats()) {
-                                                            if (seats.getSeatId().equals(combineSeatId)) {
-                                                                seats.setSeatStatus(seatStatus);
-                                                                seats.updateSeatStatus();
-                                                            }
-                                                        }
-                                                    }
-                                                    do {
-                                                        System.out.print("Continue ? (Y=Yes N=No) : ");
-                                                        strCon = scanner.next().toUpperCase();
-                                                        chCon = strCon.charAt(0);
-                                                    } while (chCon != 'Y' && chCon != 'N');
-                                                }
-                                                break;
-                                        }
-                                    } while (stop);
-                                } else {
-                                    continues = false;
-                                    back = false;
-                                }
-                            } while (continues);
-                            break;
-                        case 4:
-                            // Delete Hall
-                            do {
-                                error = true;
-                                ArrayList<Hall> hallsDeleted = new ArrayList<>();
-                                int hallDeleted = 0;
-
-                                do {
-                                    try {
-                                        System.out.println("\nSelect the hall you want to delete: ");
-                                        hallsDeleted = cinema.getHallList(1);
-
-                                        System.out.print("------------------------------------------------------");
-                                        System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Hall Name", '|');
-                                        System.out.println("------------------------------------------------------");
-                                        for (int i = 0; i < hallsDeleted.size(); i++) {
-                                            System.out.printf("%-3c %-4d %c %-41s %c\n", '|', (i + 1), '|', hallsDeleted.get(i).getHallName().getName(), '|');
-                                            System.out.println("------------------------------------------------------");
-                                        }
-
-                                        System.out.print("\nEnter the hall no (0 - Back): ");
-                                        hallDeleted = sc.nextInt();
-                                        sc.nextLine();
-
-                                        if (hallDeleted >= 0 && hallDeleted <= hallsDeleted.size()) {
-                                            error = false;
+                                        if (continueModifyHall.equals("Y")) {
+                                            continues = true;
                                         } else {
-                                            System.out.println("Your choice is not among the available options! PLease try again.");
+                                            continues = false;
+                                            back = false;
                                         }
-                                    } catch (InputMismatchException e) {
-                                        System.out.println("Please enter a valid hall no!");
-                                        sc.nextLine();
-                                    }
-                                } while (error);
+                                        break;
+                                    case 1:
+                                        Name name = null;
+                                        do {
+                                            System.out.print("\nEnter the new hall name: ");
+                                            String hallName = sc.nextLine();
 
-                                if (hallDeleted != 0) {
-                                    cinema.setHall(hallsDeleted.get(hallDeleted - 1));
-                                    String confirmation;
+                                            name = new Name(hallName);
+                                            name.capitalizeWords();
+
+                                            ResultSet result = null;
+                                            try {
+                                                Object[] params = {cinema.getCinemaID()};
+                                                result = DatabaseUtils.selectQuery("hall_name", "hall", "cinema_id = ?", params);
+                                            } catch (SQLException e) {
+                                                throw new RuntimeException(e);
+                                            }
+
+                                            String errorMsg = name.checkEditName("hall", result, "hall_name", cinema.getHall().getHallName().getName());
+
+                                            if (errorMsg == null) {
+                                                hallsModified.get(hallModified - 1).setHallName(name);
+                                                error = false;
+                                            } else {
+                                                System.out.println(errorMsg);
+                                                error = true;
+                                            }
+                                        } while (error);
+                                        break;
+                                    case 2:
+                                        System.out.println("Hall type cannot be modified! Please retry.");
+                                        break;
+                                    case 3:
+                                        System.out.println("Hall capacity cannot be modified! Please retry.");
+                                        break;
+                                    case 4: //ChinYong Part
+                                        hallsModified.get(hallModified-1).initSeatList();
+                                        String strRow=" ";
+                                        int col = 0;
+                                        String row =" ";
+                                        Scanner scanner=new Scanner(System.in);
+                                        boolean validInput = false;
+                                        String strCon="Y";
+                                        char chCon = strCon.charAt(0);
+                                        while (chCon=='Y') {
+                                            hallsModified.get(hallModified-1).viewSeatStatus();
+                                            while (!validInput) {
+                                                try {
+                                                    System.out.print("\nSelect Row    : ");
+
+                                                    row=scanner.next().toUpperCase();
+
+                                                    System.out.print("Select Column : ");
+                                                    col = scanner.nextInt();
+
+                                                    if (!Seat.checkSeatValidation(row, col)) {
+                                                        System.out.println("Invalid Input");
+                                                        continue;
+                                                    } else {
+                                                        validInput = true;
+                                                    }
+                                                } catch (Exception e) {
+                                                    System.out.println("Something wrong...");
+                                                    scanner.nextLine();
+                                                }
+                                            }
+                                            validInput=false;
+                                            String letter2 = Integer.toString(hallsModified.get(hallModified - 1).getHallID());
+                                            //char letter = (char) ('A' + row - 1);
+                                            String combineSeatId = letter2 + row.charAt(0) + Integer.toString(col);
+
+                                            int seatStatus = 1;
+                                            do {
+                                                System.out.print("Enter Status (1=Available 0=Unavailable) : ");
+                                                try {
+                                                    seatStatus = sc.nextInt();
+                                                    if (seatStatus != 1 && seatStatus != 0) {
+                                                        System.out.println("Invalid Input");
+                                                    }
+                                                } catch (Exception e) {
+                                                    System.out.println("Something wrong...");
+                                                    scanner.nextLine();
+                                                }
+                                            } while (seatStatus != 1 && seatStatus != 0);
+                                            String str = " ";
+                                            char ch = str.charAt(0);
+                                            do {
+                                                System.out.print("Confirm ? (Y=Yes N=No) : ");
+                                                str = scanner.next().toUpperCase();
+                                                ch = str.charAt(0);
+                                            } while (ch != 'Y' && ch != 'N');
+                                            if (ch == 'Y') {
+                                                for (Seat seats : hallsModified.get(hallModified - 1).getSeats()) {
+                                                    if (seats.getSeatId().equals(combineSeatId)) {
+                                                        seats.setSeatStatus(seatStatus);
+                                                        seats.updateSeatStatus();
+                                                    }
+                                                }
+                                            }
+                                            do {
+                                                System.out.print("Continue ? (Y=Yes N=No) : ");
+                                                strCon = scanner.next().toUpperCase();
+                                                chCon = strCon.charAt(0);
+                                            } while (chCon != 'Y' && chCon != 'N');
+                                        }
+                                        break;
+                                }
+                            } while (stop);
+                        }
+                        else {
+                            continues = false;
+                            back = false;
+                        }
+                    } while (continues);
+                    break;
+                case 4:
+                    // Delete Hall
+                    do {
+                        error = true;
+                        ArrayList<Hall> hallsDeleted = new ArrayList<>();
+                        int hallDeleted = 0;
+
+                        do {
+                            try {
+                                System.out.println("\nSelect the hall you want to delete: ");
+                                hallsDeleted = cinema.getHallList(1);
+
+                                System.out.print("------------------------------------------------------");
+                                System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Hall Name", '|');
+                                System.out.println("------------------------------------------------------");
+                                for (int i = 0; i < hallsDeleted.size(); i++) {
+                                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', (i + 1), '|', hallsDeleted.get(i).getHallName().getName(), '|');
+                                    System.out.println("------------------------------------------------------");
+                                }
+
+                                System.out.print("\nEnter the hall no (0 - Back): ");
+                                hallDeleted = sc.nextInt();
+                                sc.nextLine();
+
+                                if (hallDeleted >= 0 && hallDeleted <= hallsDeleted.size()) {
+                                    error = false;
+                                } else {
+                                    System.out.println("Your choice is not among the available options! PLease try again.");
+                                }
+                            } catch (InputMismatchException e) {
+                                System.out.println("Please enter a valid hall no!");
+                                sc.nextLine();
+                            }
+                        } while (error);
+
+                        if (hallDeleted != 0) {
+                            cinema.setHall(hallsDeleted.get(hallDeleted - 1));
+                            String confirmation;
+                            do {
+                                System.out.println("\nDo you want to delete this hall? (Y / N)");
+                                System.out.print("Answer: ");
+                                String answer = sc.next();
+                                sc.nextLine();
+
+                                confirmation = SystemClass.askForContinue(answer);
+                            } while (confirmation.equals("Invalid"));
+
+                            // Confirm that the cinema is successfully deleted
+                            boolean success;
+                            do {
+                                if (confirmation.equals("Y")) {
+                                    success = cinema.getHall().deleteHall();
+                                } else {
+                                    success = true;
+                                    System.out.println("\nThe hall is safe :)");
+                                }
+
+                                if (success == false) {
                                     do {
-                                        System.out.println("\nDo you want to delete this hall? (Y / N)");
+                                        System.out.println("\nDo you want to retry to delete this hall? (Y / N)");
                                         System.out.print("Answer: ");
                                         String answer = sc.next();
                                         sc.nextLine();
 
                                         confirmation = SystemClass.askForContinue(answer);
-                                    } while (confirmation.equals("Invalid"));
 
-                                    // Confirm that the cinema is successfully deleted
-                                    boolean success;
-                                    do {
                                         if (confirmation.equals("Y")) {
-                                            success = cinema.getHall().deleteHall();
-                                        } else {
-                                            success = true;
-                                            System.out.println("\nThe hall is safe :)");
-                                        }
-
-                                        if (success == false) {
-                                            do {
-                                                System.out.println("\nDo you want to retry to delete this hall? (Y / N)");
-                                                System.out.print("Answer: ");
-                                                String answer = sc.next();
-                                                sc.nextLine();
-
-                                                confirmation = SystemClass.askForContinue(answer);
-
-                                                if (confirmation.equals("Y")) {
-                                                    continues = true;
-                                                } else {
-                                                    continues = false;
-                                                }
-                                            } while (confirmation.equals("Invalid"));
+                                            continues = true;
                                         } else {
                                             continues = false;
                                         }
-                                    } while (continues);
-
-                                    String continueDeleteHall;
-                                    do {
-                                        System.out.println("\nDo you want to continue to delete another hall? (Y / N)");
-                                        System.out.print("Answer: ");
-                                        String answer2 = sc.next();
-                                        sc.nextLine();
-
-                                        continueDeleteHall = SystemClass.askForContinue(answer2);
-                                    } while (continueDeleteHall.equals("Invalid"));
-
-                                    if (continueDeleteHall.equals("Y")) {
-                                        continues = true;
-                                    } else {
-                                        continues = false;
-                                        back = false;
-                                    }
-                                } else {
+                                    } while (confirmation.equals("Invalid"));
+                                }
+                                else {
                                     continues = false;
-                                    back = false;
                                 }
                             } while (continues);
-                            break;
-                    }
-                } while (back == false);
+
+                            String continueDeleteHall;
+                            do {
+                                System.out.println("\nDo you want to continue to delete another hall? (Y / N)");
+                                System.out.print("Answer: ");
+                                String answer2 = sc.next();
+                                sc.nextLine();
+
+                                continueDeleteHall = SystemClass.askForContinue(answer2);
+                            } while (continueDeleteHall.equals("Invalid"));
+
+                            if (continueDeleteHall.equals("Y")) {
+                                continues = true;
+                            } else {
+                                continues = false;
+                                back = false;
+                            }
+                        } else {
+                            continues = false;
+                            back = false;
+                        }
+                    } while (continues);
+                    break;
             }
-            else {
-                exit = true;
-            }
-        } while (exit == false);
+        } while (back == false);
     }
 
     private static void manageMovie(Scanner sc) throws Exception {
@@ -3895,14 +4023,8 @@ public class SystemClass {
             do {
                 try {
                     System.out.println("\nSelect the report you want to view: ");
-                    System.out.printf("------------------------------------------------------");
-                    System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Report Type", '|');
-                    System.out.println("------------------------------------------------------");
-                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 1, '|', "Sales Report", '|');
-                    System.out.println("------------------------------------------------------");
-                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 2, '|', "Movie Box Office Report", '|');
-                    System.out.println("------------------------------------------------------");
-
+                    System.out.println("1. Sales Report");
+                    System.out.println("2. Movie Box Office Report");
                     System.out.print("\nEnter your selection (0 - Back): ");
                     choice = sc.nextInt();
 
@@ -3938,7 +4060,7 @@ public class SystemClass {
                                 selection = sc.nextInt();
                                 sc.nextLine();
 
-                                if (selection >= 0 && selection <= 2) {
+                                if (selection >= 0 && selection <= 4) {
                                     error = false;
                                 } else {
                                     System.out.println("Your choice is not among the available options! PLease try again.");
@@ -3956,11 +4078,11 @@ public class SystemClass {
                                 break;
                             case 1:
                                 salesReport.setTitle("Daily Sales Report");
-                                report = viewReportByDateOrMonth(sc, salesReport);
+                                report = viewSalesReport(sc, salesReport);
                                 break;
                             case 2:
                                 salesReport.setTitle("Monthly Sales Report");
-                                report = viewReportByDateOrMonth(sc, salesReport);
+                                report = viewSalesReport(sc, salesReport);
                                 break;
                             default:
                                 System.out.println("Your choice is not among the available options! PLease try again.");
@@ -3996,22 +4118,20 @@ public class SystemClass {
                     break;
                 case 2:
                     do {
+                        ArrayList<Report> reports = new ArrayList<>();
+
                         do {
                             try {
                                 System.out.println("\nPlease select a box office ranking report from the list below: ");
-                                System.out.printf("------------------------------------------------------");
-                                System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Box Office Report Selection", '|');
-                                System.out.println("------------------------------------------------------");
-                                System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 1, '|', "Daily", '|');
-                                System.out.println("------------------------------------------------------");
-                                System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 2, '|', "Monthly", '|');
-                                System.out.println("------------------------------------------------------");
-
+                                System.out.println("1. Daily");
+                                System.out.println("2. Weekly");
+                                System.out.println("3. Monthly");
+                                System.out.println("4. Yearly");
                                 System.out.print("\nEnter your selection (0 - Back): ");
                                 selection = sc.nextInt();
                                 sc.nextLine();
 
-                                if (selection >= 0 && selection <= 2) {
+                                if (selection >= 0 && selection <= 4) {
                                     error = false;
                                 } else {
                                     System.out.println("Your choice is not among the available options! PLease try again.");
@@ -4022,7 +4142,10 @@ public class SystemClass {
                             }
                         } while (error);
 
-                        BoxOfficeReport boxOfficeReport = new BoxOfficeReport();
+                        ArrayList<Movie> movies = MovieUtils.getMovieListAfterFiltered(null, null, 1);
+                        Report reportAfterRanking = new TopMovieReport();
+                        report = new TopMovieReport();
+                        String title = null;
 
                         switch (selection) {
                             case 0:
@@ -4030,20 +4153,33 @@ public class SystemClass {
                                 back = false;
                                 break;
                             case 1:
-                                boxOfficeReport.setTitle("Daily Box Office Ranking Report");
-                                report = viewReportByDateOrMonth(sc, boxOfficeReport);
+                                LocalDate today = currentDate;
+                                ((TopMovieReport) report).setReportValue(today, movies);
+                                title = "Daily Box Office Ranking Report";
                                 break;
                             case 2:
-                                boxOfficeReport.setTitle("Monthly Box Office Ranking Report");
-                                report = viewReportByDateOrMonth(sc, boxOfficeReport);
+                                LocalDate oneWeekAgo = currentDate.minusWeeks(1);
+                                ((TopMovieReport) report).setReportValue(oneWeekAgo, movies);
+                                title = "Weekly Box Office Ranking Report";
+                                break;
+                            case 3:
+                                LocalDate oneMonthAgo = currentDate.minusMonths(1);
+                                ((TopMovieReport) report).setReportValue(oneMonthAgo, movies);
+                                title = "Monthly Box Office Ranking Report";
+                                break;
+                            case 4:
+                                LocalDate oneYearAgo = currentDate.minusYears(1);
+                                ((TopMovieReport) report).setReportValue(oneYearAgo, movies);
+                                title = "Yearly Box Office Ranking Report";
                                 break;
                         }
 
-                        if (selection != 0 && report != null) {
-                            boxOfficeReport = BoxOfficeReport.getRanking(report);
+                        if (selection != 0) {
+                            reportAfterRanking = TopMovieReport.getRanking(report);
+                            reportAfterRanking.setTitle(title);
 
-                            //if (!boxOfficeReport.getMovie().isEmpty()) {
-                                System.out.println(boxOfficeReport);
+                            if (!((TopMovieReport) reportAfterRanking).getMovie().isEmpty()) {
+                                System.out.println(((TopMovieReport) reportAfterRanking).toString());
 
                                 String confirmation;
                                 do {
@@ -4060,14 +4196,10 @@ public class SystemClass {
                                     back = false;
                                     continues = false;
                                 }
-                            //} else {
-                              //  continues = true;
-                                //System.out.println("Sorry, no report found!");
-                            //}
-                        }
-                        else {
-                            continues = true;
-                            System.out.println("Sorry, no report found!");
+                            } else {
+                                continues = true;
+                                System.out.println("Sorry, no report found!");
+                            }
                         }
                     } while (continues);
                     break;
@@ -4075,20 +4207,19 @@ public class SystemClass {
         } while (back == false);
     }
 
-    public static Report viewReportByDateOrMonth(Scanner sc, Report report) {
+    public static SalesReport viewSalesReport(Scanner sc, SalesReport salesReport) {
         String viewDate;
         DateTime searchDate = null;
         boolean error;
-        ArrayList<Movie> movies = MovieUtils.getMovieListAfterFiltered(null, null, 1);
 
         do {
             error = true;
 
-            if (report.getTitle().contains("Daily")) {
+            if (salesReport.getTitle().contains("Daily")) {
                 System.out.print("\nEnter the date (yyyy-mm-dd): ");
                 viewDate = sc.nextLine().trim();
 
-                int[] dateParts = DateTime.dateFormatValidator(viewDate, "^\\d{4}-\\d{1,2}-\\d{1,2}$");
+                int[] dateParts = DateTime.dateFormatValidator(viewDate, "^\\d{4}-\\d{2}-\\d{2}$");
 
                 if (dateParts == null) {
                     continue;
@@ -4099,24 +4230,18 @@ public class SystemClass {
                 if (searchDate.isValidDate()) {
                     if (!(searchDate.getDate().equals(LocalDate.now()) || searchDate.getDate().isAfter(LocalDate.now()))) {
                         // Check the report generated is before today
-                        report.setReportDate(searchDate);
+                        salesReport.setReportDate(searchDate);
 
-                        if (report instanceof SalesReport) {
-                            return ((SalesReport) report).generateSalesReport();
-                        }
-                        else if (report instanceof BoxOfficeReport){
-                            return ((BoxOfficeReport) report).generateBoxOfficeReport(movies);
-                        }
-
+                        return salesReport.calcSalesReportInfo();
                     }
 
                     else {
-                        System.out.println("The date you enter must be at least before today.");
+                        System.out.println("The date you enter must be at least before today.\n");
                     }
                 }
 
                 else {
-                    System.out.println("Please enter valid date range.");
+                    System.out.println("Please enter valid date range.\n");
                 }
             }
 
@@ -4124,7 +4249,7 @@ public class SystemClass {
                 System.out.print("\nEnter the year and month (yyyy-mm): ");
                 viewDate = sc.nextLine().trim();
 
-                int[] dateParts = DateTime.dateFormatValidator(viewDate, "^\\d{4}-\\d{1,2}$");
+                int[] dateParts = DateTime.dateFormatValidator(viewDate, "^\\d{4}-\\d{2}$");
 
                 if (dateParts == null) {
                     continue;
@@ -4135,26 +4260,22 @@ public class SystemClass {
                 if (searchDate.isValidDate()) {
                     if (searchDate.getDate().isBefore(LocalDate.now().minusMonths(1))) {
                         // Check the report generated is before today
-                        report.setReportDate(searchDate);
+                        salesReport.setReportDate(searchDate);
 
-                        if (report instanceof SalesReport) {
-                            return ((SalesReport) report).generateSalesReport();
-                        }
-                        else if (report instanceof BoxOfficeReport){
-                            return ((BoxOfficeReport) report).generateBoxOfficeReport(movies);
-                        }
+                        return salesReport.calcSalesReportInfo();
                     }
 
                     else {
-                        System.out.println("The year and month you enter must ne at least before this month.");
+                        System.out.println("The year and month you enter must ne at least before this month.\n");
                     }
                 }
 
                 else {
-                    System.out.println("Please enter valid date range.");
+                    System.out.println("Please enter valid date range.\n");
                 }
             }
         } while (error);
+
 
         return null;
     }
@@ -4174,15 +4295,15 @@ public class SystemClass {
 //
 //            return new SalesReport(salesReport.getTitle(), salesReport.getDefaultPurpose(), salesReport.getConclusion(), salesReport.getSalesDate(), salesReport.getTotalSales(), salesReport.getTotalOrders(), salesReport.getMostPaymentMtd());
 //        } else {
-//            BoxOfficeReport topMovieReport = (BoxOfficeReport) report;
+//            TopMovieReport topMovieReport = (TopMovieReport) report;
 //
-//            return new BoxOfficeReport();
+//            return new TopMovieReport();
 //        }
 //
 //        return null;
 //    }
 
-    private static void managePromotion(Scanner sc) {
+    private static boolean managePromotion(Scanner sc) {
         boolean back = false;
         boolean error = false;
 
@@ -4202,13 +4323,10 @@ public class SystemClass {
                     do {
                         error = false;
 
-                        System.out.println("\n\nSelect the operation: ");
-                        System.out.print("---------------------\n");
-                        System.out.println("| 1 | All Promotion\t|");
-                        System.out.print("---------------------\n");
-                        System.out.println("| 2 | Custom       \t|");
-                        System.out.print("---------------------\n");
-                        System.out.print("\nEnter your selection (0 - Back): ");
+                        System.out.println("\nSelect the operation: ");
+                        System.out.println("1. All Promotion");
+                        System.out.println("2. Custom\n");
+                        System.out.print("Enter your selection (0 - Back): ");
 
                         int filterChoice = sc.nextInt();
                         sc.nextLine();
@@ -4218,9 +4336,7 @@ public class SystemClass {
                                 back = true;
                                 break;
                             case 1:
-                                // Set date to null
-                                startDate = null;
-                                endDate = null;
+                                // No action
                                 break;
                             case 2:
                                 while (true) {
@@ -4232,7 +4348,7 @@ public class SystemClass {
 
                                         break; // 日期有效，退出循环
                                     } catch (DateTimeParseException e) {
-                                        System.out.println("\nInvalid date format. Please enter a valid date (yyyy-MM-dd).\n");
+                                        System.out.println("Invalid date format. Please enter a valid date (yyyy-MM-dd).\n");
                                     }
                                 }
 
@@ -4246,34 +4362,35 @@ public class SystemClass {
                                         if (endDate.isAfter(startDate)) {
                                             break; // 日期有效，退出循环
                                         } else {
-                                            System.out.println("\nEnd date must be after start date. Please enter a valid date (yyyy-MM-dd).\n");
+                                            System.out.println("End date must be after start date. Please enter a valid date (yyyy-MM-dd).\n");
                                         }
                                     } catch (DateTimeParseException e) {
-                                        System.out.println("\nInvalid date format. Please enter a valid date (yyyy-MM-dd).\n");
+                                        System.out.println("Invalid date format. Please enter a valid date (yyyy-MM-dd).\n");
                                     }
                                 }
 
                                 break;
                             default:
-                                System.out.println("\nInvalid input. Please retry.");
+                                System.out.println("Invalid input. Please retry.");
                                 error = true;
                         }
 
                         if (back) {
                             // if no this code, it will directly back back back and no stop
                             back = false;
+                            error = true;
                             break;
 
                         } else if (!error) {
                             while (true) {
-                                filteredPromotions = PromotionUtils.filteredPromotionList(startDate, endDate, 1, "view");
+                                filteredPromotions = PromotionUtils.filteredPromotionList(startDate, endDate, 1);
 
                                 if (filteredPromotions.size() > 0) {
                                     int detailsChoice;
 
                                     do {
                                         try {
-                                            System.out.print("\nEnter the promotion no. (0 - Back): ");
+                                            System.out.print("\nEnter the promotion no. to view the details (0 - Back): ");
                                             detailsChoice = sc.nextInt();
                                             sc.nextLine();
 
@@ -4284,17 +4401,16 @@ public class SystemClass {
 
                                             else if (detailsChoice > 0 && detailsChoice <= filteredPromotions.size()) {
                                                 Promotion viewPromotionDetails = filteredPromotions.get(detailsChoice - 1);
-                                                System.out.println("\n\nPrmotion Details: ");
                                                 System.out.println(viewPromotionDetails);
                                             }
 
                                             else {
-                                                System.out.println("\nYour choice is not among the available options! PLease try again.");
+                                                System.out.println("Your choice is not among the available options! PLease try again.");
                                                 error = true;
                                             }
                                         }
                                         catch (InputMismatchException e) {
-                                            System.out.println("\nPlease enter a valid choice!");
+                                            System.out.println("Please enter a valid choice!");
                                             sc.nextLine();
                                             error = true;
                                         }
@@ -4302,13 +4418,8 @@ public class SystemClass {
                                 }
 
                                 else {
-                                    System.out.println("\nOops! There is no any promotion found!\n");
-                                    pressEnterToBack();
-                                    break;
-                                }
-
-                                if (back) {
-                                    back = false;
+                                    System.out.println("\nNo record found!");
+                                    error = true;
                                     break;
                                 }
 
@@ -4323,17 +4434,14 @@ public class SystemClass {
                                     ctnViewPromotion = SystemClass.askForContinue(answer);
                                 } while (ctnViewPromotion.equals("Invalid"));
 
-                                if (ctnViewPromotion.equals("N")) {
-                                    back = true;
+                                if (!ctnViewPromotion.equals("Y") || back) {
+                                    back = false;
                                     break;
                                 }
                             }
-                        }
-                    } while (!back);
 
-                    if (back) {
-                        back = false;
-                    }
+                        }
+                    } while (error);
 
                     break;
 
@@ -4343,7 +4451,7 @@ public class SystemClass {
                         // Create promotion object
                         Promotion newPromotion = new Promotion();
 
-                        System.out.println("\n\nPlease fill in all the following required information: ");
+                        System.out.println("\nPlease fill in all the following required information: ");
 
                         // Set promotion description
                         Promotion_Management.PromotionValidator.checkDescription(sc, newPromotion);
@@ -4363,9 +4471,9 @@ public class SystemClass {
                         // Set promotion end date
                         Promotion_Management.PromotionValidator.checkEndDate(sc, newPromotion, newPromotion.getStartDate());
 
+
                         // Set promotion publish count
                         Promotion_Management.PromotionValidator.checkPublishCount(sc, newPromotion);
-
 
                         String confirmAddPromotion;
 
@@ -4380,15 +4488,9 @@ public class SystemClass {
                             } while (confirmAddPromotion.equals("Invalid"));
 
                             if (confirmAddPromotion.equals("Y")) {
-                                if(newPromotion.add()) {
-                                    System.out.println("\nSuccessfully add the promotion!");
-                                }
-
+                                newPromotion.add();
                                 break;
                             }
-
-                            back = true;
-                            break;
                         }
 
                         String ctnAddPromotion;
@@ -4403,6 +4505,7 @@ public class SystemClass {
                         } while (ctnAddPromotion.equals("Invalid"));
 
                         if (ctnAddPromotion.equals("N")) {
+                            error = true;
                             break;
                         }
                     }
@@ -4414,7 +4517,9 @@ public class SystemClass {
                     int promotionId = 1;
 
                     while (true) {
-                        filteredPromotions = PromotionUtils.filteredPromotionList(null, null, 1, "modify");
+                        System.out.println("\nSelect the promotion you want to modify: \n");
+                        System.out.println("No     Promotion Description");
+                        filteredPromotions = PromotionUtils.filteredPromotionList(null, null, 1);
 
                         if (filteredPromotions == null) {
                             break;
@@ -4448,7 +4553,7 @@ public class SystemClass {
                             do {
                                 back = false;
 
-                                System.out.println(modifiedPromotion.printModify());
+                                System.out.println(modifiedPromotion);
                                 System.out.println("\n(Note: Receive count can't be changed)");
                                 System.out.print("\nEnter the serial number of the promotion information you want to change (0 - Stop): ");
                                 String serialNo = sc.nextLine();
@@ -4462,7 +4567,7 @@ public class SystemClass {
                                         String save;
 
                                         do {
-                                            System.out.println("Do you want to save the changes? (Y / N)");
+                                            System.out.println("\nDo you want to save the changes? (Y / N)");
                                             System.out.print("Answer: ");
                                             String answer = sc.next();
                                             sc.nextLine();
@@ -4472,7 +4577,6 @@ public class SystemClass {
 
                                         if (save.equals("Y")) {
                                             modifiedPromotion.modify();
-                                            System.out.println("\nThe changes have been saved.");
                                         }
 
                                         else {
@@ -4519,6 +4623,7 @@ public class SystemClass {
                     }
 
                     back = false;
+                    error = true;
 
                     break;
 
@@ -4527,7 +4632,8 @@ public class SystemClass {
                     promotionId = 0;
 
                     do {
-                        filteredPromotions = PromotionUtils.filteredPromotionList(null, null, 1, "delete");
+                        System.out.println("\nSelect the promotion you want to delete: ");
+                        filteredPromotions = PromotionUtils.filteredPromotionList(null, null, 1);
 
                         do {
                             try {
@@ -4563,42 +4669,33 @@ public class SystemClass {
                             } while (delete.equals("Invalid"));
 
                             if (delete.equals("Y")) {
-
-                                if (promotion.delete()) {
-                                    System.out.println("\nThe promotion has been deleted.");
-
-                                } else {
-                                    System.out.println("\nSomething went wrong...");
-                                }
+                                promotion.delete();
                             }
-
                             else {
-                                System.out.println("\nThe promotion is saved.");
+                                System.out.println("\nThe movie is saved.");
                             }
-
                             back = true;
-
                         } else {
-
                             back = false;
-
                         }
-
                     } while (back);
 
                     back = false;
+                    error = true;
 
                     break;
 
                 default:
                     System.out.println("Invalid input. Please retry.");
+                    error = true;
             }
 
             if (back) {
                 break;
             }
+        } while (error);
 
-        } while (!back);
+        return back;
     }
 
     private static boolean customerPromotion(Scanner sc, Customer cust) {
@@ -4609,14 +4706,11 @@ public class SystemClass {
         Promotion promotion = new Promotion();
         promotion.setCustomer(cust);
 
-
         do {
-            System.out.println("\n\nSelect the operation: ");
-            System.out.print("---------------------\n");
-            System.out.println("| 1 | New promotion\t|");
-            System.out.print("---------------------\n");
-            System.out.println("| 2 | My promotion \t|");
-            System.out.print("---------------------\n");
+            System.out.println("\nSelect the operation: ");
+            System.out.println("1. New promotion");
+            System.out.println("2. My promotion");
+            // System.out.println("3. Past promotion\n");
             System.out.print("\nEnter your selection (0 - Back): ");
             String operation = sc.nextLine();
 
@@ -4644,13 +4738,11 @@ public class SystemClass {
 
                             int count = 0;
 
-                            System.out.println("\n\nThese are the promotion you can get now: ");
-                            System.out.print("\n-----------------------------------------------------\n");
+                            System.out.println("\nThese are the promotion you can get now: ");
 
                             for(Promotion details: validPromotions) {
                                 count++;
-                                System.out.printf("| %d | %-45s |\n", count, details.getDescription());
-                                System.out.print("-----------------------------------------------------\n");
+                                System.out.printf("%d. %s\n", count, details.getDescription());
                             }
 
                             try {
@@ -4741,15 +4833,13 @@ public class SystemClass {
                             }
 
                             System.out.println("\nYour promotion: ");
-                            System.out.print("-----------------------------------------------------\n");
 
                             int count = 0;
 
                             for(Promotion details: validPromotions) {
                                 if (details.getPromotionStatus() == 1) {
                                     count++;
-                                    System.out.printf("| %d | %-45s |\n", count, details.getDescription());
-                                    System.out.print("-----------------------------------------------------\n");
+                                    System.out.printf("%d. %s\n", count, details.getDescription());
                                 }
                             }
 
@@ -4768,13 +4858,13 @@ public class SystemClass {
                                 else if (detailsChoice > 0 && detailsChoice <= validPromotions.size()) {
                                     promotion = validPromotions.get(detailsChoice - 1);
                                     promotion.setCustomer(cust);
-                                    System.out.println(promotion.viewOwnPromotionDetails());
+                                    System.out.println(promotion.viewOwnPromotionDetails() + "\n");
 
                                     pressEnterToBack();
                                 }
 
                                 else {
-                                    System.out.println("\nYour choice is not among the available options! PLease enter again.");
+                                    System.out.println("Your choice is not among the available options! PLease try again.");
                                 }
                             }
 
@@ -4807,7 +4897,7 @@ public class SystemClass {
         String apply;
 
         do {
-            System.out.println("\nDo you want to apply promotion? (Y / N)");
+            System.out.println("\nDo you want to apply promotion code? (Y/N) : ");
             System.out.print("Answer: ");
             String answer = sc.next().trim();
             sc.nextLine();
@@ -4864,23 +4954,19 @@ public class SystemClass {
 
             for (Promotion validPromotion : validPromotions) {
                 if (i == 1) {
-                    System.out.println("----------------------------------------------");
-                    System.out.printf("| %d | %-15s (Most Prefer) |\n", i, validPromotion.getDescription());
-                    System.out.println("----------------------------------------------");
+                    System.out.printf("%d. %s (Most Prefer)\n", i, validPromotion.getDescription());
                 } else {
-                    System.out.printf("| %d | %-15s               |\n", i, validPromotion.getDescription());
-                    System.out.println("----------------------------------------------");
+                    System.out.printf("%d. %s\n", i, validPromotion.getDescription());
                 }
 
                 i++;
             }
 
-
             boolean ctn = false;
 
             do {
                 try {
-                    System.out.print("\nEnter the promotion no. to apply the promotion (0 - Continue with no promotion): ");
+                    System.out.println("\nEnter the promotion no. to apply the promotion (0 - Continue with no promotion): ");
                     int applyChoice = sc.nextInt();
                     sc.nextLine();
 
@@ -4931,17 +5017,10 @@ public class SystemClass {
                 booking.printBookingDetail();
             }
 
-            int totalWidth = 26;
-            String centeredPaymentMtd = SystemClass.centerText("Payment Method", totalWidth);
-
-            System.out.println("\n\n------------------------------");
-            System.out.printf("| %s |\n", centeredPaymentMtd);
-            System.out.println("------------------------------");
-            System.out.println("| 1 | Credit/Debit Card      |");
-            System.out.println("------------------------------");
-            System.out.println("| 2 | Touch 'n Go            |");
-            System.out.println("------------------------------");
-            System.out.print("\n\nSelect your payment method (0 - Back): ");
+            System.out.println("\nPayment Method: ");
+            System.out.println("1. Credit/Debit Card");
+            System.out.println("2. Touch 'n Go");
+            System.out.print("\nSelect your payment method (0 - Back): ");
 
             paymentMethod = sc.nextLine().trim();
 
@@ -4995,7 +5074,7 @@ public class SystemClass {
                         break;
 
                     default:
-                        System.out.println("\nInvalid selection. Please retry.");
+                        System.out.println("Invalid selection. Please retry.");
                         back = true;
                 }
 
@@ -5041,7 +5120,7 @@ public class SystemClass {
                     booking.getPromotion().custApplyPromotion(booking);
                 }
 
-                System.out.println("\n\n\n\t\tPayment Successfully! Thanks for your payment.\n");
+                System.out.println("\nPayment Successfully! Thanks for your payment.");
 
                 return validPayment;
             }
@@ -5064,7 +5143,6 @@ public class SystemClass {
                     try {
                         // Cancel booking
                         booking.cancelBooking();
-                        Payment.setNextPaymentId(validPayment.getPaymentId() - 1);
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }
@@ -5228,7 +5306,7 @@ public class SystemClass {
         }
     }
 
-    public static void pressEnterToBack() {
+    private static void pressEnterToBack() {
         System.out.print("Press Enter to back...");
 
         try {
@@ -5238,7 +5316,7 @@ public class SystemClass {
         }
     }
 
-    public static void pressEnterToContinue() {
+    private static void pressEnterToContinue() {
         System.out.print("Press Enter to continue...");
 
         try {
@@ -5246,13 +5324,5 @@ public class SystemClass {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public static String centerText(String text, int totalWidth) {
-        int textWidth = text.length();
-        int leftPadding = (totalWidth - textWidth) / 2;
-        int rightPadding = totalWidth - textWidth - leftPadding;
-
-        return " ".repeat(leftPadding) + text + " ".repeat(rightPadding);
     }
 }

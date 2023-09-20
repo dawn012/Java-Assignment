@@ -24,17 +24,6 @@ public class Customer extends User {
         this.accStatus = accStatus;
     }
 
-    public static User findUserByUsername(String username) {
-        ArrayList<User> userList = getAllUsers();
-        User foundUser = null;
-        for (User user : userList) {
-            if (user.getLogin().getUsername().equals(username)) {
-                foundUser = user;
-                break;
-            }
-        }
-        return foundUser;
-    }
 
     public void add() {
         int rowAffected = 0;
@@ -109,6 +98,11 @@ public class Customer extends User {
         System.out.println("Please Confirm Your Password: ");
         String confirmPassword = RegisterValidator.validatePasswordConfirmation(input, password);
 
+
+        System.out.println("Please Enter Your Gender: ");
+        String gender = RegisterValidator.validateGender(input);
+        ((Customer)newUser).setGender(gender);
+
         System.out.println("Please Enter Your email: ");
         String email = RegisterValidator.validateEmail(input);
         ((Customer)newUser).setEmail(email);
@@ -119,6 +113,10 @@ public class Customer extends User {
         String dob = RegisterValidator.validateDateOfBirth(input);
         newUser.setDOB(dob);
 
+        System.out.println("Please Enter Your Phone Number : ");
+        String phone = RegisterValidator.validatePhoneNumber(input);
+        ((Customer)newUser).setPhoneNo(phone);
+
         newUser.add();
 
         return newUser;
@@ -127,21 +125,23 @@ public class Customer extends User {
     public void viewAllCustomers() {
         ArrayList<User> custList = getCustomerDataFromDatabase();
 
-
         System.out.println("\nAll Customers:\n");
-        System.out.println(String.format("%-10s %-15s %-30s %-15s %-15s", "User ID", "Username", "Email", "Date of Birth", "Account Status"));
+        System.out.println(String.format("%-10s %-15s %-30s %-15s %-15s %-15s %-15s", "User ID", "Username", "Email", "Gender", "Phone No", "Date of Birth", "Account Status"));
         System.out.println("----------------------------------------------------------------------------------------------");
 
         for (User customer : custList) {
             int userId = customer.getUserId();
             String username = customer.getLogin().getUsername();
             String email = customer.getEmail();
+            String gender = customer.getGender();
+            String phoneNo = customer.getPhoneNo();
             String dob = customer.getDOB();
             String accStatus = ((Customer) customer).getAccStatus();
 
-            System.out.println(String.format("%-10d %-15s %-30s %-15s %-15s", userId, username, email, dob, accStatus));
+            System.out.println(String.format("%-10d %-15s %-30s %-15s %-15s %-15s %-15s", userId, username, email, gender, phoneNo, dob, accStatus));
         }
     }
+
 
     private ArrayList<User> getCustomerDataFromDatabase() {
         ArrayList<User> custList = new ArrayList<>();
@@ -153,6 +153,8 @@ public class Customer extends User {
                 int userId = resultSet.getInt("userID");
                 String username = resultSet.getString("username");
                 String email = resultSet.getString("email");
+                String gender = resultSet.getString("gender");
+                String phone = resultSet.getString("phoneNo");
                 String dob = resultSet.getString("DOB");
                 String accStatus = resultSet.getString("accStatus");
 
@@ -162,6 +164,8 @@ public class Customer extends User {
                 customer.setEmail(email);
                 customer.setDOB(dob);
                 customer.setAccStatus(accStatus);
+                customer.setGender(gender);
+                customer.setPhoneNo(phone);
 
                 custList.add(customer);
             }
@@ -198,6 +202,8 @@ public class Customer extends User {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder(super.toString());
+        sb.append("Gender        : ").append(getGender()).append("\n");
+        sb.append("Phone Number  : ").append(getPhoneNo()).append("\n");
         sb.append("Account Status: ").append(getAccStatus()).append("\n");
         return sb.toString();
     }

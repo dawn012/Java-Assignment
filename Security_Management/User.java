@@ -184,11 +184,12 @@ public abstract class User{
                     System.out.println("1. Username        : " + user.getLogin().getUsername());
                     System.out.println("2. Email           : " + user.getEmail());
                     System.out.println("3. Date of Birth   : " + user.getDOB());
+                    System.out.println("4. Gender          : " + user.getGender());
+                    System.out.println("5. Phone Number    : " + user.getPhoneNo());
 
                     if (user instanceof Admin) {
-                        System.out.println("4. Password    : " + user.getLogin().getPassword());
-                        System.out.println("5. Gender      : " + ((Admin) user).getGender());
-                        System.out.println("6. Phone Number: " + ((Admin) user).getPhoneNo());
+                        System.out.println("6. Password        : " + user.getLogin().getPassword());
+
                     }
 
                     System.out.println("0. Editing completed");
@@ -232,31 +233,42 @@ public abstract class User{
                     System.out.println("Date of birth updated to: " + newDOB);
                     break;
                 case 4:
-                    System.out.print("Enter new password: ");
-                    String newPassword = RegisterValidator.validatePassword(scanner);
-                    user.getLogin().setPassword(newPassword);
-                    System.out.println("Password updated.");
-                    break;
-                case 5:
                     if (user instanceof Admin) {
                         System.out.print("Enter new gender: ");
                         String newGender = RegisterValidator.validateGender(scanner);
                         ((Admin) user).setGender(newGender);
                         System.out.println("Gender updated to: " + newGender);
+                    } else if (user instanceof Customer) {
+                        System.out.print("Enter new gender: ");
+                        String newGender = RegisterValidator.validateGender(scanner);
+                        ((Customer) user).setGender(newGender);
+                        System.out.println("Gender updated to: " + newGender);
                     } else {
                         System.out.println("Invalid choice. Please select a valid option.");
                     }
                     break;
-                case 6:
+                case 5:
                     if (user instanceof Admin) {
                         System.out.print("Enter new phone number: ");
                         String newPhoneNo = RegisterValidator.validatePhoneNumber(scanner);
                         ((Admin) user).setPhoneNo(newPhoneNo);
                         System.out.println("Phone number updated to: " + newPhoneNo);
-
+                    } else if (user instanceof Customer) {
+                        System.out.print("Enter new phone number: ");
+                        String newPhoneNo = RegisterValidator.validatePhoneNumber(scanner);
+                        ((Customer) user).setPhoneNo(newPhoneNo);
+                        System.out.println("Phone number updated to: " + newPhoneNo);
                     } else {
                         System.out.println("Invalid choice. Please select a valid option.");
                     }
+                    break;
+                case 6:
+
+                        System.out.print("Enter new password: ");
+                        String newPass = RegisterValidator.validatePassword(scanner);
+                        user.getLogin().setPassword(newPass);
+                        System.out.println("Phone number updated to: " + newPass);
+
                     break;
                 default:
                     System.out.println("Invalid choice. Please select a valid option.");
@@ -264,6 +276,7 @@ public abstract class User{
             }
         }
     }
+
 
     public int getUserId() {
         if (this instanceof Customer) {
@@ -325,7 +338,7 @@ public abstract class User{
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("User ID       : ").append(getUserId()).append("\n");
+        sb.append("\nUser ID       : ").append(getUserId()).append("\n");
         sb.append("Username      : ").append(getLogin().getUsername()).append("\n");
         sb.append("Email         : ").append(getEmail()).append("\n");
         sb.append("Date of Birth : ").append(getDOB()).append("\n");

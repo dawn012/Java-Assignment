@@ -123,7 +123,7 @@ public class Admin extends User {
             int rowsUpdated = DatabaseUtils.updateQuery(updateSql, newStatus, userId);
 
             if (rowsUpdated > 0) {
-                System.out.println("User account with ID " + userId + " has been " + (newStatus.equals("active") ? "unblocked." : "blocked."));
+                System.out.println("\n\nUser account with ID " + userId + " has been " + (newStatus.equals("active") ? "unblocked." : "blocked."));
             } else {
                 System.out.println("Failed to update user account status.");
             }
@@ -134,7 +134,6 @@ public class Admin extends User {
 
     public void viewAllAdmins() {
         ArrayList<User> adminList = getAdminDataFromDatabase();
-        System.out.println(adminList);
 
         System.out.println("\nAll Admins:\n");
 
@@ -146,8 +145,8 @@ public class Admin extends User {
             String username = admin.getLogin().getUsername();
             String email = admin.getEmail();
             String dob = admin.getDOB();
-            String gender = ((Admin) admin).getGender();
-            String phoneNo = ((Admin) admin).getPhoneNo();
+            String gender = admin.getGender();
+            String phoneNo = admin.getPhoneNo();
 
             System.out.println(String.format("%-10d %-15s %-30s %-15s %-10s %-15s", userId, username, email, dob, gender, phoneNo));
         }

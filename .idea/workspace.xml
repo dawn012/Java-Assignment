@@ -5,8 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="design">
+    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Database/DatabaseUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/Database/DatabaseUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Driver/SystemClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/Driver/SystemClass.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Seat_Management/TestDriver.java" beforeDir="false" afterPath="$PROJECT_DIR$/Seat_Management/TestDriver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Security_Management/Admin.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/Admin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Security_Management/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/Customer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Security_Management/Login.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/Login.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Security_Management/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/User.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,6 +133,7 @@
       <list>
         <item itemvalue="Application.Driver" />
         <item itemvalue="Application.LoginDriver" />
+        <item itemvalue="Application.AdminDriver" />
       </list>
     </recent_temporary>
   </component>
@@ -397,29 +405,26 @@
       <option name="project" value="LOCAL" />
       <updated>1695007043871</updated>
     </task>
-    <task id="LOCAL-00034" summary="debug">
-      <option name="closed" value="true" />
-      <created>1695169723390</created>
+    <task id="LOCAL-00034" summary="fix file">
+      <created>1695007374768</created>
       <option name="number" value="00034" />
       <option name="presentableId" value="LOCAL-00034" />
       <option name="project" value="LOCAL" />
-      <updated>1695169723390</updated>
+      <updated>1695007374768</updated>
     </task>
-    <task id="LOCAL-00035" summary="debug">
-      <option name="closed" value="true" />
-      <created>1695194681925</created>
+    <task id="LOCAL-00035" summary="fix bug">
+      <created>1695007847122</created>
       <option name="number" value="00035" />
       <option name="presentableId" value="LOCAL-00035" />
       <option name="project" value="LOCAL" />
-      <updated>1695194681925</updated>
+      <updated>1695007847122</updated>
     </task>
-    <task id="LOCAL-00036" summary="design">
-      <option name="closed" value="true" />
-      <created>1695203417849</created>
+    <task id="LOCAL-00036" summary="upgrade function">
+      <created>1695031796818</created>
       <option name="number" value="00036" />
       <option name="presentableId" value="LOCAL-00036" />
       <option name="project" value="LOCAL" />
-      <updated>1695203417849</updated>
+      <updated>1695031796819</updated>
     </task>
     <task id="LOCAL-00037" summary="fix bug">
       <created>1695032022749</created>
@@ -470,13 +475,33 @@
       <option name="project" value="LOCAL" />
       <updated>1695103499841</updated>
     </task>
-    <task id="LOCAL-00044" summary="change the gender and phone from admin to customer">
-      <option name="closed" value="true" />
-      <created>1695121680217</created>
+    <task id="LOCAL-00044" summary="fix">
+      <created>1695105108583</created>
       <option name="number" value="00044" />
       <option name="presentableId" value="LOCAL-00044" />
       <option name="project" value="LOCAL" />
-      <updated>1695121680217</updated>
+      <updated>1695105108583</updated>
+    </task>
+    <task id="LOCAL-00045" summary="fix">
+      <created>1695113657414</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1695113657414</updated>
+    </task>
+    <task id="LOCAL-00046" summary="fix">
+      <created>1695113688075</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1695113688075</updated>
+    </task>
+    <task id="LOCAL-00047" summary="fix">
+      <created>1695115397087</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1695115397087</updated>
     </task>
     <task id="LOCAL-00045" summary="design">
       <option name="closed" value="true" />
@@ -487,6 +512,21 @@
       <updated>1695211809148</updated>
     </task>
     <option name="localTasksCounter" value="46" />
+    <task id="LOCAL-00048" summary="fix">
+      <created>1695116578830</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1695116578830</updated>
+    </task>
+    <task id="LOCAL-00049" summary="fix">
+      <created>1695199061516</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1695199061516</updated>
+    </task>
+    <option name="localTasksCounter" value="50" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -535,6 +575,10 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <MESSAGE value="add the package" />
+    <MESSAGE value="add the sql" />
+    <MESSAGE value="add the yong package" />
+    <MESSAGE value="change the hall package" />
     <MESSAGE value="change the SystemClass.java" />
     <MESSAGE value="change the directory to package" />
     <MESSAGE value="change the sql.txt" />
@@ -556,6 +600,7 @@
     <MESSAGE value="upgrade function" />
     <MESSAGE value="fix bug" />
     <MESSAGE value="fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix" />
     <MESSAGE value="change the gender and phone from admin to customer" />
     <MESSAGE value="debug report" />
     <MESSAGE value="debug" />
