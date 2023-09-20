@@ -39,7 +39,7 @@ public class TestDriver {
 
 
 //        Object[] params = {1};
-//        ResultSet result = DatabaseUtils.selectQueryById("*", "seat", null, null);
+//        ResultSet result = DatabaseUtils.selectQuery("*", "seat", null, null);
 //        String id=" ";
 //        while (result.next()) {
 //            //Movie movie = new Movie(id, mvName, releaseDate, duration, lang, director, writter, starring, musicProvider, country, metaDescription, childTicketPrice, adultTicketPrice);
@@ -149,7 +149,8 @@ public class TestDriver {
 
         Customer customer = new Customer();
         customer.setCustId(1);
-
+        /*
         Booking.viewBookingHistory(customer);
+        */
     }
 }

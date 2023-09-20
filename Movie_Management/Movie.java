@@ -54,7 +54,7 @@ public class Movie implements DatabaseOperations {
 
         try {
             Object[] params = {genre.getGenreID()};
-            result = DatabaseUtils.selectQueryById("genre_name", "genre", "genre_id = ?", params);
+            result = DatabaseUtils.selectQuery("genre_name", "genre", "genre_id = ?", params);
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -119,7 +119,7 @@ public class Movie implements DatabaseOperations {
         do {
             try {
                 Object[] params = {genre.getGenreID()};
-                ResultSet result = DatabaseUtils.selectQueryById("genre_name", "genre", "genre_id = ?", params);
+                ResultSet result = DatabaseUtils.selectQuery("genre_name", "genre", "genre_id = ?", params);
 
                 try {
                     int count = 1;
@@ -217,7 +217,7 @@ public class Movie implements DatabaseOperations {
 
         try {
             Object[] params = {movieID};
-            rowAffected = DatabaseUtils.deleteQueryById("movie", "movie_status", "movie_id", params);
+            rowAffected = DatabaseUtils.delectQuery("movie", "movie_status", "movie_id", params);
         }
         catch (SQLException e) {
             e.printStackTrace();

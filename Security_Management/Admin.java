@@ -72,90 +72,6 @@ public class Admin extends User {
         newAdmin.add();
         return newAdmin;
     }
-   /* public static ArrayList<User> getAllUsers() {
-        ArrayList<User> userList = new ArrayList<>();
-
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet resultSet = null;
-
-        try {
-            conn = DatabaseUtils.getConnection();
-            String sql = "SELECT * FROM User";
-            stmt = conn.prepareStatement(sql);
-            resultSet = stmt.executeQuery();
-
-            while (resultSet.next()) {
-                int userId = resultSet.getInt("userID");
-                String username = resultSet.getString("username");
-                String gender = resultSet.getString("gender");
-                String password = resultSet.getString("password");
-                String email = resultSet.getString("email");
-                String userType = resultSet.getString("userType");
-                String DOB = resultSet.getString("DOB");
-                String phoneNo = resultSet.getString("phoneNo");
-                String accStatus = resultSet.getString("accStatus");
-
-                User user;
-                if ("cust".equals(userType)) {
-                    user = new Customer(userId, new Login(username, password), email, DOB, userType, accStatus);
-                } else {
-                    user = new Admin(new Login(username, password), email, DOB, userType, userId, gender, phoneNo);
-                }
-                userList.add(user);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (resultSet != null) resultSet.close();
-                if (stmt != null) stmt.close();
-                if (conn != null) conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return userList;
-    }*/
-
-    public static ArrayList<User> getAllUsers() {
-        ArrayList<User> userList = new ArrayList<>();
-
-        try {
-            ResultSet resultSet = DatabaseUtils.selectQueryById("*", "User", null,null);
-
-            while (resultSet.next()) {
-                int userId = resultSet.getInt("userID");
-                String username = resultSet.getString("username");
-                String gender = resultSet.getString("gender");
-                String password = resultSet.getString("password");
-                String email = resultSet.getString("email");
-                String userType = resultSet.getString("userType");
-                String DOB = resultSet.getString("DOB");
-                String phoneNo = resultSet.getString("phoneNo");
-                String accStatus = resultSet.getString("accStatus");
-
-                User user;
-                if ("cust".equals(userType)) {
-                    user = new Customer(userId, new Login(username, password), email, DOB, userType, accStatus);
-                } else {
-                    user = new Admin(new Login(username, password), email, DOB, userType, gender, phoneNo, userId);
-                }
-                userList.add(user);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return userList;
-    }
-
-    public static void printArrayList(ArrayList<?> list) {
-        for (Object item : list) {
-            System.out.println(item);
-        }
-    }
 
     public void manageAccountStatus() {
         Scanner scanner = new Scanner(System.in);
@@ -242,7 +158,7 @@ public class Admin extends User {
 
         try {
             String sql = "SELECT * FROM User WHERE userType = 'admin'";
-            ResultSet resultSet = DatabaseUtils.selectQueryById("*", "User", "userType = 'admin'");
+            ResultSet resultSet = DatabaseUtils.selectQuery("*", "User", "userType = 'admin'");
 
             while (resultSet.next()) {
                 int userId = resultSet.getInt("userID");
@@ -283,7 +199,7 @@ public class Admin extends User {
         if (confirmation.equals("y")) {
             try {
                 String sql = "DELETE FROM User WHERE userID = ?";
-                int rowsAffected = DatabaseUtils.deleteQueryById("User", "accStatus", "userID", userId);
+                int rowsAffected = DatabaseUtils.delectQuery("User", "accStatus", "userID", userId);
 
                 if (rowsAffected > 0) {
                     System.out.println("User with ID " + userId + " has been deleted successfully.");

@@ -49,7 +49,7 @@ public class Schedule implements DatabaseOperations {
         ResultSet result = null;
         try {
             Object[] params = {hall.getHallID(), String.valueOf(showDate.getDate()), 1};
-            result = DatabaseUtils.selectQueryById("*", "timeTable", "hall_id = ? AND movie_showDate = ? AND timeTable_status = ?", params);
+            result = DatabaseUtils.selectQuery("*", "timeTable", "hall_id = ? AND movie_showDate = ? AND timeTable_status = ?", params);
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -68,7 +68,7 @@ public class Schedule implements DatabaseOperations {
 
             try {
                 Object[] params = {movieID};
-                result2 = DatabaseUtils.selectQueryById("*", "movie", "movie_id = ? LIMIT 1", params);
+                result2 = DatabaseUtils.selectQuery("*", "movie", "movie_id = ? LIMIT 1", params);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -235,7 +235,7 @@ public class Schedule implements DatabaseOperations {
 
         try {
             Object[] params = {scheduleID};
-            rowAffected = DatabaseUtils.deleteQueryById("timeTable", "timeTable_status", "schedule_id", params);
+            rowAffected = DatabaseUtils.delectQuery("timeTable", "timeTable_status", "schedule_id", params);
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -272,7 +272,7 @@ public class Schedule implements DatabaseOperations {
         ResultSet result = null;
         try {
             Object[] params = {hall.getHallID(), movie.getMovieID(), String.valueOf(showDate.getDate()), 1};
-            result = DatabaseUtils.selectQueryById("*", "timeTable", "hall_id = ? AND movie_id = ? AND movie_showDate = ? AND timeTable_status = ?", params);
+            result = DatabaseUtils.selectQuery("*", "timeTable", "hall_id = ? AND movie_id = ? AND movie_showDate = ? AND timeTable_status = ?", params);
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -340,7 +340,7 @@ public class Schedule implements DatabaseOperations {
 
         try {
             Object[] params2 = {getHall().getHallID(), showDate};
-            result = DatabaseUtils.selectQueryById("movie_startTime, movie_endTime", "timeTable", "hall_id = ? AND movie_showDate = ?", params2);
+            result = DatabaseUtils.selectQuery("movie_startTime, movie_endTime", "timeTable", "hall_id = ? AND movie_showDate = ?", params2);
         }
         catch (SQLException e) {
             e.printStackTrace();

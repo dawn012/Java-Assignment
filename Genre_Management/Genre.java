@@ -36,7 +36,7 @@ public class Genre implements DatabaseOperations {
 
         try {
             Object[] params = {status};
-            result = DatabaseUtils.selectQueryById("*", "genre", "genre_status = ?", params);
+            result = DatabaseUtils.selectQuery("*", "genre", "genre_status = ?", params);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -117,7 +117,7 @@ public class Genre implements DatabaseOperations {
 
         try {
             Object[] params = {genreID};
-            rowAffected = DatabaseUtils.deleteQueryById("genre", "genre_status", "genre_id", params);
+            rowAffected = DatabaseUtils.delectQuery("genre", "genre_status", "genre_id", params);
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -149,7 +149,7 @@ public class Genre implements DatabaseOperations {
 
     public int getPost() throws SQLException {
         Object[] params = {1, genreID};
-        ResultSet result = DatabaseUtils.selectQueryById("count(*) AS POST", "movie m, genre g", "m.genre_id = g.genre_id AND m.movie_status = ? AND g.genre_id = ?", params);
+        ResultSet result = DatabaseUtils.selectQuery("count(*) AS POST", "movie m, genre g", "m.genre_id = g.genre_id AND m.movie_status = ? AND g.genre_id = ?", params);
         while (result.next()) {
             post = result.getInt("post");
         }

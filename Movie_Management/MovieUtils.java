@@ -24,11 +24,11 @@ public class MovieUtils {
         try {
             if (mvName != null && genre == null) {  // search by movie name
                 Object[] params = {"%" + mvName + "%", 1};
-                result = DatabaseUtils.selectQueryById("*", "movie", "mv_name LIKE ? AND release_date >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH) AND movie_status = ?", params);
+                result = DatabaseUtils.selectQuery("*", "movie", "mv_name LIKE ? AND release_date >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH) AND movie_status = ?", params);
             }
             else if (mvName == null && genre != null) {  // search by genre
                 Object[] params = {genre.getGenreID(), 1};
-                result = DatabaseUtils.selectQueryById("*", "movie", "genre_id = ? AND release_date >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH) AND movie_status = ?", params);
+                result = DatabaseUtils.selectQuery("*", "movie", "genre_id = ? AND release_date >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH) AND movie_status = ?", params);
             }
             else {
                 // 查询条件为空，不执行查询
@@ -162,7 +162,7 @@ public class MovieUtils {
 
         try {
             Object[] params = {status};
-            ResultSet result = DatabaseUtils.selectQueryById("*", "movie", "movie_status = ?", params);
+            ResultSet result = DatabaseUtils.selectQuery("*", "movie", "movie_status = ?", params);
 
             while (result.next()) {
                 Movie movie = new Movie();
@@ -321,6 +321,7 @@ public class MovieUtils {
         return 0;
     }
 
+    // For designing the output
     public static void printWrappedTextForSynopsis(String header, String text, int lineLength) {
         String[] lines = text.split("\\s+");
         String border = new String(new char[lineLength]).replace('\0', '-');
@@ -346,6 +347,7 @@ public class MovieUtils {
         }
     }
 
+    // For designing the output
     public static void printEditWrappedTextForSynopsis(String header, String text, int lineLength, int num) {
         String[] lines = text.split("\\s+");
         String border = new String(new char[lineLength]).replace('\0', '-');

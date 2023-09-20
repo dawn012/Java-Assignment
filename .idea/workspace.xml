@@ -5,11 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="design">
+    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Driver/DateTime.java" beforeDir="false" afterPath="$PROJECT_DIR$/Driver/DateTime.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Driver/SystemClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/Driver/SystemClass.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Payment_Management/Payment.java" beforeDir="false" afterPath="$PROJECT_DIR$/Payment_Management/Payment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Promotion_Management/Promotion.java" beforeDir="false" afterPath="$PROJECT_DIR$/Promotion_Management/Promotion.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Receipt_Management/Receipt.java" beforeDir="false" afterPath="$PROJECT_DIR$/Receipt_Management/Receipt.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report_Management/BoxOfficeReport.java" beforeDir="false" afterPath="$PROJECT_DIR$/Report_Management/BoxOfficeReport.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -127,9 +130,6 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.Driver" />
-        <item itemvalue="Application.Driver" />
-        <item itemvalue="Application.AdminDriver" />
-        <item itemvalue="Application.LoginDriver" />
         <item itemvalue="Application.LoginDriver" />
       </list>
     </recent_temporary>
@@ -374,37 +374,33 @@
       <option name="project" value="LOCAL" />
       <updated>1694954172519</updated>
     </task>
-    <task id="LOCAL-00030" summary="debug">
-      <option name="closed" value="true" />
-      <created>1695130848027</created>
+    <task id="LOCAL-00030" summary="add new file">
+      <created>1694954377499</created>
       <option name="number" value="00030" />
       <option name="presentableId" value="LOCAL-00030" />
       <option name="project" value="LOCAL" />
-      <updated>1695130848027</updated>
+      <updated>1694954377499</updated>
     </task>
-    <task id="LOCAL-00031" summary="debug report">
-      <option name="closed" value="true" />
-      <created>1695154105769</created>
+    <task id="LOCAL-00031" summary="add new file">
+      <created>1695004343601</created>
       <option name="number" value="00031" />
       <option name="presentableId" value="LOCAL-00031" />
       <option name="project" value="LOCAL" />
-      <updated>1695154105769</updated>
+      <updated>1695004343601</updated>
     </task>
-    <task id="LOCAL-00032" summary="debug report">
-      <option name="closed" value="true" />
-      <created>1695154118196</created>
+    <task id="LOCAL-00032" summary="delete file">
+      <created>1695004843084</created>
       <option name="number" value="00032" />
       <option name="presentableId" value="LOCAL-00032" />
       <option name="project" value="LOCAL" />
-      <updated>1695154118196</updated>
+      <updated>1695004843084</updated>
     </task>
-    <task id="LOCAL-00033" summary="debug">
-      <option name="closed" value="true" />
-      <created>1695157850895</created>
+    <task id="LOCAL-00033" summary="add file">
+      <created>1695007043871</created>
       <option name="number" value="00033" />
       <option name="presentableId" value="LOCAL-00033" />
       <option name="project" value="LOCAL" />
-      <updated>1695157850895</updated>
+      <updated>1695007043871</updated>
     </task>
     <task id="LOCAL-00034" summary="debug">
       <option name="closed" value="true" />
@@ -488,6 +484,7 @@
       <updated>1695121680217</updated>
     </task>
     <option name="localTasksCounter" value="37" />
+    <option name="localTasksCounter" value="45" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -562,6 +559,7 @@
     <MESSAGE value="debug" />
     <MESSAGE value="design" />
     <option name="LAST_COMMIT_MESSAGE" value="design" />
+    <option name="LAST_COMMIT_MESSAGE" value="change the gender and phone from admin to customer" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

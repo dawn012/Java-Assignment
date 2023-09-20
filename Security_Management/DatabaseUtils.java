@@ -5,7 +5,7 @@ import java.sql.*;
 public class DatabaseUtils {
     private static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/cinema";
     private static final String DB_UNAME = "root";
-    private static final String DB_PSD = "";
+    private static final String DB_PSD = "qwerty";
 
     // 不能创建对象
     private DatabaseUtils() {
@@ -16,7 +16,7 @@ public class DatabaseUtils {
         return DriverManager.getConnection(DB_URL, DB_UNAME, DB_PSD);
     }
 
-    public static ResultSet selectQueryById(String selectedThing, String tableName, String idColumn, Object... params) throws SQLException {
+    public static ResultSet selectQuery(String selectedThing, String tableName, String idColumn, Object... params) throws SQLException {
         try {
             Connection conn = getConnection();
 
@@ -79,7 +79,7 @@ public class DatabaseUtils {
         }
     }
 
-    public static int deleteQueryById(String tableName, String statusColumnName, String idColumn, Object... params) throws SQLException {
+    public static int delectQuery(String tableName, String statusColumnName, String idColumn, Object... params) throws SQLException {
         try {
             Connection conn = getConnection();
 

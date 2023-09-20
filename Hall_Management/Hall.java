@@ -118,7 +118,7 @@ public class Hall {
 
         try {
             Object[] params = {getHallID()};
-            rowAffected = DatabaseUtils.deleteQueryById("hall", "hall_status", "hall_id", params);
+            rowAffected = DatabaseUtils.delectQuery("hall", "hall_status", "hall_id", params);
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -140,7 +140,7 @@ public class Hall {
 
         try {
             Object[] params = {this.hallID};
-            ResultSet result = DatabaseUtils.selectQueryById("*", "seat", "hall_id = ?", params);
+            ResultSet result = DatabaseUtils.selectQuery("*", "seat", "hall_id = ?", params);
 
             while (result.next()) {
                 Seat seat = new Seat();
@@ -213,7 +213,7 @@ public class Hall {
 
         try {
             Object[] params = {hallName.getName()};
-            ResultSet result = DatabaseUtils.selectQueryById("*", "hall", "hall_name = ?", params);
+            ResultSet result = DatabaseUtils.selectQuery("*", "hall", "hall_name = ?", params);
 
             while (result.next()) {
 

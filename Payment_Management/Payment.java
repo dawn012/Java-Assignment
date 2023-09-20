@@ -135,7 +135,7 @@ public abstract class Payment {
         ResultSet rs;
 
         try {
-            rs = DatabaseUtils.selectQueryById("COUNT(*)", "PAYMENT", null, params);
+            rs = DatabaseUtils.selectQuery("COUNT(*)", "PAYMENT", null, params);
 
             // 获取整数结果
             if (rs.next()) {

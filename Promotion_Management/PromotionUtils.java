@@ -18,7 +18,7 @@ public class PromotionUtils {
         Object[] params = {status};
 
         try {
-            rs = DatabaseUtils.selectQueryById("*", "PROMOTION", "PROMOTION_STATUS = ?", params);
+            rs = DatabaseUtils.selectQuery("*", "PROMOTION", "PROMOTION_STATUS = ?", params);
 
             while (rs.next()) {
                 Promotion promotion = new Promotion();

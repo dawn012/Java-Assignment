@@ -21,18 +21,6 @@ public class Ticket {
         this.ticketStatus=1;
     }
 
-//    public Ticket(int ticket_id, Seat seat, Booking booking) {
-//        this.ticket_id = ticket_id;
-//        this.seat = seat;
-//        this.booking = booking;
-//    }
-//    public Ticket(int ticket_id, Seat seat, Schedule schedule) {
-//        this.ticket_id = ticket_id;
-//        this.seat = seat;
-//        this.schedule = schedule;
-//        this.ticketStatus=1;
-//    }
-
     public Ticket(int ticket_id, Seat seat, String ticketType, double priceRate, Schedule schedule) {
         this.ticketId = ticket_id;
         this.seat = seat;
@@ -70,7 +58,7 @@ public class Ticket {
         ArrayList<Ticket> tickets = new ArrayList<>();
         try {
             Object[] params = {};
-            ResultSet result = DatabaseUtils.selectQueryById("*", "ticket",null,null);
+            ResultSet result = DatabaseUtils.selectQuery("*", "ticket",null,null);
 
             while (result.next()) {
                 Ticket ticket = new Ticket();
@@ -92,8 +80,6 @@ public class Ticket {
         catch (SQLException e) {
             e.printStackTrace();
         }
-
-
 
         for(Ticket t:tickets){
             if(t.getTicket_id()>=largeId)
@@ -128,32 +114,14 @@ public class Ticket {
 
 
     //--------------------------------------------------------------------------------------------------------------------------------
-//    public void addTicket() throws Exception {
-//        int rowAffected = 0;
-//
-//        try {
-//            String insertSql = "INSERT INTO `ticket` (`ticket_id`,`booking_id`,``,`seat_id`,`schedule_id`,`ticket_type`,`price_rate`) value(?,?,?,?,?,?);";
-//            Object[] params = {getSeat_id(),this.hall.getHallID(),getSeatRow(),getSeatCol(),getSeat_status()};
-//            rowAffected = DatabaseUtils.insertQuery(insertSql, params);
-//        }
-//        catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        if (rowAffected > 0) {
-//            System.out.println("\nSeat successfully added...");
-//        }
-//        else {
-//            System.out.println("\nSomething went wrong!");
-//        }
-//    }
+
     public static ArrayList<Ticket> getBookedTicketList(){
         boolean error = false;
         ArrayList<Ticket> tickets = new ArrayList<>();
 
         try {
             Object[] params = {1};
-            ResultSet result = DatabaseUtils.selectQueryById("*", "ticket","ticket_status = ?",params);
+            ResultSet result = DatabaseUtils.selectQuery("*", "ticket","ticket_status = ?",params);
 
             while (result.next()) {
 
@@ -196,7 +164,7 @@ public class Ticket {
 
         try {
             Object[] params = {schedule_id,1};
-            ResultSet result = DatabaseUtils.selectQueryById("*", "ticket","schedule_id = ? AND ticket_status = ?",params);
+            ResultSet result = DatabaseUtils.selectQuery("*", "ticket","schedule_id = ? AND ticket_status = ?",params);
             //Ticket ticket = null;
             while (result.next()) {
 
@@ -251,7 +219,6 @@ public class Ticket {
     }
     public double calculateTicketPrice(){
         return this.schedule.getMovie().getBasicTicketPrice()*this.priceRate;
-        //return movie.getBasicTicketPrice()*this.price_rate;
 
     }
     public boolean updateStatus() throws SQLException {
@@ -267,7 +234,6 @@ public class Ticket {
         }
 
         if (rowAffected > 0) {
-            //System.out.println("\nThe changes have been saved.");
             return true;
         }
         else {
@@ -278,3 +244,22 @@ public class Ticket {
 
 
 }
+//    public void addTicket() throws Exception {
+//        int rowAffected = 0;
+//
+//        try {
+//            String insertSql = "INSERT INTO `ticket` (`ticket_id`,`booking_id`,``,`seat_id`,`schedule_id`,`ticket_type`,`price_rate`) value(?,?,?,?,?,?);";
+//            Object[] params = {getSeat_id(),this.hall.getHallID(),getSeatRow(),getSeatCol(),getSeat_status()};
+//            rowAffected = DatabaseUtils.insertQuery(insertSql, params);
+//        }
+//        catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//
+//        if (rowAffected > 0) {
+//            System.out.println("\nSeat successfully added...");
+//        }
+//        else {
+//            System.out.println("\nSomething went wrong!");
+//        }
+//    }
