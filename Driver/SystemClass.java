@@ -528,7 +528,7 @@ public class SystemClass {
                     c.setCustId(1);//暂时用
                     //Booking.viewBookingHistory(c);
                     boolean skip=false;
-                    Customer customer = new Customer();
+                    customer = new Customer();
                     customer.setCustId(1);
                     int periodSelected = 0;
                     error = true;
