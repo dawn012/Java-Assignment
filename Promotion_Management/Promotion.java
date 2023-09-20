@@ -356,22 +356,48 @@ public class Promotion implements DatabaseOperations {
     }
 
     public String viewNewPromotionDetails() {
-        return  "\n" + description
-                + "\n1. Discount value : " + discountValue
-                + "\n2. Minimum Spend : " + minSpend
-                + "\n3. Start date : " + startDate.getDate()
-                + "\n4. End date : " + endDate.getDate()
-                + "\n5. Remain : " + (publishCount-receiveCount)
-                + "\n\nYou can only use this promotion for " + perLimit + " time(s) only.\n";
+        int totalWidth = 30; // 总宽度，根据你的输出需求调整
+        String centeredDescription = SystemClass.centerText(description, totalWidth);
+
+        return String.format(
+                "\n\n----------------------------------\n" +
+                        "| %s |\n" +
+                        "----------------------------------\n" +
+                        "| Discount value | RM %-11.2f|\n" +
+                        "----------------------------------\n" +
+                        "| Minimum Spend  | RM %-11.2f|\n" +
+                        "----------------------------------\n" +
+                        "| Start date     | %-14s|\n" +
+                        "----------------------------------\n" +
+                        "| End date       | %-14s|\n" +
+                        "----------------------------------\n" +
+                        "| Remain         | %-14d|\n" +
+                        "----------------------------------\n" +
+                        "\nYou can only use this promotion for %d time(s) only.\n",
+                centeredDescription, discountValue, minSpend, startDate.getDate(), endDate.getDate(), (publishCount-receiveCount), perLimit
+        );
     }
 
     public String viewOwnPromotionDetails() {
-        return  "\n" + description
-                + "\n1. Discount value : " + discountValue
-                + "\n2. Minimum Spend : " + minSpend
-                + "\n3. Start date : " + startDate.getDate()
-                + "\n4. End date : " + endDate.getDate()
-                + "\n5. Left : " + remainQty() + " time(s)";
+        int totalWidth = 30; // 总宽度，根据你的输出需求调整
+        String centeredDescription = SystemClass.centerText(description, totalWidth);
+
+        return String.format(
+                "\n\n----------------------------------\n" +
+                        "| %s |\n" +
+                        "----------------------------------\n" +
+                        "| Discount value | RM %-11.2f|\n" +
+                        "----------------------------------\n" +
+                        "| Minimum Spend  | RM %-11.2f|\n" +
+                        "----------------------------------\n" +
+                        "| Start date     | %-14s|\n" +
+                        "----------------------------------\n" +
+                        "| End date       | %-14s|\n" +
+                        "----------------------------------\n" +
+                        "| Left (time)    | %-14d|\n" +
+                        "----------------------------------\n",
+                centeredDescription, discountValue, minSpend, startDate.getDate(), endDate.getDate(), remainQty()
+        );
     }
 
     public String printModify() {

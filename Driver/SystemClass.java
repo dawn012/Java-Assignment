@@ -403,6 +403,10 @@ public class SystemClass {
                                                                 receipt.printReceipt();
                                                                 receipt.add();
 
+                                                                System.out.println();
+
+                                                                pressEnterToContinue();
+
                                                                 back = true;
 
                                                                 confirmStr = "N";
@@ -4389,7 +4393,6 @@ public class SystemClass {
                     }
 
                     back = false;
-                    error = true;
 
                     break;
 
@@ -4480,11 +4483,14 @@ public class SystemClass {
         Promotion promotion = new Promotion();
         promotion.setCustomer(cust);
 
+
         do {
-            System.out.println("\nSelect the operation: ");
-            System.out.println("1. New promotion");
-            System.out.println("2. My promotion");
-            // System.out.println("3. Past promotion\n");
+            System.out.println("\n\nSelect the operation: ");
+            System.out.print("---------------------\n");
+            System.out.println("| 1 | New promotion\t|");
+            System.out.print("---------------------\n");
+            System.out.println("| 2 | My promotion \t|");
+            System.out.print("---------------------\n");
             System.out.print("\nEnter your selection (0 - Back): ");
             String operation = sc.nextLine();
 
@@ -4512,11 +4518,13 @@ public class SystemClass {
 
                             int count = 0;
 
-                            System.out.println("\nThese are the promotion you can get now: ");
+                            System.out.println("\n\nThese are the promotion you can get now: ");
+                            System.out.print("\n-----------------------------------------------------\n");
 
                             for(Promotion details: validPromotions) {
                                 count++;
-                                System.out.printf("%d. %s\n", count, details.getDescription());
+                                System.out.printf("| %d | %-45s |\n", count, details.getDescription());
+                                System.out.print("-----------------------------------------------------\n");
                             }
 
                             try {
@@ -4607,13 +4615,15 @@ public class SystemClass {
                             }
 
                             System.out.println("\nYour promotion: ");
+                            System.out.print("-----------------------------------------------------\n");
 
                             int count = 0;
 
                             for(Promotion details: validPromotions) {
                                 if (details.getPromotionStatus() == 1) {
                                     count++;
-                                    System.out.printf("%d. %s\n", count, details.getDescription());
+                                    System.out.printf("| %d | %-45s |\n", count, details.getDescription());
+                                    System.out.print("-----------------------------------------------------\n");
                                 }
                             }
 
@@ -4632,13 +4642,13 @@ public class SystemClass {
                                 else if (detailsChoice > 0 && detailsChoice <= validPromotions.size()) {
                                     promotion = validPromotions.get(detailsChoice - 1);
                                     promotion.setCustomer(cust);
-                                    System.out.println(promotion.viewOwnPromotionDetails() + "\n");
+                                    System.out.println(promotion.viewOwnPromotionDetails());
 
                                     pressEnterToBack();
                                 }
 
                                 else {
-                                    System.out.println("Your choice is not among the available options! PLease try again.");
+                                    System.out.println("\nYour choice is not among the available options! PLease enter again.");
                                 }
                             }
 
@@ -4671,7 +4681,7 @@ public class SystemClass {
         String apply;
 
         do {
-            System.out.println("\nDo you want to apply promotion code? (Y/N) : ");
+            System.out.println("\nDo you want to apply promotion? (Y / N)");
             System.out.print("Answer: ");
             String answer = sc.next().trim();
             sc.nextLine();
@@ -4728,19 +4738,23 @@ public class SystemClass {
 
             for (Promotion validPromotion : validPromotions) {
                 if (i == 1) {
-                    System.out.printf("%d. %s (Most Prefer)\n", i, validPromotion.getDescription());
+                    System.out.println("----------------------------------------------");
+                    System.out.printf("| %d | %-15s (Most Prefer) |\n", i, validPromotion.getDescription());
+                    System.out.println("----------------------------------------------");
                 } else {
-                    System.out.printf("%d. %s\n", i, validPromotion.getDescription());
+                    System.out.printf("| %d | %-15s               |\n", i, validPromotion.getDescription());
+                    System.out.println("----------------------------------------------");
                 }
 
                 i++;
             }
 
+
             boolean ctn = false;
 
             do {
                 try {
-                    System.out.println("\nEnter the promotion no. to apply the promotion (0 - Continue with no promotion): ");
+                    System.out.print("\nEnter the promotion no. to apply the promotion (0 - Continue with no promotion): ");
                     int applyChoice = sc.nextInt();
                     sc.nextLine();
 
@@ -4791,10 +4805,17 @@ public class SystemClass {
                 booking.printBookingDetail();
             }
 
-            System.out.println("\nPayment Method: ");
-            System.out.println("1. Credit/Debit Card");
-            System.out.println("2. Touch 'n Go");
-            System.out.print("\nSelect your payment method (0 - Back): ");
+            int totalWidth = 26;
+            String centeredPaymentMtd = SystemClass.centerText("Payment Method", totalWidth);
+
+            System.out.println("\n\n------------------------------");
+            System.out.printf("| %s |\n", centeredPaymentMtd);
+            System.out.println("------------------------------");
+            System.out.println("| 1 | Credit/Debit Card      |");
+            System.out.println("------------------------------");
+            System.out.println("| 2 | Touch 'n Go            |");
+            System.out.println("------------------------------");
+            System.out.print("\n\nSelect your payment method (0 - Back): ");
 
             paymentMethod = sc.nextLine().trim();
 
@@ -4848,7 +4869,7 @@ public class SystemClass {
                         break;
 
                     default:
-                        System.out.println("Invalid selection. Please retry.");
+                        System.out.println("\nInvalid selection. Please retry.");
                         back = true;
                 }
 
@@ -4894,7 +4915,7 @@ public class SystemClass {
                     booking.getPromotion().custApplyPromotion(booking);
                 }
 
-                System.out.println("\nPayment Successfully! Thanks for your payment.");
+                System.out.println("\n\n\n\t\tPayment Successfully! Thanks for your payment.\n");
 
                 return validPayment;
             }

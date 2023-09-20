@@ -4,11 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="debug">
+    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="design">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Driver/SystemClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/Driver/SystemClass.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Payment_Management/Payment.java" beforeDir="false" afterPath="$PROJECT_DIR$/Payment_Management/Payment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Promotion_Management/Promotion.java" beforeDir="false" afterPath="$PROJECT_DIR$/Promotion_Management/Promotion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Promotion_Management/PromotionUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/Promotion_Management/PromotionUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Receipt_Management/Receipt.java" beforeDir="false" afterPath="$PROJECT_DIR$/Receipt_Management/Receipt.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -421,12 +422,13 @@
       <option name="project" value="LOCAL" />
       <updated>1695194681925</updated>
     </task>
-    <task id="LOCAL-00036" summary="upgrade function">
-      <created>1695031796818</created>
+    <task id="LOCAL-00036" summary="design">
+      <option name="closed" value="true" />
+      <created>1695203417849</created>
       <option name="number" value="00036" />
       <option name="presentableId" value="LOCAL-00036" />
       <option name="project" value="LOCAL" />
-      <updated>1695031796819</updated>
+      <updated>1695203417849</updated>
     </task>
     <task id="LOCAL-00037" summary="fix bug">
       <created>1695032022749</created>
@@ -485,7 +487,7 @@
       <option name="project" value="LOCAL" />
       <updated>1695121680217</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -534,7 +536,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="change the hall package" />
     <MESSAGE value="change the SystemClass.java" />
     <MESSAGE value="change the directory to package" />
     <MESSAGE value="change the sql.txt" />
@@ -559,7 +560,8 @@
     <MESSAGE value="change the gender and phone from admin to customer" />
     <MESSAGE value="debug report" />
     <MESSAGE value="debug" />
-    <option name="LAST_COMMIT_MESSAGE" value="debug" />
+    <MESSAGE value="design" />
+    <option name="LAST_COMMIT_MESSAGE" value="design" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
