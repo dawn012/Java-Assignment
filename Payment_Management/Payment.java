@@ -65,6 +65,14 @@ public abstract class Payment {
         this.booking = booking;
     }
 
+    public static int getNextPaymentId() {
+        return nextPaymentId;
+    }
+
+    public static void setNextPaymentId(int nextPaymentId) {
+        Payment.nextPaymentId = nextPaymentId;
+    }
+
     public int getPaymentId() {
         return paymentId;
     }
@@ -157,7 +165,7 @@ public abstract class Payment {
 
     public void printPaymentDetail(){
         System.out.println("\n\t\t-------------------------------------------");
-        System.out.println("\t\t\t\t\tPayment Details");
+        System.out.println("\t\t|\t\t\t   Payment Details \t\t\t|");
         System.out.println("\t\t-------------------------------------------");
         System.out.printf("\t\t Payment ID   : %04d\n", paymentId);
         System.out.printf("\t\t Booking ID   : %04d\n", booking.getBookingId());
@@ -181,26 +189,19 @@ public abstract class Payment {
         }
 
         System.out.println("\n\t\t-------------------------------------------");
-//        System.out.printf("\t\t\tTotal \t\t\t\t\t   RM%6.2f\n", originalTotal);
-//
-//        if (booking.getPromotion() != null) {
-//            System.out.printf("\t\t\tDiscount\t\t\t\t\t- RM%6.2f\n", booking.getPromotion().getDiscountValue());
-//            System.out.println("\t\t-------------------------------------------");
-//            System.out.printf("\t\t\tTotal Amount : \t\t\t\tRM%6.2f\n", booking.getTotalPrice());
-//        }
 
         if (booking.getPromotion() != null) {
             // Get original Price
-            System.out.printf("\t\t\tTotal \t\t\t\t\t   RM%6.2f\n", getBooking().getTotalPrice() + getBooking().getPromotion().getDiscountValue());
-            System.out.printf("\t\t\tDiscount\t\t\t\t\t- RM%6.2f\n", getBooking().getPromotion().getDiscountValue());
+            System.out.printf("\t\t Total   \t\t\t\t\t\t   RM%6.2f\n", getBooking().getTotalPrice() + getBooking().getPromotion().getDiscountValue());
+            System.out.printf("\t\t Discount\t\t\t\t\t\t - RM%6.2f\n", getBooking().getPromotion().getDiscountValue());
         }
 
         else {
-            System.out.printf("\t\t\tTotal \t\t\t\t\t   RM%6.2f\n", getBooking().getTotalPrice());
+            System.out.printf("\t\t Total   \t\t\t\t\t\t   RM%6.2f\n", getBooking().getTotalPrice());
         }
 
         System.out.println("\t\t-------------------------------------------");
-        System.out.printf("\t\t\tTotal Amount : \t\t\t\tRM%6.2f\n", getBooking().getTotalPrice());
+        System.out.printf("\t\t Total Amount \t\t\t\t       RM%6.2f\n", getBooking().getTotalPrice());
         System.out.println("\t\t-------------------------------------------");
     }
 }

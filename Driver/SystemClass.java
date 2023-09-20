@@ -39,8 +39,6 @@ public class SystemClass {
     }
 
     public static void run(Scanner sc) throws Exception {
-        SystemClass system = new SystemClass();
-
         int choice = 0;
         boolean error = true, continues = true, back = false;
 
@@ -408,6 +406,10 @@ public class SystemClass {
                                                                 receipt.printReceipt();
                                                                 receipt.add();
 
+                                                                System.out.println();
+
+                                                                pressEnterToContinue();
+
                                                                 back = true;
 
                                                                 confirmStr = "N";
@@ -547,7 +549,7 @@ public class SystemClass {
                         int no = 0;
                         do {
                             try {
-                                System.out.print("\nEnter No. Booking to Show Detail (0=Back) : ");
+                                System.out.print("\nEnter No. Booking to Show Detail (0 = Back) : ");
                                 no = sc.nextInt();
                                 if (no == 0)
                                     break;
@@ -840,7 +842,7 @@ public class SystemClass {
                     manageSchedule(sc);
                     break;
                 case 6:
-                    back = managePromotion(sc);
+                    managePromotion(sc);
                     break;
                 case 7:
                     viewReport(sc);
@@ -4185,7 +4187,7 @@ public class SystemClass {
 //        return null;
 //    }
 
-    private static boolean managePromotion(Scanner sc) {
+    private static void managePromotion(Scanner sc) {
         boolean back = false;
         boolean error = false;
 
@@ -4205,10 +4207,13 @@ public class SystemClass {
                     do {
                         error = false;
 
-                        System.out.println("\nSelect the operation: ");
-                        System.out.println("1. All Promotion");
-                        System.out.println("2. Custom\n");
-                        System.out.print("Enter your selection (0 - Back): ");
+                        System.out.println("\n\nSelect the operation: ");
+                        System.out.print("---------------------\n");
+                        System.out.println("| 1 | All Promotion\t|");
+                        System.out.print("---------------------\n");
+                        System.out.println("| 2 | Custom       \t|");
+                        System.out.print("---------------------\n");
+                        System.out.print("\nEnter your selection (0 - Back): ");
 
                         int filterChoice = sc.nextInt();
                         sc.nextLine();
@@ -4218,7 +4223,9 @@ public class SystemClass {
                                 back = true;
                                 break;
                             case 1:
-                                // No action
+                                // Set date to null
+                                startDate = null;
+                                endDate = null;
                                 break;
                             case 2:
                                 while (true) {
@@ -4230,7 +4237,7 @@ public class SystemClass {
 
                                         break; // 日期有效，退出循环
                                     } catch (DateTimeParseException e) {
-                                        System.out.println("Invalid date format. Please enter a valid date (yyyy-MM-dd).\n");
+                                        System.out.println("\nInvalid date format. Please enter a valid date (yyyy-MM-dd).\n");
                                     }
                                 }
 
@@ -4244,35 +4251,34 @@ public class SystemClass {
                                         if (endDate.isAfter(startDate)) {
                                             break; // 日期有效，退出循环
                                         } else {
-                                            System.out.println("End date must be after start date. Please enter a valid date (yyyy-MM-dd).\n");
+                                            System.out.println("\nEnd date must be after start date. Please enter a valid date (yyyy-MM-dd).\n");
                                         }
                                     } catch (DateTimeParseException e) {
-                                        System.out.println("Invalid date format. Please enter a valid date (yyyy-MM-dd).\n");
+                                        System.out.println("\nInvalid date format. Please enter a valid date (yyyy-MM-dd).\n");
                                     }
                                 }
 
                                 break;
                             default:
-                                System.out.println("Invalid input. Please retry.");
+                                System.out.println("\nInvalid input. Please retry.");
                                 error = true;
                         }
 
                         if (back) {
                             // if no this code, it will directly back back back and no stop
                             back = false;
-                            error = true;
                             break;
 
                         } else if (!error) {
                             while (true) {
-                                filteredPromotions = PromotionUtils.filteredPromotionList(startDate, endDate, 1);
+                                filteredPromotions = PromotionUtils.filteredPromotionList(startDate, endDate, 1, "view");
 
                                 if (filteredPromotions.size() > 0) {
                                     int detailsChoice;
 
                                     do {
                                         try {
-                                            System.out.print("\nEnter the promotion no. to view the details (0 - Back): ");
+                                            System.out.print("\nEnter the promotion no. (0 - Back): ");
                                             detailsChoice = sc.nextInt();
                                             sc.nextLine();
 
@@ -4283,16 +4289,17 @@ public class SystemClass {
 
                                             else if (detailsChoice > 0 && detailsChoice <= filteredPromotions.size()) {
                                                 Promotion viewPromotionDetails = filteredPromotions.get(detailsChoice - 1);
+                                                System.out.println("\n\nPrmotion Details: ");
                                                 System.out.println(viewPromotionDetails);
                                             }
 
                                             else {
-                                                System.out.println("Your choice is not among the available options! PLease try again.");
+                                                System.out.println("\nYour choice is not among the available options! PLease try again.");
                                                 error = true;
                                             }
                                         }
                                         catch (InputMismatchException e) {
-                                            System.out.println("Please enter a valid choice!");
+                                            System.out.println("\nPlease enter a valid choice!");
                                             sc.nextLine();
                                             error = true;
                                         }
@@ -4300,8 +4307,13 @@ public class SystemClass {
                                 }
 
                                 else {
-                                    System.out.println("\nNo record found!");
-                                    error = true;
+                                    System.out.println("\nOops! There is no any promotion found!\n");
+                                    pressEnterToBack();
+                                    break;
+                                }
+
+                                if (back) {
+                                    back = false;
                                     break;
                                 }
 
@@ -4316,14 +4328,17 @@ public class SystemClass {
                                     ctnViewPromotion = SystemClass.askForContinue(answer);
                                 } while (ctnViewPromotion.equals("Invalid"));
 
-                                if (!ctnViewPromotion.equals("Y") || back) {
-                                    back = false;
+                                if (ctnViewPromotion.equals("N")) {
+                                    back = true;
                                     break;
                                 }
                             }
-
                         }
-                    } while (error);
+                    } while (!back);
+
+                    if (back) {
+                        back = false;
+                    }
 
                     break;
 
@@ -4333,7 +4348,7 @@ public class SystemClass {
                         // Create promotion object
                         Promotion newPromotion = new Promotion();
 
-                        System.out.println("\nPlease fill in all the following required information: ");
+                        System.out.println("\n\nPlease fill in all the following required information: ");
 
                         // Set promotion description
                         Promotion_Management.PromotionValidator.checkDescription(sc, newPromotion);
@@ -4353,9 +4368,9 @@ public class SystemClass {
                         // Set promotion end date
                         Promotion_Management.PromotionValidator.checkEndDate(sc, newPromotion, newPromotion.getStartDate());
 
-
                         // Set promotion publish count
                         Promotion_Management.PromotionValidator.checkPublishCount(sc, newPromotion);
+
 
                         String confirmAddPromotion;
 
@@ -4370,9 +4385,15 @@ public class SystemClass {
                             } while (confirmAddPromotion.equals("Invalid"));
 
                             if (confirmAddPromotion.equals("Y")) {
-                                newPromotion.add();
+                                if(newPromotion.add()) {
+                                    System.out.println("\nSuccessfully add the promotion!");
+                                }
+
                                 break;
                             }
+
+                            back = true;
+                            break;
                         }
 
                         String ctnAddPromotion;
@@ -4387,7 +4408,6 @@ public class SystemClass {
                         } while (ctnAddPromotion.equals("Invalid"));
 
                         if (ctnAddPromotion.equals("N")) {
-                            error = true;
                             break;
                         }
                     }
@@ -4399,9 +4419,7 @@ public class SystemClass {
                     int promotionId = 1;
 
                     while (true) {
-                        System.out.println("\nSelect the promotion you want to modify: \n");
-                        System.out.println("No     Promotion Description");
-                        filteredPromotions = PromotionUtils.filteredPromotionList(null, null, 1);
+                        filteredPromotions = PromotionUtils.filteredPromotionList(null, null, 1, "modify");
 
                         if (filteredPromotions == null) {
                             break;
@@ -4435,7 +4453,7 @@ public class SystemClass {
                             do {
                                 back = false;
 
-                                System.out.println(modifiedPromotion);
+                                System.out.println(modifiedPromotion.printModify());
                                 System.out.println("\n(Note: Receive count can't be changed)");
                                 System.out.print("\nEnter the serial number of the promotion information you want to change (0 - Stop): ");
                                 String serialNo = sc.nextLine();
@@ -4449,7 +4467,7 @@ public class SystemClass {
                                         String save;
 
                                         do {
-                                            System.out.println("\nDo you want to save the changes? (Y / N)");
+                                            System.out.println("Do you want to save the changes? (Y / N)");
                                             System.out.print("Answer: ");
                                             String answer = sc.next();
                                             sc.nextLine();
@@ -4459,6 +4477,7 @@ public class SystemClass {
 
                                         if (save.equals("Y")) {
                                             modifiedPromotion.modify();
+                                            System.out.println("\nThe changes have been saved.");
                                         }
 
                                         else {
@@ -4505,7 +4524,6 @@ public class SystemClass {
                     }
 
                     back = false;
-                    error = true;
 
                     break;
 
@@ -4514,8 +4532,7 @@ public class SystemClass {
                     promotionId = 0;
 
                     do {
-                        System.out.println("\nSelect the promotion you want to delete: ");
-                        filteredPromotions = PromotionUtils.filteredPromotionList(null, null, 1);
+                        filteredPromotions = PromotionUtils.filteredPromotionList(null, null, 1, "delete");
 
                         do {
                             try {
@@ -4551,33 +4568,42 @@ public class SystemClass {
                             } while (delete.equals("Invalid"));
 
                             if (delete.equals("Y")) {
-                                promotion.delete();
+
+                                if (promotion.delete()) {
+                                    System.out.println("\nThe promotion has been deleted.");
+
+                                } else {
+                                    System.out.println("\nSomething went wrong...");
+                                }
                             }
+
                             else {
-                                System.out.println("\nThe movie is saved.");
+                                System.out.println("\nThe promotion is saved.");
                             }
+
                             back = true;
+
                         } else {
+
                             back = false;
+
                         }
+
                     } while (back);
 
                     back = false;
-                    error = true;
 
                     break;
 
                 default:
                     System.out.println("Invalid input. Please retry.");
-                    error = true;
             }
 
             if (back) {
                 break;
             }
-        } while (error);
 
-        return back;
+        } while (!back);
     }
 
     private static boolean customerPromotion(Scanner sc, Customer cust) {
@@ -4588,11 +4614,14 @@ public class SystemClass {
         Promotion promotion = new Promotion();
         promotion.setCustomer(cust);
 
+
         do {
-            System.out.println("\nSelect the operation: ");
-            System.out.println("1. New promotion");
-            System.out.println("2. My promotion");
-            // System.out.println("3. Past promotion\n");
+            System.out.println("\n\nSelect the operation: ");
+            System.out.print("---------------------\n");
+            System.out.println("| 1 | New promotion\t|");
+            System.out.print("---------------------\n");
+            System.out.println("| 2 | My promotion \t|");
+            System.out.print("---------------------\n");
             System.out.print("\nEnter your selection (0 - Back): ");
             String operation = sc.nextLine();
 
@@ -4620,11 +4649,13 @@ public class SystemClass {
 
                             int count = 0;
 
-                            System.out.println("\nThese are the promotion you can get now: ");
+                            System.out.println("\n\nThese are the promotion you can get now: ");
+                            System.out.print("\n-----------------------------------------------------\n");
 
                             for(Promotion details: validPromotions) {
                                 count++;
-                                System.out.printf("%d. %s\n", count, details.getDescription());
+                                System.out.printf("| %d | %-45s |\n", count, details.getDescription());
+                                System.out.print("-----------------------------------------------------\n");
                             }
 
                             try {
@@ -4715,13 +4746,15 @@ public class SystemClass {
                             }
 
                             System.out.println("\nYour promotion: ");
+                            System.out.print("-----------------------------------------------------\n");
 
                             int count = 0;
 
                             for(Promotion details: validPromotions) {
                                 if (details.getPromotionStatus() == 1) {
                                     count++;
-                                    System.out.printf("%d. %s\n", count, details.getDescription());
+                                    System.out.printf("| %d | %-45s |\n", count, details.getDescription());
+                                    System.out.print("-----------------------------------------------------\n");
                                 }
                             }
 
@@ -4740,13 +4773,13 @@ public class SystemClass {
                                 else if (detailsChoice > 0 && detailsChoice <= validPromotions.size()) {
                                     promotion = validPromotions.get(detailsChoice - 1);
                                     promotion.setCustomer(cust);
-                                    System.out.println(promotion.viewOwnPromotionDetails() + "\n");
+                                    System.out.println(promotion.viewOwnPromotionDetails());
 
                                     pressEnterToBack();
                                 }
 
                                 else {
-                                    System.out.println("Your choice is not among the available options! PLease try again.");
+                                    System.out.println("\nYour choice is not among the available options! PLease enter again.");
                                 }
                             }
 
@@ -4779,7 +4812,7 @@ public class SystemClass {
         String apply;
 
         do {
-            System.out.println("\nDo you want to apply promotion code? (Y/N) : ");
+            System.out.println("\nDo you want to apply promotion? (Y / N)");
             System.out.print("Answer: ");
             String answer = sc.next().trim();
             sc.nextLine();
@@ -4836,19 +4869,23 @@ public class SystemClass {
 
             for (Promotion validPromotion : validPromotions) {
                 if (i == 1) {
-                    System.out.printf("%d. %s (Most Prefer)\n", i, validPromotion.getDescription());
+                    System.out.println("----------------------------------------------");
+                    System.out.printf("| %d | %-15s (Most Prefer) |\n", i, validPromotion.getDescription());
+                    System.out.println("----------------------------------------------");
                 } else {
-                    System.out.printf("%d. %s\n", i, validPromotion.getDescription());
+                    System.out.printf("| %d | %-15s               |\n", i, validPromotion.getDescription());
+                    System.out.println("----------------------------------------------");
                 }
 
                 i++;
             }
 
+
             boolean ctn = false;
 
             do {
                 try {
-                    System.out.println("\nEnter the promotion no. to apply the promotion (0 - Continue with no promotion): ");
+                    System.out.print("\nEnter the promotion no. to apply the promotion (0 - Continue with no promotion): ");
                     int applyChoice = sc.nextInt();
                     sc.nextLine();
 
@@ -4899,10 +4936,17 @@ public class SystemClass {
                 booking.printBookingDetail();
             }
 
-            System.out.println("\nPayment Method: ");
-            System.out.println("1. Credit/Debit Card");
-            System.out.println("2. Touch 'n Go");
-            System.out.print("\nSelect your payment method (0 - Back): ");
+            int totalWidth = 26;
+            String centeredPaymentMtd = SystemClass.centerText("Payment Method", totalWidth);
+
+            System.out.println("\n\n------------------------------");
+            System.out.printf("| %s |\n", centeredPaymentMtd);
+            System.out.println("------------------------------");
+            System.out.println("| 1 | Credit/Debit Card      |");
+            System.out.println("------------------------------");
+            System.out.println("| 2 | Touch 'n Go            |");
+            System.out.println("------------------------------");
+            System.out.print("\n\nSelect your payment method (0 - Back): ");
 
             paymentMethod = sc.nextLine().trim();
 
@@ -4956,7 +5000,7 @@ public class SystemClass {
                         break;
 
                     default:
-                        System.out.println("Invalid selection. Please retry.");
+                        System.out.println("\nInvalid selection. Please retry.");
                         back = true;
                 }
 
@@ -5002,7 +5046,7 @@ public class SystemClass {
                     booking.getPromotion().custApplyPromotion(booking);
                 }
 
-                System.out.println("\nPayment Successfully! Thanks for your payment.");
+                System.out.println("\n\n\n\t\tPayment Successfully! Thanks for your payment.\n");
 
                 return validPayment;
             }
@@ -5025,6 +5069,7 @@ public class SystemClass {
                     try {
                         // Cancel booking
                         booking.cancelBooking();
+                        Payment.setNextPaymentId(validPayment.getPaymentId() - 1);
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }
@@ -5188,7 +5233,7 @@ public class SystemClass {
         }
     }
 
-    private static void pressEnterToBack() {
+    public static void pressEnterToBack() {
         System.out.print("Press Enter to back...");
 
         try {
@@ -5198,7 +5243,7 @@ public class SystemClass {
         }
     }
 
-    private static void pressEnterToContinue() {
+    public static void pressEnterToContinue() {
         System.out.print("Press Enter to continue...");
 
         try {
@@ -5206,5 +5251,13 @@ public class SystemClass {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static String centerText(String text, int totalWidth) {
+        int textWidth = text.length();
+        int leftPadding = (totalWidth - textWidth) / 2;
+        int rightPadding = totalWidth - textWidth - leftPadding;
+
+        return " ".repeat(leftPadding) + text + " ".repeat(rightPadding);
     }
 }

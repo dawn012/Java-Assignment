@@ -60,29 +60,15 @@ public class SalesReport extends Report {
         this.mostPaymentMtd = mostPaymentMtd;
     }
 
-//    public static void main(String[] args) {
-//        Scanner sc = new Scanner(System.in);
-//
-//        SalesReport salesReport = new SalesReport();
-//        SalesReport salesReport1;
-//
-//        salesReport1 = salesReport.viewSalesReport(sc);
-//
-//        System.out.println(salesReport1);
-//    }
-
     public static ArrayList<Payment> allPayments() {
         ArrayList<Payment> payments = new ArrayList<>();
 
-        String sql = " SELECT P.PAYMENT_ID, P.BOOKING_ID, P.PAYMENT_METHOD, P.PAYMENT_AMOUNT, P.CURRENCY, P.PAYMENT_DATE, P.PAYMENT_TIME, P.PAYMENT_STATUS, C.CARD_NO, C.EXPIRED_DATE, C.CVC, T.PHONE_NO, T.PIN_NO FROM PAYMENT P LEFT JOIN CARD C ON P.PAYMENT_ID = C.PAYMENT_ID LEFT JOIN TNG T ON P.PAYMENT_ID = T.PAYMENT_ID WHERE P.PAYMENT_STATUS = ?";
         Object[] params = {"PAID"};
 
         ResultSet rs;
 
         try {
-            //rs = DatabaseUtils.selectQuery("SELECT P.PAYMENT_ID, P.BOOKING_ID, P.PAYMENT_METHOD, P.PAYMENT_AMOUNT, P.CURRENCY, P.PAYMENT_DATE, P.PAYMENT_TIME, P.PAYMENT_STATUS, C.CARD_NO, C.EXPIRED_DATE, C.CVC, T.PHONE_NO, T.PIN_NO", "PAYMENT P LEFT JOIN CARD C ON P.PAYMENT_ID = C.PAYMENT_ID LEFT JOIN TNG T ON P.PAYMENT_ID = T.PAYMENT_ID", "P.PAYMENT_STATUS = ?", params);
-
-            rs = DatabaseUtils.select(sql, params);
+            rs = DatabaseUtils.selectQuery("P.PAYMENT_ID, P.BOOKING_ID, P.PAYMENT_METHOD, P.PAYMENT_AMOUNT, P.CURRENCY, P.PAYMENT_DATE, P.PAYMENT_TIME, P.PAYMENT_STATUS, C.CARD_NO, C.EXPIRED_DATE, C.CVC, T.PHONE_NO, T.PIN_NO", "PAYMENT P LEFT JOIN CARD C ON P.PAYMENT_ID = C.PAYMENT_ID LEFT JOIN TNG T ON P.PAYMENT_ID = T.PAYMENT_ID", "P.PAYMENT_STATUS = ?", params);
 
             while(rs.next()) {
 

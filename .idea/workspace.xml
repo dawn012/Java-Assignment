@@ -5,12 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="design the report output">
+    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="design"></list>
+    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Driver/DateTime.java" beforeDir="false" afterPath="$PROJECT_DIR$/Driver/DateTime.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Driver/SystemClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/Driver/SystemClass.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Genre_Management/Genre.java" beforeDir="false" afterPath="$PROJECT_DIR$/Genre_Management/Genre.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Movie_Management/Movie.java" beforeDir="false" afterPath="$PROJECT_DIR$/Movie_Management/Movie.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Movie_Management/MovieUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/Movie_Management/MovieUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Movie_Management/MovieValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/Movie_Management/MovieValidator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Payment_Management/Payment.java" beforeDir="false" afterPath="$PROJECT_DIR$/Payment_Management/Payment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Promotion_Management/Promotion.java" beforeDir="false" afterPath="$PROJECT_DIR$/Promotion_Management/Promotion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Receipt_Management/Receipt.java" beforeDir="false" afterPath="$PROJECT_DIR$/Receipt_Management/Receipt.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Report_Management/BoxOfficeReport.java" beforeDir="false" afterPath="$PROJECT_DIR$/Report_Management/BoxOfficeReport.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Report_Management/Report.java" beforeDir="false" afterPath="$PROJECT_DIR$/Report_Management/Report.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Schedule_Management/Schedule.java" beforeDir="false" afterPath="$PROJECT_DIR$/Schedule_Management/Schedule.java" afterDir="false" />
@@ -482,15 +488,7 @@
       <option name="project" value="LOCAL" />
       <updated>1695121680217</updated>
     </task>
-    <task id="LOCAL-00045" summary="design the report output">
-      <option name="closed" value="true" />
-      <created>1695204567680</created>
-      <option name="number" value="00045" />
-      <option name="presentableId" value="LOCAL-00045" />
-      <option name="project" value="LOCAL" />
-      <updated>1695204567680</updated>
-    </task>
-    <option name="localTasksCounter" value="46" />
+    <option name="localTasksCounter" value="45" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -539,6 +537,7 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <MESSAGE value="add the sql" />
     <MESSAGE value="add the yong package" />
     <MESSAGE value="change the hall package" />
     <MESSAGE value="change the SystemClass.java" />
@@ -563,8 +562,7 @@
     <MESSAGE value="fix bug" />
     <MESSAGE value="fix" />
     <MESSAGE value="change the gender and phone from admin to customer" />
-    <MESSAGE value="design the report output" />
-    <option name="LAST_COMMIT_MESSAGE" value="design the report output" />
+    <option name="LAST_COMMIT_MESSAGE" value="change the gender and phone from admin to customer" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
