@@ -153,7 +153,7 @@ INSERT INTO `timeTable` (`schedule_id`, `hall_id`, `movie_id`, `movie_showDate`,
 
 
 CREATE TABLE `seat` (
-  `seat_id` varchar(3) NOT NULL,
+  `seat_id` varchar(7) NOT NULL,
   `hall_id` int(11) NOT NULL,
   `seatrow` int(1) DEFAULT NULL,
   `seatcol` int(1) DEFAULT NULL,
