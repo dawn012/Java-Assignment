@@ -83,7 +83,7 @@ public class DateTime {
         Matcher matcher = pattern.matcher(date);
 
         if (!matcher.matches()) {
-            System.out.println("Invalid date format. Please enter a valid date.\n");
+            System.out.println("Invalid date format. Please enter a valid date.");
             return null;
         }
 

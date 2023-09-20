@@ -15,6 +15,11 @@ public class Report {
         dateGenerated = LocalDate.now();
     }
 
+    public Report(String title, DateTime reportDate) {
+        this.title = title;
+        this.reportDate = reportDate;
+    }
+
     public Report(String title, DateTime reportDate, String conclusion) {
         this();
         this.title = title;
@@ -25,9 +30,8 @@ public class Report {
     //public abstract double calculate();
     @Override
     public String toString() {
-        return String.format("\n\nReport Generated Date: %s\n\n", dateGenerated);
+        return String.format("\n%-127c %c\n%c %104s %-20s %c\n%-127c %c\n", '|', '|', '|', "Report Generated Date:", dateGenerated, '|', '|', '|');
     }
-
 
     // Setter
     public void setTitle(String title) {

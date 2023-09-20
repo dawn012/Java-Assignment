@@ -321,6 +321,7 @@ public class MovieUtils {
         return 0;
     }
 
+    // For designing the output
     public static void printWrappedTextForSynopsis(String header, String text, int lineLength) {
         String[] lines = text.split("\\s+");
         String border = new String(new char[lineLength]).replace('\0', '-');
@@ -346,6 +347,7 @@ public class MovieUtils {
         }
     }
 
+    // For designing the output
     public static void printEditWrappedTextForSynopsis(String header, String text, int lineLength, int num) {
         String[] lines = text.split("\\s+");
         String border = new String(new char[lineLength]).replace('\0', '-');

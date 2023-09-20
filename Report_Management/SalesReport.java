@@ -184,7 +184,7 @@ public class SalesReport extends Report {
 //        return salesReport;
 //    }
 
-    public SalesReport calcSalesReportInfo() {
+    public SalesReport generateSalesReport() {
         totalSales = 0;
         totalOrders = 0;
         int countCard = 0;
