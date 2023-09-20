@@ -4,6 +4,7 @@ import Database.DatabaseUtils;
 import Driver.DateTime;
 import Driver.Name;
 import Driver.SystemClass;
+import Genre_Management.Genre;
 import Hall_Management.Hall;
 import Movie_Management.Movie;
 import Promotion_Management.Promotion;
@@ -600,6 +601,87 @@ public class Booking {
     public void completeBooking() throws SQLException {
         this.setBookingStatus("completed");
         this.updateBooking();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public static ArrayList<Booking> getBookingListAfterFiltered(LocalDate expectedDate, LocalDate currentDate,  int customerId){
+        ArrayList<Booking> bookings = new ArrayList<>();
+
+        try {
+            Object[] params = {customerId};
+            ResultSet result = DatabaseUtils.selectQuery("*", "booking", "customer_id = ?", params);
+
+            while (result.next()) {
+                Booking b = new Booking();
+
+                b.setBookingId(result.getInt("booking_id"));
+                b.setAdultTicketQty(result.getInt("adultTicket_qty"));
+                b.setBookingDateTime(new DateTime(result.getDate("booking_date").toLocalDate()));
+                b.setChildTicketQty(result.getInt("childTicket_qty"));
+                b.setTotalPrice(result.getDouble("total_price"));
+                b.setBookingStatus(result.getString("booking_status"));
+                Time time =result.getTime("booking_time");
+                b.setBookingTime(time.toLocalTime());
+                Customer c =new Customer();
+                c.setCustId(result.getInt("customer_id"));
+                b.setCustomer(c);
+
+
+
+
+
+                bookings.add(b);
+            }
+
+            result.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Booking> bookingsAfterFiltered = new ArrayList<>();
+
+        for (int i = 0; i < bookings.size(); i++) {
+            LocalDate localReleaseDate = bookings.get(i).getBookingDateTime().getDate();
+
+            if (expectedDate != null && currentDate == null) {  // Future Booking(s)
+                if (localReleaseDate.equals(expectedDate) || localReleaseDate.isAfter(expectedDate)) {
+                    bookingsAfterFiltered.add(bookings.get(i));
+                }
+            } else if (expectedDate == null && currentDate == null) {  // All Movies
+                bookingsAfterFiltered.add(bookings.get(i));
+            }
+            else {
+                if (localReleaseDate.equals(expectedDate) || (localReleaseDate.isAfter(expectedDate) && localReleaseDate.isBefore(currentDate))) {
+                    bookingsAfterFiltered.add(bookings.get(i));
+                }
+            }
+        }
+
+        return bookingsAfterFiltered;
     }
 }
 
