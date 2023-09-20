@@ -5,27 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="">
-    <list default="true" id="5ecf6160-812f-4e7a-9181-2318ab0f4334" name="Changes" comment="fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database/DatabaseUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/Database/DatabaseUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Driver/DateTime.java" beforeDir="false" afterPath="$PROJECT_DIR$/Driver/DateTime.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Driver/SystemClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/Driver/SystemClass.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Movie_Management/MovieUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/Movie_Management/MovieUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Receipt_Management/Receipt.java" beforeDir="false" afterPath="$PROJECT_DIR$/Receipt_Management/Receipt.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report_Management/Report.java" beforeDir="false" afterPath="$PROJECT_DIR$/Report_Management/Report.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report_Management/SalesReport.java" beforeDir="false" afterPath="$PROJECT_DIR$/Report_Management/SalesReport.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report_Management/TopMovieReport.java" beforeDir="false" afterPath="$PROJECT_DIR$/Report_Management/BoxOfficeReport.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sql.txt" beforeDir="false" afterPath="$PROJECT_DIR$/sql.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Receipt_Management/Receipt.java" beforeDir="false" afterPath="$PROJECT_DIR$/Receipt_Management/Receipt.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/Admin.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/Admin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/Customer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/CustomerDriver.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/CustomerDriver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/DatabaseUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/DatabaseUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/Login.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/Login.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/LoginDriver.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/LoginDriver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/LoginValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/LoginValidator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/RDriver.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Security_Management/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/Security_Management/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Report_Management/BoxOfficeReport.java" beforeDir="false" afterPath="$PROJECT_DIR$/Report_Management/BoxOfficeReport.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

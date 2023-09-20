@@ -86,7 +86,7 @@ public class BoxOfficeReport extends Report {
         }
 
         for (int i = 0; i < looping; i++) {
-            result.append(String.format("%-10c %-10d %-30s %-20.2f %-25d %-27.2f %c\n", '|', (i + 1), movies.get(i).getMvName().getName(), totalBoxOffices.get(i), numOfScreenings.get(i), averageBoxOffices.get(i), '|'));
+            result.append(String.format("%-13c %-7d %-36s %-24.2f %-21d %-21.2f %c\n", '|', (i + 1), movies.get(i).getMvName().getName(), totalBoxOffices.get(i), numOfScreenings.get(i), averageBoxOffices.get(i), '|'));
         }
 
         result.append("|          -----------------------------------------------------------------------------------------------------------          |\n");

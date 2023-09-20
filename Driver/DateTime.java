@@ -110,34 +110,6 @@ public class DateTime {
         }
     }
 
-    /*
-    public boolean run(String date) {
-        boolean validDate;
-
-        try {
-            String[] parts = date.split("-");
-            int year = Integer.parseInt(parts[0]);  // Java's built-in method for converting strings to integers (int type)
-            int month = Integer.parseInt(parts[1]);
-            int day = Integer.parseInt(parts[2]);
-
-            // 验证日期是否 valid
-            viewDate = new ShowDate(year, month, day);
-            validDate = viewDate.isValidDate();
-
-            if (validDate == true) {
-                viewDate.setMonth(month - 1);  // Months are 0-based in calendar
-                viewDate.parseDate();
-                error = false;
-            } else {
-                System.out.println("Please enter a valid date!");
-                error = true;
-            }
-        } catch (Exception e) {
-            System.out.println("The date format entered in wrong!");
-        }
-    }
-    */
-
     public void setYear(int year) {
         this.year = year;
     }

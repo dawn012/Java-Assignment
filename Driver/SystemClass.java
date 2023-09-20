@@ -3893,8 +3893,14 @@ public class SystemClass {
             do {
                 try {
                     System.out.println("\nSelect the report you want to view: ");
-                    System.out.println("1. Sales Report");
-                    System.out.println("2. Movie Box Office Report");
+                    System.out.printf("------------------------------------------------------");
+                    System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Report Type", '|');
+                    System.out.println("------------------------------------------------------");
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 1, '|', "Sales Report", '|');
+                    System.out.println("------------------------------------------------------");
+                    System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 2, '|', "Movie Box Office Report", '|');
+                    System.out.println("------------------------------------------------------");
+
                     System.out.print("\nEnter your selection (0 - Back): ");
                     choice = sc.nextInt();
 
@@ -3991,8 +3997,14 @@ public class SystemClass {
                         do {
                             try {
                                 System.out.println("\nPlease select a box office ranking report from the list below: ");
-                                System.out.println("1. Daily");
-                                System.out.println("2. Monthly");
+                                System.out.printf("------------------------------------------------------");
+                                System.out.printf("\n%-3c %-4s %c %-41s %c\n", '|', "No", '|', "Box Office Report Selection", '|');
+                                System.out.println("------------------------------------------------------");
+                                System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 1, '|', "Daily", '|');
+                                System.out.println("------------------------------------------------------");
+                                System.out.printf("%-3c %-4d %c %-41s %c\n", '|', 2, '|', "Monthly", '|');
+                                System.out.println("------------------------------------------------------");
+
                                 System.out.print("\nEnter your selection (0 - Back): ");
                                 selection = sc.nextInt();
                                 sc.nextLine();
