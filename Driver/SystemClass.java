@@ -341,7 +341,9 @@ public class SystemClass {
                                                         if (confirmStr.equals("R")) {
                                                             booking.executeBooking(schedule);
                                                         }
+
                                                         booking.printBookingDetail();
+
                                                         do {
                                                             try {
                                                                 System.out.print("Confirm This Booking ? (Y=\"Yes\", R=\"Select Again\", N=\"Exit\") : ");
@@ -350,19 +352,25 @@ public class SystemClass {
                                                                 if (confirmStr.equals("Y")) {
                                                                     if (!insert) {
                                                                         Booking.insertBooking(booking);
+
                                                                         for (Ticket t : booking.getTicketList()) {
                                                                             Ticket.insertTicket(t, booking);
                                                                         }
+
                                                                         insert = true;
+
                                                                     } else {
                                                                         // if already insert to the database so just to change the status from "cancelled" to "processing"😊
                                                                         booking.setBookingStatus("processing");
+
                                                                         for (Ticket t : booking.getTicketList()) {
                                                                             t.setTicketStatus(0);
                                                                             t.updateStatus();
                                                                         }
+
                                                                         booking.updateBooking();
                                                                     }
+
                                                                 } else if (confirmStr.equals("N")) {
                                                                     if (insert) {
                                                                         booking.cancelBooking();
@@ -370,6 +378,7 @@ public class SystemClass {
                                                                     }
                                                                     //back = true;
                                                                     break;
+
                                                                 } else if (confirmStr.equals("R")) {
                                                                     if (insert) {
                                                                         booking.cancelBooking();
@@ -377,36 +386,37 @@ public class SystemClass {
                                                                     }
                                                                 }
 
-
                                                             } catch (Exception e) {
                                                                 System.out.println("Something wrong...");
                                                                 sc.nextLine();
                                                             }
+
                                                         } while (!confirmStr.equals("Y") && !confirmStr.equals("N") && !confirmStr.equals("R"));
 
                                                         if (confirmStr.equals("Y")) {
-                                                            //booking.printBookingDetail();
-                                                            // Apply promotion
-                                                            //booking.setBooking_status("completed");
-                                                            //booking.updateStatus();
-                                                            //Promotion promotion = applyPromotion(sc, 1, booking);
-
                                                             applyPromotion(sc, booking);
 
-                                                        // Make Payment
-                                                        Payment payment = makePayment(sc, booking);
+                                                            // Make Payment
+                                                            Payment payment = makePayment(sc, booking);
 
-                                                        if (payment != null) {
-                                                            // Print Receipt
-                                                            Receipt receipt = new Receipt(payment);
+                                                            if (payment != null) {
+                                                                // Print Receipt
+                                                                Receipt receipt = new Receipt(payment);
 
-                                                            receipt.printReceipt();
-                                                            receipt.add();
+                                                                receipt.printReceipt();
+                                                                receipt.add();
 
-                                                            back = true;
+                                                                back = true;
+
+                                                                confirmStr = "N";
+                                                            } else {
+                                                                confirmStr = "Y";
+                                                            }
                                                         }
+
                                                     } while (!confirmStr.equals("N"));
-                                                }
+
+                                                } while (error);
                                             }
                                         }
                                     } else {
