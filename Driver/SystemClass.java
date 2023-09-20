@@ -408,9 +408,7 @@ public class SystemClass {
                                         if (scheduleFound == true) {
                                             // 4. Select the seat chin yong part
                                             Booking booking = new Booking();
-                                            Customer c = new Customer();//暂时用
-                                            c.setCustId(2);//暂时用
-                                            booking.setCustomer(c);//暂时用
+                                            booking.setCustomer(customer);
                                             String confirmStr = " ";
                                             boolean insert = false;
                                             while (confirmStr.equals(" ")) {
@@ -518,15 +516,11 @@ public class SystemClass {
                     } while (back == false);
                     break;
                 case 3:
-                    Customer c1 = new Customer();////暂时用
-                    c1.setCustId(2);//暂时用
-                    back = customerPromotion(sc, c1);
+
+                    back = customerPromotion(sc, customer);
                     break;
                 case 4:
                     //View Booking History
-                    Customer c =new Customer();////暂时用
-                    c.setCustId(1);//暂时用
-                    //Booking.viewBookingHistory(c);
                     boolean skip=false;
                     customer.setCustId(1);
                     int periodSelected = 0;
