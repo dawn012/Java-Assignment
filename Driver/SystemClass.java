@@ -78,17 +78,20 @@ public class SystemClass {
                                 Customer customer = (Customer) user;
                                 System.out.println(customer.getGender() + customer.getPhoneNo());
 
-                                custMenu(customer);
+                                while (custMenu(customer)) {
+                                    custMenu(customer);
+                                }
                             } else if (user instanceof Admin) {
                                 Admin admin = (Admin) user;
                                 adminMenu(admin);
                             }
+
                         } else {
                             System.out.println("Login failed. Exiting...");
                             break;
                         }
 
-                        return;
+                        break;
                     case 3:
                         System.out.println("You selected Option 3.");
                         Customer.forgetPassword();
@@ -109,7 +112,7 @@ public class SystemClass {
 
     }
 
-    public static void custMenu(Customer customer) throws Exception {
+    public static boolean custMenu(Customer customer) throws Exception {
         System.out.println(customer);
         int choice = 0;
         Scanner sc = new Scanner(System.in);
@@ -486,9 +489,7 @@ public class SystemClass {
 
                                                                 pressEnterToContinue();
 
-                                                                back = true;
-
-                                                                confirmStr = "N";
+                                                                return true;
                                                             } else {
                                                                 confirmStr = "Y";
                                                             }
@@ -547,7 +548,7 @@ public class SystemClass {
                             periodSelected = sc.nextInt();
                             sc.nextLine();
 
-                            if (periodSelected >= 0 && periodSelected <= 3) {
+                            if (periodSelected >= 0 && periodSelected <= 4) {
                                 error = false;
                             } else {
                                 System.out.println("Your choice is not among the available options! PLease try again.");
@@ -862,6 +863,8 @@ public class SystemClass {
 
             }
         } while (back == false);
+
+        return false;
     }
     public static void adminMenu(Admin admin) throws Exception {
         boolean back = false;
@@ -4277,26 +4280,26 @@ public class SystemClass {
                             boxOfficeReport = BoxOfficeReport.getRanking(report);
 
                             //if (!boxOfficeReport.getMovie().isEmpty()) {
-                                System.out.println(boxOfficeReport);
+                            System.out.println(boxOfficeReport);
 
-                                String confirmation;
-                                do {
-                                    System.out.println("\nDo you want to view another report? (Y / N)");
-                                    System.out.print("Answer: ");
-                                    String answer = sc.nextLine();
+                            String confirmation;
+                            do {
+                                System.out.println("\nDo you want to view another report? (Y / N)");
+                                System.out.print("Answer: ");
+                                String answer = sc.nextLine();
 
-                                    confirmation = SystemClass.askForContinue(answer);
-                                } while (confirmation.equals("Invalid"));
+                                confirmation = SystemClass.askForContinue(answer);
+                            } while (confirmation.equals("Invalid"));
 
-                                if (confirmation.equals("Y")) {
-                                    continues = true;
-                                } else {
-                                    back = false;
-                                    continues = false;
-                                }
+                            if (confirmation.equals("Y")) {
+                                continues = true;
+                            } else {
+                                back = false;
+                                continues = false;
+                            }
                             //} else {
-                              //  continues = true;
-                                //System.out.println("Sorry, no report found!");
+                            //  continues = true;
+                            //System.out.println("Sorry, no report found!");
                             //}
                         }
                         else {

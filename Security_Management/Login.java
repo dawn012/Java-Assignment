@@ -1,15 +1,13 @@
 package Security_Management;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
 
 import static Security_Management.LoginValidator.*;
 import static Security_Management.User.*;
+import Database.DatabaseUtils;
 
 public class Login {
 
