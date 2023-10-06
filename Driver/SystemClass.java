@@ -3595,6 +3595,9 @@ public class SystemClass {
                                                         System.out.println(errorMessage);
                                                     }
                                                 }
+                                                else {
+                                                    error = false;
+                                                }
                                             } else {
                                                 System.out.println(errorMessage);
                                             }

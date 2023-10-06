@@ -201,7 +201,7 @@ public class BoxOfficeReport extends Report {
         for (int i = 0; i < bookings.size(); i++) {
             try {
                 Object[] params = {bookings.get(i).getBookingId()};
-                ResultSet result = DatabaseUtils.selectQuery("total_price", "booking", "booking_id = ?", params);
+                ResultSet result = DatabaseUtils.selectQuery("*", "booking", "booking_id = ?", params);
 
                 while (result.next()) {
                     if (result.getString("booking_status").equals("completed")) {
