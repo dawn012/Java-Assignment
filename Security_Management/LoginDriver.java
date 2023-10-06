@@ -1,14 +1,9 @@
 package Security_Management;
 
-
-
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Scanner;
 
-
 import static Security_Management.Login.loginMenu;
-import static Security_Management.Customer.registerUser;
 import static Security_Management.User.getAllUsers;
 
 public class LoginDriver {

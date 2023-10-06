@@ -2,8 +2,9 @@ package Security_Management;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Scanner;
+
+import Database.DatabaseUtils;
 
 public class Customer extends User {
     private int custId;

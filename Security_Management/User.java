@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-import static Security_Management.Admin.getAllUsers;
+import Database.DatabaseUtils;
 
 
 public abstract class User{
@@ -113,66 +113,41 @@ public abstract class User{
         return userList;
     }
     public void updateUserInfo() throws SQLException {
-        Connection conn = null;
-        PreparedStatement updateStmt = null;
+        String updateSql;
 
-        try {
-            conn = DatabaseUtils.getConnection();
-            String updateSql;
+        if (this instanceof Admin) {
+            updateSql = "UPDATE User SET username = ?, email = ?, DOB = ?, gender = ?, phoneNo = ? WHERE userID = ?";
+        } else if (this instanceof Customer) {
+            updateSql = "UPDATE User SET username = ?, email = ?, DOB = ? WHERE userID = ?";
+        } else {
+            System.out.println("Unsupported user type.");
+            return;
+        }
 
-            if (this instanceof Admin) {
-                updateSql = "UPDATE User SET username = ?, email = ?, DOB = ?, gender = ?, phoneNo = ? WHERE userID = ?";
-            } else if (this instanceof Customer) {
-                updateSql = "UPDATE User SET username = ?, email = ?, DOB = ? WHERE userID = ?";
-            } else {
-                System.out.println("Unsupported user type.");
-                return;
-            }
+        Object[] params = getUserUpdateParams();
 
-            updateStmt = conn.prepareStatement(updateSql);
-            setUserUpdateParams(updateStmt);
+        int rowsUpdated = DatabaseUtils.updateQuery(updateSql, params);
 
-            int rowsUpdated = updateStmt.executeUpdate();
-
-            if (rowsUpdated > 0) {
-                System.out.println("User information updated successfully!");
-            } else {
-                System.out.println("Failed to update user information.");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (updateStmt != null) updateStmt.close();
-                if (conn != null) conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+        if (rowsUpdated > 0) {
+            System.out.println("User information updated successfully!");
+        } else {
+            System.out.println("Failed to update user information.");
         }
     }
 
-    private void setUserUpdateParams(PreparedStatement stmt) throws SQLException {
+    private Object[] getUserUpdateParams() throws SQLException {
         if (this instanceof Admin) {
             Admin admin = (Admin) this;
-            stmt.setString(1, admin.getLogin().getUsername());
-            stmt.setString(2, admin.getEmail());
-            stmt.setString(3, admin.getDOB());
-            stmt.setString(4, admin.getGender());
-            stmt.setString(5, admin.getPhoneNo());
-            stmt.setInt(6, admin.getAdminId());
-        } else if (this instanceof Customer) {
+            return new Object[]{admin.getLogin().getUsername(), email, DOB, gender, phoneNo, admin.getAdminId()};
+        } else {
             Customer customer = (Customer) this;
-            stmt.setString(1, customer.getLogin().getUsername());
-            stmt.setString(2, customer.getEmail());
-            stmt.setString(3, customer.getDOB());
-            stmt.setInt(4, customer.getCustId());
+            return new Object[]{customer.getLogin().getUsername(), email, DOB, customer.getCustId()};
         }
     }
 
 
     //auto detect cust or admin object to modify info
     public void modifyUserInfo(Scanner scanner, User user) throws SQLException {
-        Connection conn = DatabaseUtils.getConnection();
         boolean isEditing = true;
 
         while (isEditing) {

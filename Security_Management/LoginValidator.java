@@ -1,14 +1,7 @@
 package Security_Management;
 
-
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-
-import static Security_Management.Admin.getAllUsers;
+import Database.DatabaseUtils;
 
 public class LoginValidator {
 
